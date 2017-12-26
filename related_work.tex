@@ -1,0 +1,37 @@
+
+\chapter{RELATED WORK AND BACKGROUND}
+\label{sec:realred_work}
+\section{Related work}
+\input{pattern_prediction}
+\input{distributedOnlineLearning}
+\input{technological_background}
+
+
+%\section{Related Work}
+%
+%In this section, we discuss the building blocks and techniques of our proposed approach. 
+%
+%
+%\subsection{Event Forecasting with Pattern Markov Chains}
+%
+%Wayeb \cite{alevizos2017event} is a system that provides the ability to forecast the completion (i.e., full match) of defined patterns within an input stream of events, the proposed approach is based on the Pattern Markov Chain (PMC) framework \cite{nuel2008pattern} that provides a probabilistic model for the events pattern. The patterns are defined in  the form of regular expressions such as $p1=e1.*.(e3 | e4)$ ($p1$ is a pattern that starts with an event of type $e1$ followed by any event type, then ends with an event of type $e3$ or $e4$), which is transformed to deterministic finite automate $(DFA)$. The resulting $DFA$ is then used to construct a Markov Chain model, which  enables probabilistic inferences (i.e., probability of completion time interval) for the events pattern. Furthermore, the system implicitly is able to report the full matches of the foretasted pattern. We will employ it as the local prediction model in our system.  
+%
+%%discuss stream is stationary assumption
+%\subsection{Distributed Online Learning}
+%
+%\par In \cite{kamp2014communication} a distributed prediction learning protocol over multiple data streams has been proposed. Their work focuses on providing a dynamic and communication efficient synchronization scheme of learning models between distributed learners, by triggering the synchronization process on local node only if its local model diverges from a global reference point. This dynamic scheme comes as an improvement of the static synchronization (i.e., mini-batch) scheme \cite{dekel2012optimal} that is based on making the local learners send their local models to a central site after processing a fixed number of input samples (i.e., batch). In both settings, a central node  called coordinator receives the local learning models, in order to construct an aggregated global model based on all local models and sends it back to all participating nodes.
+%
+%\par In our system we refer to the predicator/forecaster nodes as the distributed learners. Our integration plan is divided into two steps: first, employing the distributed online learning protocol with mini-batch synchronization scheme by combing the local models after certain batch size $b \in \N$. Second, reduce the number of times that local learners need to communicate their models by applying the dynamic synchronization protocol.
+
+
+%\subsection{Clustering}
+%
+%\par Clustering a set of objects into partitioned groups is a popular unsupervised machine learning method, it aims to divide the objects into disjoint subsets of objects (i.e., clusters), where the objects that belong to the same cluster are similar to each other and different from the objects in other clusters, and the similarity between objects is typically measured by some distance function \cite{clustering}. One of the most common clustering algorithms $DBSCAN$ \cite{ester1996density}  which is density based clustering algorithm that identifies clusters with arbitrary shapes in large spatial databases. Likewise, $k$-$means$ \cite{k-means} is another common clustering algorithms, it divides $M$ points into $K$ clusters based on minimizing the sum of squares (i.e., distance) between the points within the same cluster.
+%
+%\par In this thesis, we are applying our approach on events streams of moving objects (i.e., vessels). Thus, we are focusing on the trajectory-based clustering methods. Fortunately, There are many trajectory-based clustering techniques that have been proposed in literature, we will have to examine and evaluate some of the proposed clustering techniques to be utilized in our system. 
+%
+% \par For instance, in \cite{liu2014knowledge} a density-based algorithm to cluster the moving trajectory points of vessels was introduced, they modified the definition of $Eps-neighborhood$ in the $DBSCAN$ algorithm to take into account the variance of the speed and direction. Moreover, Lee et al. \cite{lee2007trajectory} have proposed trajectories clustering algorithm (TRACLUS) that firstly splits the trajectory into  sequence of line segments,  which are then partitioned into clusters using s density-based clustering technique.    
+%
+%\par On the other hand, the authors of \cite{chen2005robust} have proposed a new distance function of trajectories of moving objects, which is called $Edit Distance on Real sequence (EDR)$ that measures the similarity between two trajectories of moving objects (e.g., $T_1$ and $T_2$ based on the cost is needed to change $T_1$ into $T_2$ by checking the matching of the element of the two trajectories.
+
+%don't forget to mention concept drift.
