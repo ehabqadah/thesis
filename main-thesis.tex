@@ -127,7 +127,6 @@ BCOR=8mm]{scrbook}
 % paper
 
 
-
 \def\dfar{$\mathit{DFA_{\mathcal{P}}}$}
 \def\nfar{$\mathit{NFA_{\mathcal{P}}}$}
 \def\dfasr{$\mathit{DFA_{\Sigma^{*}\cdot \mathcal{P}}}$}
@@ -169,7 +168,7 @@ BCOR=8mm]{scrbook}
 \begin{document}
 	\frontmatter
 	
-	\input{title}
+	\input{chapters/title}
 
 	\vspace{4cm}
 	
@@ -188,31 +187,30 @@ BCOR=8mm]{scrbook}
 	\end{flushleft}
 	
 	
-	
-	
+
 	\chapter*{Abstract}
 	\thispagestyle{empty}
-    \input{abstract}
+    \input{chapters/abstract}
     
 	
 	\tableofcontents
 	\thispagestyle{empty}
-	%\listoffigures
-	%\listofalgorithms
+	\listoffigures
+%	\listofalgorithms
 	
 	\mainmatter
 	
-	\input{introduction}
+	\input{chapters/introduction}
 	
-	\input{related_work}
+	\input{chapters/related_work}
 	
-	\input{system}
+	\input{chapters/system}
 	
-	\input{implementaion}
+	\input{chapters/implementaion}
 
-	\input{evaluation}
-	
-	\input{conclusion}
+	\input{chapters/evaluation}
+	\input{chapters/discussion}
+	\input{chapters/conclusion}
 	
 	\FloatBarrier
 	
