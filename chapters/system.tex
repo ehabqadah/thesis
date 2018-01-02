@@ -148,7 +148,7 @@ Each node $n_i$ handles a single event stream $s_i$ associated with a moving obj
 \par On the other hand, the coordinator receives the prediction models from the predictor nodes that requested for model synchronization (violation). Then it tries to keep incrementally querying other nodes for their local prediction models until reaching out all nodes, or the variance of the aggregated model $\hat{f}$ that is computed from the already received models less or equal than the divergence threshold  $\Delta$. Finally, the aggregated model $\hat{f}$ is sent back to the predictor nodes that sent their models after the violation or have been queried by the coordinator.
 
 \begin{algorithm}[h]
-	\caption{Communication-efficient Distributed Online Learning Protocol } 
+	\caption{Communication-efficient Distributed Online Learning} 
 	\begin{algorithmic}[1] 
 		\Statex \Indm  \textbf{Predictor} node $n_i$: at observing event $e_j$
 		\Statex \Indp update the prediction model parameters $f_i$ and provide a prediction service \; 

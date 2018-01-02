@@ -4,165 +4,10 @@ twoside, % two sided printing
 openright, % start new chapter on right side only ( inserts blank pages )
 abstract=on, % Use an abstract
 DIV=11,      % This parameter organizes the borders (detailed explanation at http://texdoc.net/texmf-dist/doc/latex/koma-script/scrguide.pdf
-BCOR=8mm]{scrbook} 
-%scrreprt is used for larger texts with chapters (Master or Bachelor Thesis)
-%scrartcl is used when there are no chapters ( for smaller paper)
-\relpenalty=9999
-\binoppenalty=9999
+BCOR=8mm,openright]{scrbook} 
 
-\usepackage[utf8]{inputenc}
-\usepackage[english]{babel} % sets up english hyphenation
-\usepackage{csquotes} % for language-dependent quotes in biblatex
-\usepackage[unicode=true]{hyperref} % enables use of metadata for pdfs and hyperlinks within a document
-%\usepackage[natbib,maxnames=2,maxbibnames=100,style=authoryear-comp,uniquename=full,firstinits,doi=false,backend=bibtex,backref,hyperref]{biblatex} % advanced bibliography support
-\usepackage[numbers]{natbib}
-\usepackage[usenames,dvipsnames,hyperref]{xcolor} % enables more advanced color support for hyperref
-\hypersetup{colorlinks=true, %flag for prints
-	hidelinks,  % this option would hide links for the print version of your thesis
-	linkcolor=red!35!black,    %definition of the link color
-	citecolor=green!35!black,  %definition of the cite color
-	urlcolor=magenta!35!black, %definition of the url color
-	%pdfauthor=, % Optional: Specify the author of the pdf
-	%pdftitle=   % Optional: Specify the title within the pdf
-}
-\usepackage{algorithmicx}
-%\def\NoNumber#1{{\def\alglinenumber##1{}\State #1}\addtocounter{ALG@line}{-1}}
-
-\usepackage{verbatim} % for multiple line comment
-\usepackage[final]{pdfpages} %include pdf files
-\usepackage{amsmath}
-\usepackage{amssymb}
-\mathchardef\mhyphen="2D % Define a "math hyphen" 
-\usepackage{amsthm}
-\usepackage{eufrak}
-\newtheorem*{definition*}{Definition}
-\newtheorem{definition}{Definition}
-\newtheorem{mylem}{Lemma}[section]
-\newtheorem{mytheorem}{Theorem}[section]
-
-%\numberwithin{mydef}{section} % important bit
-\usepackage{subfiles} %This package is used for subfiles
-\usepackage{tabu}     % provides advanced tables
-\usepackage{array,multirow}
-%\bibliography{thesis.bib}% Include all the bibliography files
-\usepackage{booktabs} % enables reference bookstyle tables
-\usepackage[format=plain, labelfont=bf]{caption}
-\usepackage[capitalize,noabbrev]{cleveref}
-\usepackage{subcaption} % enables use multiple figures in a figure
-\captionsetup{compatibility=false}
-\usepackage{eurosym} %includes the euro symbol 
-\usepackage{enumitem} % allows customization of enumeration and itemize environment
-\usepackage{graphicx} % enables loading of graphics
-\usepackage{tikz} % drawing vector graphics in latex
-\usetikzlibrary{graphs,graphs.standard}
-\usetikzlibrary{shapes.geometric,backgrounds}
-\newcommand{\R}{\mathbb{R}}
-\newcommand{\N}{\mathbb{N}}
-\DeclareMathOperator*{\Exp}{\mathbb{E}}
-\newcommand{\expAvgLoss}{\Exp\left[\overline{X}\right]}
-\newcommand{\avgLoss}{\overline{X}}
-\newcommand*\mean[1]{\bar{#1}}
-\newcommand{\inputSpace}{\mathcal{Z}}
-\newcommand{\dist}{\mathcal{D}}
-\newcommand{\hilbertSpace}{\mathcal{H}}
-\newcommand{\mapping}[3]{#1\!: #2 \to #3}
-\newcommand{\mappingdef}[3]{#1\!\left (#2\right )=#3}
-\newcommand{\prob}[1]{\mathbb{P}\!\left[#1\right]}
-\newcommand{\regret}{R}
-\newcommand{\hatv}[1]{\overset{\wedge}{\mathstrut#1}}
-
-\newtheorem{thm}{Theorem}
-\newtheorem{lem}[thm]{Lemma}
-\newtheorem{prop}[thm]{Proposition}
-\newtheorem{cor}[thm]{Corollary}
-\newtheorem{exm}[thm]{Example}
-\newtheorem{problem}[thm]{Problem}
-\DeclareMathOperator*{\argmin}{\mathrm{argmin}}
-%\usepackage{parskip} %alternatively parskip replaces paragraph indentation by increased in-betweeen-paragraph linespacing 
-\usepackage{setspace} % helps setup line spacing
-%\onehalfspacing % increases linespacing to one and half
-\usepackage{placeins} % provides FloatBarrier
-%\usepackage[miktex]{gnuplottex} % gnuplot within latex. May be obsolete with pylab.
-\usepackage[ruled,vlined,noend]{algorithm2e}
-%algorithm package
-\linespread{1.1} % Definition of the linespread
-\usepackage[tbtags]{mathtools}
-\DeclareMathOperator*{\somefunc}{somefunc}
-\SetKwInput{KwInput}{Input}
-\SetKwInput{KwOutput}{Output}
-
-%tikz helps to draw nice pictures with a lot of effort for advanced users
-\usetikzlibrary{positioning, shapes, shadows, arrows, backgrounds}
-\usepackage{verbatim}
-\usepackage{tikz-3dplot}
-\usepackage{forest}
-\usepackage[export]{adjustbox}
-
-
-\DeclarePairedDelimiter\floor{\lfloor}{\rfloor}
-
-%table of contents depth
-\setcounter{secnumdepth}{3}
-\setcounter{tocdepth}{3}% Allow only \chapter in ToC
-
-%some definitions for the cref package
-\crefname{algocf}{Algorithm}{Algorithms}
-\crefname{table}{Table}{Tables}
-\crefname{chapter}{Chapter}{Chapters}
-\crefname{equation}{Equation}{Equations}
-\crefname{section}{Section}{Sections}
-
-
-\tikzset{
-	tri/.style={
-		draw,
-		shape border rotate=90,
-		isosceles triangle,
-		isosceles triangle apex angle=60,
-		node distance=1cm,
-		minimum height=4em
-	}
-}
-
-% paper
-
-
-\def\dfar{$\mathit{DFA_{\mathcal{P}}}$}
-\def\nfar{$\mathit{NFA_{\mathcal{P}}}$}
-\def\dfasr{$\mathit{DFA_{\Sigma^{*}\cdot \mathcal{P}}}$}
-\def\nfasr{$\mathit{NFA_{\Sigma^{*}\cdot \mathcal{P}}}$}
-\def\pmcmr{$\mathit{PMC_{\mathcal{P}}^{m}}$}
-\def\pmczeror{$\mathit{PMC_{\mathcal{P}}^{0}}$}
-\def\pmconer{$\mathit{PMC_{\mathcal{P}}^{1}}$}
-\def\pfc{$\mathit{P_{fc}}$}
-
-\usepackage{listings}
-\usepackage{color}
-
-\definecolor{dkgreen}{rgb}{0,0.6,0}
-\definecolor{gray}{rgb}{0.5,0.5,0.5}
-\definecolor{mauve}{rgb}{0.58,0,0.82}
-
-\lstset{
-	language=Java,
-	aboveskip=3mm,
-	belowskip=3mm,
-	showstringspaces=false,
-	columns=flexible,
-	basicstyle={\small\ttfamily},
-	numbers=none,
-	numberstyle=\tiny\color{gray},
-	keywordstyle=\color{blue},
-	commentstyle=\color{dkgreen},
-	stringstyle=\color{mauve},
-	breaklines=true,
-	breakatwhitespace=true,
-	tabsize=3,
-	captionpos=b
-}
-
-%\linespread{1.1} % Definition of the linespread
-% new
+% openany By default the new chapters are opening on the right hand page. Use the [openany] class option if that is not desired.
+\input{thesis-configs}
 
 
 \begin{document}
@@ -217,7 +62,7 @@ BCOR=8mm]{scrbook}
 	%\begin{singlespacing}
 	%    \printbibliography
 	%\end{singlespacing}
-	\bibliographystyle{plainnat}
+	\bibliographystyle{agsm}
 	\bibliography{bmda-paper-bibliography,forecasting} 
 \end{document}
 
