@@ -5,13 +5,16 @@
 %define the pattern we deal formally%
 % include base line 1 batch size in experemintal results%
 
+%In this section we give a brief introduction to an approach to forecasting
+%based on the state space model.
+
 For our work presented in this paper,
 we use the approach presented in \cite{alevizos2017event}.
 For the sake of self-containment,
 we briefly describe this approach in the following,
 first assuming that only a single stream is consumed
 and then adjusting for the case of multiple streams.
-We follow the terminology of \cite{luckham2008power,alevizos2015complex,zhou_pattern_2015} to formalize the problem we tackle.
+We follow the terminology of \cite{schultz2009distributed,luckham2008power,alevizos2015complex,zhou_pattern_2015} to formalize the problem we tackle.
 
 \subsection{Problem formulation}
 
@@ -38,7 +41,7 @@ the goal is to estimate at each new event arrival the number of future events
 that we will need to wait for until the pattern is satisfied (and therefore a full match is detected).
 
 \subsection{Proposed approach}
-
+\label{sec:Event-Forecasting-PMC}
 As a first step, event patterns are converted to deterministic finite automata (DFA) through standard conversion algorithms.
 As an example, see Figure ~\ref{fig:dfatcc} for the DFA of the simple sequential pattern $\mathcal{P}=a ; c ; c$ and an alphabet $\Sigma=\{a,b,c\}$
 (note that the DFA has no dead states since we need to handle streams and not strings).
