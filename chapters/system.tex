@@ -179,7 +179,7 @@ Each node $n_i$ handles a single event stream $s_i$ associated with a moving obj
 \end{algorithm}
 
 
-\par This protocol was introduced for linear models, and has been  extended to handle kernelized online learning models \cite{kamp2016communication}. We also employ this protocol for the pattern prediction model, which is internally based on the PMC \pmcmr. This allows the distributed \pmcmr\ predictors for multiple event streams to  synchronize their models (i.e., the transition probability matrix of each predictor) within the system in a communication-efficient manner. 
+\par  We use this protocol for the pattern prediction model, which is internally based on the PMC \pmcmr. This allows the distributed \pmcmr\ predictors for multiple event streams to  synchronize their models (i.e., the transition probability matrix of each predictor) within the system in a communication-efficient manner. 
 
 
 
