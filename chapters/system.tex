@@ -1,6 +1,6 @@
 \chapter{Method and Theoretical Analysis}
 \label{sec:system}
-\section{Pattern prediction on a single stream}
+\section{Pattern Prediction Over a Single Event Stream}
 %refine the stream and event pattern %
 %define the pattern we deal formally%
 % include base line 1 batch size in experemintal results%
@@ -151,7 +151,7 @@ Each node $n_i$ handles a single event stream $s_i$ associated with a moving obj
 \par On the other hand, the coordinator receives the prediction models from the predictor nodes that requested for model synchronization (violation). Then it tries to keep incrementally querying other nodes for their local prediction models until reaching out all nodes, or the variance of the aggregated model $\hat{f}$ that is computed from the already received models less or equal than the divergence threshold  $\Delta$. Finally, the aggregated model $\hat{f}$ is sent back to the predictor nodes that sent their models after the violation or have been queried by the coordinator.
 
 \begin{algorithm}[h]
-	\caption{Communication-efficient Distributed Online Learning} 
+	\caption{Communication-efficient Distributed Online Learning \cite{kamp2014communication}.} 
 	\begin{algorithmic}[1] 
 		\Statex \Indm  \textbf{Predictor} node $n_i$: at observing event $e_j$
 		\Statex \Indp update the prediction model parameters $f_i$ and provide a prediction service \; 
@@ -199,5 +199,7 @@ Each node $n_i$ handles a single event stream $s_i$ associated with a moving obj
 % may add it to conclusion 
 %\par By enabling collaborative learning our approach is imposing an acceleration of learning of the underlying prediction models with less training data, in addition, it provides an improvement of the predictive performance compared to the no-distributed  version of event forecasting with Pattern Markov Chains system. 
 
-\section{Theoretical Analysis of Proposed Method}
+\section{Theoretical Analysis of Proposed Approach}
  
+ 
+ % take the mc matrix from pmc paper and try to derive the varince 
