@@ -201,5 +201,19 @@ Each node $n_i$ handles a single event stream $s_i$ associated with a moving obj
 
 \section{Theoretical Analysis of Proposed Approach}
  
+ In this section, we present preliminaries of Markov chain and Maximum like-hood estimator, and we describe the theoretical properties of our proposed synchronization operator and its relation with ML estimator.  
  
  % take the mc matrix from pmc paper and try to derive the varince 
+ 
+ \subsection*{Preliminaries.}
+
+\begin{definition}
+	Let $\{s_0, s_1, \ldots s_n\}$ be a sequence of random variables as \textbf{Markov chain}, where $s_i$ belongs to a finite state space $\mathbf{S =\{1,\ldots m\}}$ and represents the observed state of the chain at time $i$. Let the transition probabilities of the Markov chain $p_{ij}(t+1)$ such that $i,j \in S$ and $t=0,\ldots, n$, where  $p_{ij}(t+1)$ is the probability of the state $j$ at time $t+1$, given state $i$ at time $t$, where the sequence $\{s_0, s_1, \ldots s_n\}$ satisfies
+	
+	\begin{equation*}
+	P(s_{t+1}=j|s_{t}=i,s_{t-1}=i_{t-1},\ldots ,s_{0}=i_{0})=P(s_{t+1}=j|s_{t}=i)
+	\end{equation*}
+
+	
+	$\forall i,j \in S$ and all times t \cite{bertsekas2002introduction,Billingsley1961,anderson1957statistical}.
+\end{definition}
