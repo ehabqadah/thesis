@@ -201,19 +201,51 @@ Each node $n_i$ handles a single event stream $s_i$ associated with a moving obj
 
 \section{Theoretical Analysis of Proposed Approach}
  
- In this section, we present preliminaries of Markov chain and Maximum like-hood estimator, and we describe the theoretical properties of our proposed synchronization operator and its relation with ML estimator.  
+ In this section, we present preliminaries of Markov chain and Maximum like-hood estimator, and we describe the theoretical properties of our proposed synchronization operator and its relation with ML estimator. 
  
  % take the mc matrix from pmc paper and try to derive the varince 
  
- \subsection*{Preliminaries.}
+ \subsection*{Preliminaries}
+ 
+The theoretical definitions presented in this section are based 
+on the work described in \cite{bertsekas2002introduction,Billingsley1961,anderson1957statistical,howard2012dynamic}.
 
 \begin{definition}
-	Let $\{s_0, s_1, \ldots s_n\}$ be a sequence of random variables as \textbf{Markov chain}, where $s_i$ belongs to a finite state space $\mathbf{S =\{1,\ldots m\}}$ and represents the observed state of the chain at time $i$. Let the transition probabilities of the Markov chain $p_{ij}(t+1)$ such that $i,j \in S$ and $t=0,\ldots, n$, where  $p_{ij}(t+1)$ is the probability of the state $j$ at time $t+1$, given state $i$ at time $t$, where the sequence $\{s_0, s_1, \ldots s_n\}$ satisfies
+	Let $\{s_0, s_1, \ldots s_n\}$ be a sequence of random variables as \textbf{Markov chain}, where $s_i$ belongs to a finite state space $\mathbf{S =\{1,\ldots m\}}$ and represents the observed state of the chain at time $i$. Let the transition probabilities of the Markov chain $p_{ij}(t+1)$ such that $i,j \in S$ and $t=0,\ldots, n$, where  $p_{ij}(t+1)$ is the probability of the state $j$ at time $t+1$, given state $i$ at time $t$, where the sequence $\{s_0, s_1, \ldots s_n\}$ satisfies the \textbf{Markov property} 
 	
-	\begin{equation*}
-	P(s_{t+1}=j|s_{t}=i,s_{t-1}=i_{t-1},\ldots ,s_{0}=i_{0})=P(s_{t+1}=j|s_{t}=i)
-	\end{equation*}
+	\begin{equation}
+	\begin{aligned}
+	P(s_{t+1}=j|s_{t}=i,s_{t-1}=i_{t-1},\ldots ,s_{0}=i_{0})=P(s_{t+1}=j|s_{t}=i)\\
+	\forall i,j,i_{t-1},i_{0} \in S
+	\end{aligned}
+	\end{equation}
 
 	
-	$\forall i,j \in S$ and all times t \cite{bertsekas2002introduction,Billingsley1961,anderson1957statistical}.
+	Thus, the probability of moving to a future state only depends on the current  state (first-order Markov chain). While for higher order $m$ Markov chains the conditional probabilities can be modeled to be dependent on the last $m$ states. 
+	
+	When the conditional probabilities $P(s_{t+1}=j|s_{t}=i)$ are independent of the time $t$, the Markov chain is called \textbf{homogeneous} such that $p_{ij}:=P(s_{t+1}=j|s_{t}=i)$.
+	
+
+	
 \end{definition}
+
+The transition probabilities of the Markov chain are represented by a $m \times m$  matrix that called \textbf{transition probability matrix} $\boldsymbol{\Pi}$ with $p_{ij}$ elements
+
+
+\begin{equation}
+\label{eq:matrix_example}
+\boldsymbol{\Pi} = 
+\begin{pmatrix} 
+p_{1,1}	   &p_{1,2}  &. 		&. 		& . &  	p_{1,m} \\
+p_{2,1}		   &.  & .		& .	    & .	& . \\
+. 		   &.  & .		& .	    & .	& . \\
+.		   &.  & .		& .		& .	& . \\
+.		   &.  & .		& .		& .	& .\\
+p_{m,1}	   & p_{m,1}	&.		& .	& .	&p_{m,m}
+\end{pmatrix}
+\end{equation}
+
+where $0 \leq p_{i,j}\leq 1 $ and the rows sum up to one 
+\begin{equation}
+\sum_{j=1}^{m} p_{i,j}= 1\ \ \ \ \ \ \ \ \ i=1,2 \ldots m
+\end{equation}
