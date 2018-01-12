@@ -109,19 +109,12 @@ $\mathcal{P}=a ; b ; b ; b$, $\Sigma=\{a,b\}$, $m=1$, $\theta_{\mathit{fc}}=0.5$
 \end{centering}
 \end{figure}
 
-The above described method assumes that we know the (possibly conditional) occurrence probabilities of the various event types appearing in a stream
+\par The above described method assumes that we know the (possibly conditional) occurrence probabilities of the various event types appearing in a stream
 (as would be the case with synthetically generated streams).
 However, this is not always the case in real-world situations.
 Therefore, it is crucial for a system implementing this method to have the capability to learn the values of the PMC's transition matrix.
-One way to do this is to use some part of the stream to obtain the maximum-likelihood estimators for the transition probabilities. 
-If $\boldsymbol{\Pi}$ is the transition matrix of a Markov chain with a set of states $Q$, 
-$\pi_{i,j}$ the transition probability from state $i$ to state $j$,
-$n_{i,j}$ the number of observed transitions from state $i$ to state $j$,
-then the maximum likelihood estimator for $\pi_{i,j}$ is given by:
-\begin{equation*}
-\label{eq:pi_estim}
-\hat{\pi}_{i,j}=\frac{n_{i,j}}{\sum_{k \in Q} n_{i,k}}=\frac{n_{i,j}}{n_{i}}
-\end{equation*}
+One way to do this is to use some part of the stream to obtain the maximum-likelihood estimators for the transition probabilities as illustrated in Section ~\ref{sec:theoretical}. 
+
 Executing this learning step on a single node might require a vast amount of time until we arrive at a sufficiently good model.
 In this paper, we present a distributed method for learning the transition probability matrix.
 
@@ -184,10 +177,10 @@ Each node $n_i$ handles a single event stream $s_i$ associated with a moving obj
 
 
 \par We propose a \textit{synchronization operation} for the parameters of the models ($f_i=\boldsymbol{\Pi}_i :i \in[k]$) of the $k$ distributed PMC predictors. The operation is based on distributing the maximum-likelihood estimation \cite{anderson1957statistical} for the transition probabilities of the underlying \pmcmr\ models described by: 
-\begin{equation*}
+\begin{equation}
 \label{eq:dis_pi_estim}
 \hat{\pi}_{i,j}=\frac{\sum_{k \in K} n_{k,i,j}}{\sum_{k \in K} \sum_{l \in L} n_{k,i,l}}
-\end{equation*}
+\end{equation}
 
 \par Moreover, we measure the divergence of local models from the reference model  $\|f_k - f_r\|^2$ by calculating the sum of square difference between the transition probabilities  $\boldsymbol{\Pi}_i$ and  $\boldsymbol{\Pi}_r$:
 \begin{equation*}
@@ -249,3 +242,37 @@ where $0 \leq p_{i,j}\leq 1 $ and the rows sum up to one
 \begin{equation}
 \sum_{j=1}^{m} p_{i,j}= 1\ \ \ \ \ \ \ \ \ i=1,2 \ldots m
 \end{equation}
+
+\textbf{Estimating the Transition Matrix}. In practice the underlaying transition probability matrix is unknown, and desirable to estimate or learn it form the observed sequence $\{s_0, s_1, \ldots s_n\}$. The maximum likelihood estimator is a common method to estimate the transition probability matrix \cite{anderson1957statistical}.
+
+
+\begin{definition}
+	Let $\boldsymbol{\Pi}$ is the transition probability matrix of a Markov chain with a set of states $S$, 
+	$\pi_{i,j}$ the transition probability from state $i$ to state $j$,
+	$n_{i,j}$ the number of observed transitions from state $i$ to state $j$,
+	then the maximum likelihood estimator finds $\boldsymbol{\hat{\Pi}}$ as an estimate for $\boldsymbol{\Pi}$, where its elements $\hat{p}_{i,j}$ are
+	\begin{equation}
+	\label{eq:pi_estim}
+	\hat{p}_{i,j}=\frac{n_{i,j}}{\sum_{k \in S} n_{i,k}}=\frac{n_{i,j}}{n_{i}}
+	\end{equation}
+	
+\end{definition} 
+
+
+	The maximum likelihood estimates of transition probabilities are obtained based on the observed transitions between the states of the chain. ~\citet{anderson1957statistical} have shown that 
+	
+	
+	\begin{equation}
+	\lim_{n\to\infty} \sqrt{n}\ (\hat{p}_{i,j} - {p}_{i,j}) \sim \mathcal{N}(\mu,\,\sigma^{2})\,.
+	\end{equation}
+Thus, the random variable $\sqrt{n}\ (\hat{p}_{i,j} - {p}_{i,j})$ has asymptotically normal distribution with mean $\mu=0$, and the variances and covariances of can be computed. In next, we will show that our proposed approach of distributing the maximum likelihood estimator is still preserving  a similar asymptotic behavior.
+
+
+\subsection{Proprietors of Proposed Approach}
+\par The synchronization operator in Equation ~\ref{eq:dis_pi_estim} is basically aggregating  the  maximum likelihood estimates over $k$ observed sequences (i.e., sequences of the DFA states based on the consumed event streams), the asymptotic properties can be shown as follows 
+
+
+
+\subsection{Calculating the transition matrix from the PMC transition matrix}
+
+\par 
