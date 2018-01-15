@@ -51,11 +51,12 @@ The system ingests the input events stream from a Kafka cluster that is mapped t
 
 
 \par Moreover, the implementation of  the \textit{predictor} map function includes the communication  with \textit{coordinator} using Kafka streams. At the beginning of the execution, it sends a registration request to the coordinator. Also at the run-time,  it sends  its local prediction model as synchronization request,  or as a response for a resolution request from the coordinator. These communication messages are published into different Kafka topics as depicted in Table ~\ref{tab:messagesToTopics}. 
-
+\begin{center}
+\centering
 \begin{table}[h]
 	\caption{Messages to Kafka topics mapping.}
 	\label{tab:messagesToTopics}
-	\begin{tabular}{p{3cm}l}
+	\begin{tabular}{p{5cm}l}
 		\toprule
 		Message &Kafka Topic\\
 		\midrule
@@ -66,6 +67,7 @@ The system ingests the input events stream from a Kafka cluster that is mapped t
 	\end{tabular}
 \end{table}
 
+\end{center}
 
 \textbf{Coordinator.} Listing ~\ref{algonline:flink2} presents the workflow of the coordinator node that manages the distributed online learning protocol operations, which is implemented as Flink program. The coordinator receives messages from the local predictors through a Kafka Stream of a topic named \textit{"LocalToCoordinatorTopicId"}. It is implemented as a single \textit{map} function over the messages stream, by setting the \textit{parallelism} level of the Flink program to \textit{"1"}. Increasing the parallelism will scale up the number of parallel coordinator instances, for example, in order to handle different groupings of the input event streams. The map operator of the coordinator  handles three message types from the predictors: \begin{enumerate}[]
 	\item \textbf{RegisterNode} that contains  a registration request for a new predictor node,

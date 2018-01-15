@@ -243,7 +243,7 @@ where $0 \leq p_{i,j}\leq 1 $ and the rows sum up to one
 \sum_{j=1}^{m} p_{i,j}= 1\ \ \ \ \ \ \ \ \ i=1,2 \ldots m
 \end{equation}
 
-\textbf{Estimating the Transition Matrix}. In practice the underlaying transition probability matrix is unknown, and desirable to estimate or learn it form the observed sequence $\{s_0, s_1, \ldots s_n\}$. The maximum likelihood estimator is a common method to estimate the transition probability matrix \cite{anderson1957statistical}.
+\textbf{Learning the Transition Probability Matrix}. In practice the underlaying transition probability matrix is unknown, and desirable to estimate or learn it form the observed sequence $\{s_0, s_1, \ldots s_n\}$. The maximum likelihood estimator is a common method to estimate the transition probability matrix \cite{anderson1957statistical}.
 
 
 \begin{definition}
@@ -253,26 +253,39 @@ where $0 \leq p_{i,j}\leq 1 $ and the rows sum up to one
 	then the maximum likelihood estimator finds $\boldsymbol{\hat{\Pi}}$ as an estimate for $\boldsymbol{\Pi}$, where its elements $\hat{p}_{i,j}$ are
 	\begin{equation}
 	\label{eq:pi_estim}
-	\hat{p}_{i,j}=\frac{n_{i,j}}{\sum_{k \in S} n_{i,k}}=\frac{n_{i,j}}{n_{i}}
+	\hat{p}_{i,j}=\frac{n_{i,j}}{\sum_{l \in S} n_{i,l}}=\frac{n_{i,j}}{n_{i}}
 	\end{equation}
 	
 \end{definition} 
 
 
-	The maximum likelihood estimates of transition probabilities are obtained based on the observed transitions between the states of the chain. ~\citet{anderson1957statistical} have shown that 
+	The maximum likelihood estimates of transition probabilities are obtained based on the observed transitions between the states of the chain. That is, the maximum likelihood estimates are basically the count of transitions from $i$ to $j$ divided by the total count of the chain being in state $i$.  
+	
+	\par ~\citet{anderson1957statistical} have shown that 
 	
 	
 	\begin{equation}
+	\label{eq:lim_dist}
 	\lim_{n\to\infty} \sqrt{n}\ (\hat{p}_{i,j} - {p}_{i,j}) \sim \mathcal{N}(\mu,\,\sigma^{2})\,.
 	\end{equation}
 Thus, the random variable $\sqrt{n}\ (\hat{p}_{i,j} - {p}_{i,j})$ has asymptotically normal distribution with mean $\mu=0$, and the variances and covariances of can be computed. In next, we will show that our proposed approach of distributing the maximum likelihood estimator is still preserving  a similar asymptotic behavior.
 
 
 \subsection{Proprietors of Proposed Approach}
-\par The synchronization operator in Equation ~\ref{eq:dis_pi_estim} is basically aggregating  the  maximum likelihood estimates over $k$ observed sequences (i.e., sequences of the DFA states based on the consumed event streams), the asymptotic properties can be shown as follows 
+\par The synchronization operator in Equation ~\ref{eq:dis_pi_estim} is basically aggregating  the maximum likelihood estimates over $k$ observed sequences (i.e., sequences of the DFA states based on the consumed event streams), the operator estimates the maximum likelihood values of the probabilities for the $k$ arranged in serial order as large chain with length $ N=k \times n$ where we assume that all $k$ sequences have $n$ observations, then it follows that 
+\begin{equation}
+\label{eq:dis_pi_estim2}
+	\begin{aligned}
+\hat{\pi}_{i,j}=\frac{\sum_{k \in K} n_{k,i,j}}{\sum_{k \in K} \sum_{l \in L} n_{k,i,l}} = \hat{p}_{i,j}(N)\\\\
+ where\ N = k \times n.
+ \end{aligned}
+\end{equation}
 
+\par Thus, our proposed synchronization operation of the $k$ transition matrices has the same proprieties as maximum likelihood estimator over a combined sequence (i.e., a serial sequence of all $k$ sequences) of $k$ sequences of the transition matrices, but with skipping $k-1$ transitions between any two different sequences, which is a small number can be neglected comparing to the total transitions count $k \times n$. Therefor, the estimates of global model of our proposed operation within the distributed online learning protocol has the same proprieties as maximum likelihood estimates, in particular, the the random variable $\sqrt{t}\ (\hat{\pi}_{i,j} - {p}_{i,j})$ has asymptotically normal distribution with mean $\mu=0$ following Equation ~\ref{eq:lim_dist}
+\begin{equation}
+\lim_{n\to\infty} \sqrt{N}\ (\hat{\pi}_{i,j} - {p}_{i,j}) \sim \mathcal{N}(\mu,\,\sigma^{2})\,.
+\end{equation} 
 
+\subsection{Computing the Transition Matrix From the Matrix of \pmcmr }
 
-\subsection{Calculating the transition matrix from the PMC transition matrix}
-
-\par 
+\par In order to study the asymptotic behavior of our synchronization operator, we should introduce how is possible to compute the transition probability matrix  of a Markov chain giben the transition matrix of \pmcmr.
