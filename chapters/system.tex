@@ -194,7 +194,7 @@ Each node $n_i$ handles a single event stream $s_i$ associated with a moving obj
 
 \section{Theoretical Analysis of Proposed Approach}
  
- In this section, we present preliminaries of Markov chain and Maximum like-hood estimator, and we describe the theoretical properties of our proposed synchronization operator and its relation with ML estimator. 
+ In this section, we present preliminaries of Markov chain and Maximum like-hood estimator, and we describe the theoretical properties of our proposed synchronization operator and its relation with the maximum likelihood estimator. 
  
  % take the mc matrix from pmc paper and try to derive the varince 
  
@@ -272,24 +272,23 @@ where $0 \leq p_{i,j}\leq 1 $ and the rows sum up to one
 	\begin{equation}
 	\begin{aligned}
 	\label{eq:lim_dist}
-	 \sqrt{n}\ (\hat{p}_{i,j} - {p}_{i,j}) \xrightarrow{d} \mathcal{N}(\mu,\,\sigma^{2}_{mle})\\
+	 \sqrt{n}\ (\hat{p}_{i,j} - {p}_{i,j}) \xrightarrow{d} \mathcal{N}(\mu,\,\sigma^{2}_{mle_n})\\
 	 as\ n \xrightarrow{} \infty
 	 \end{aligned}
 	\end{equation}
-Thus, the random variable $\sqrt{n}\ (\hat{p}_{i,j} - {p}_{i,j})$ has asymptotically normal distribution with mean $\mu=0$, and for some $\sigma^{2}_{mle}$. Therefore, the MLE is an asymptotically normal. 
+Thus, the random variable $\sqrt{n}\ (\hat{p}_{i,j} - {p}_{i,j})$ has asymptotically normal distribution with mean $\mu=0$. Therefore, the MLE is an asymptotically normal. While the variance  $\sigma^{2}_{mle_n}$ is given by   
 
 	\begin{equation}
 \begin{aligned}
-\sigma^{2}_{mle}=\mathrm{Var}(\sqrt{n}\ (\hat{p}_{i,j} - {p}_{i,j}))= 2.28\\
+\sigma^{2}_{mle_n}=\mathrm{Var}(\sqrt{n}\ (\hat{p}_{i,j} - {p}_{i,j})) \approx \frac {\sum_{l=1}^{m} \sum_{t=1}^{n} n_{l}\ p_{l,j}^{t-1} \ {p}_{i,j}\ (1- {p}_{i,j})} {n} \\
 \end{aligned}
 \end{equation}
 
-
-In next, we will show that our proposed approach of distributing the maximum likelihood estimator is still preserving  a similar asymptotic behavior. Furthermore, the variance of the estimates is smaller ....
+Where $p_{l,j}^{t-1}$ is the probability of state $j$ at time  $t-1$ given that the state $l$ at time $0$  ~\cite{anderson1957statistical}.It clearly seen that increasing the sample size $n$ reduces the variances.  In next, we will show that our proposed approach of synchronizing the maximum likelihood estimators over $k$ chains is preserving  a similar asymptotic behavior. 
 
 
 \subsection{Proprietors of Proposed Approach}
-\par The synchronization operator in Equation ~\ref{eq:dis_pi_estim} is basically aggregating  the maximum likelihood estimates over $k$ observed sequences (i.e., sequences of the DFA states based on the consumed event streams), the operator estimates the maximum likelihood values of the probabilities for the $k$ arranged in serial order as large chain with length $ N=k \times n$ where we assume that all $k$ sequences have $n$ observations, then it follows that 
+\par The synchronization operator in Equation ~\ref{eq:dis_pi_estim} is basically aggregating  the maximum likelihood estimates over $k$ observed sequences (i.e., sequences of the DFA states based on the consumed event streams), the operator estimates the maximum likelihood of the probabilities for a set of $k$ sequences, which are arranged in serial order as large chain with length $ N=k \times n$ where we assume that all $k$ sequences have $n$ observations. For simplicity we assume that the synchronization phase happens on batch size equals $n$ (i.e., $b=n$) the, then it follows that 
 \begin{equation}
 \label{eq:dis_pi_estim2}
 	\begin{aligned}
@@ -298,11 +297,21 @@ In next, we will show that our proposed approach of distributing the maximum lik
  \end{aligned}
 \end{equation}
 
-\par Thus, our proposed synchronization operation of the $k$ transition matrices has the same proprieties as maximum likelihood estimator over a combined sequence (i.e., a serial sequence of all $k$ sequences) of $k$ sequences of the transition matrices, but with skipping $k-1$ transitions between any two different sequences, which is a small number can be neglected comparing to the total transitions count $k \times n$. Therefor, the estimates of global model of our proposed operation within the distributed online learning protocol has the same proprieties as maximum likelihood estimates, in particular, the the random variable $\sqrt{N}\ (\hat{\pi}_{i,j} - {p}_{i,j})$ has asymptotically normal distribution with mean $\mu=0$ following Equation ~\ref{eq:lim_dist}
-\begin{equation}
-\lim_{n\to\infty} \sqrt{N}\ (\hat{\pi}_{i,j} - {p}_{i,j}) \sim \mathcal{N}(\mu,\,\sigma^{2})\,.
-\end{equation} 
+\par Thus, our proposed synchronization operation of the $k$ transition matrices has the same proprieties as the maximum likelihood estimator over a serial sequence of all $k$ sequences, but with skipping $k-1$ transitions between each two consecutive sequences, which is a small number in practice that can be neglected comparing to the total transitions count $k \times n$. Therefor, the probabilities estimates of the global model given by our proposed operation within the distributed online learning protocol have the same proprieties as maximum likelihood estimates, in particular, the the random variable $\sqrt{N}\ (\hat{\pi}_{i,j} - {p}_{i,j})$ has asymptotically normal distribution with mean $\mu=0$ following Equation ~\ref{eq:lim_dist} shown by 
 
+\begin{equation}
+\begin{aligned}
+\label{eq:lim_dist2}
+\sqrt{N}\ (\hat{p}_{i,j} - {p}_{i,j}) \xrightarrow{d} \mathcal{N}(\mu,\,\sigma^{2}_{mle_N})\\
+as\ N \xrightarrow{} \infty\\
+where\ N = k \times n.
+\end{aligned}
+\end{equation}
+
+
+
+Furthermore, since $N \gg n$ the variances of our method estimates are smaller than the estimates of MLE over an isolated sequence. To summarize, our approach aggregating the MLE estimates over $k$ sequences speeds up the convergence rate to reach the true transition probabilities as result of the  smaller variances.
+ 
 \subsection{Computing the Transition Matrix From the Matrix of \pmcmr }
 
-\par In order to study the asymptotic behavior of our synchronization operator, we should introduce how is possible to compute the transition probability matrix  of a Markov chain giben the transition matrix of \pmcmr.
+\par In order to study the asymptotic behavior of our synchronization operator, we should introduce how is possible to compute the transition probability matrix  of a Markov chain given the transition matrix of \pmcmr.
