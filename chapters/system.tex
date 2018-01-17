@@ -243,7 +243,7 @@ where $0 \leq p_{i,j}\leq 1 $ and the rows sum up to one
 \sum_{j=1}^{m} p_{i,j}= 1\ \ \ \ \ \ \ \ \ i=1,2 \ldots m
 \end{equation}
 
-\textbf{Learning the Transition Probability Matrix}. In practice the underlaying transition probability matrix is unknown, and desirable to estimate or learn it form the observed sequence $\{s_0, s_1, \ldots s_n\}$. The maximum likelihood estimator is a common method to estimate the transition probability matrix \cite{anderson1957statistical}.
+\textbf{Learning the Transition Probability Matrix}. In practice the underlaying transition probability matrix is unknown, and desirable to estimate or learn it form the observed sequence $\{s_0, s_1, \ldots s_n\}$. The maximum likelihood estimator (MLE) is a common method to estimate the transition probability matrix \cite{anderson1957statistical}.
 
 
 \begin{definition}
@@ -264,11 +264,28 @@ where $0 \leq p_{i,j}\leq 1 $ and the rows sum up to one
 	\par ~\citet{anderson1957statistical} have shown that 
 	
 	
+%	\begin{equation}
+%	\label{eq:lim_dist}
+%	\lim_{n\to\infty} \sqrt{n}\ (\hat{p}_{i,j} - {p}_{i,j}) \sim \mathcal{N}(\mu,\,\sigma^{2}_{mle})\,.
+%	\end{equation}
+
 	\begin{equation}
+	\begin{aligned}
 	\label{eq:lim_dist}
-	\lim_{n\to\infty} \sqrt{n}\ (\hat{p}_{i,j} - {p}_{i,j}) \sim \mathcal{N}(\mu,\,\sigma^{2})\,.
+	 \sqrt{n}\ (\hat{p}_{i,j} - {p}_{i,j}) \xrightarrow{d} \mathcal{N}(\mu,\,\sigma^{2}_{mle})\\
+	 as\ n \xrightarrow{} \infty
+	 \end{aligned}
 	\end{equation}
-Thus, the random variable $\sqrt{n}\ (\hat{p}_{i,j} - {p}_{i,j})$ has asymptotically normal distribution with mean $\mu=0$, and the variances and covariances of can be computed. In next, we will show that our proposed approach of distributing the maximum likelihood estimator is still preserving  a similar asymptotic behavior.
+Thus, the random variable $\sqrt{n}\ (\hat{p}_{i,j} - {p}_{i,j})$ has asymptotically normal distribution with mean $\mu=0$, and for some $\sigma^{2}_{mle}$. Therefore, the MLE is an asymptotically normal. 
+
+	\begin{equation}
+\begin{aligned}
+\sigma^{2}_{mle}=\mathrm{Var}(\sqrt{n}\ (\hat{p}_{i,j} - {p}_{i,j}))= 2.28\\
+\end{aligned}
+\end{equation}
+
+
+In next, we will show that our proposed approach of distributing the maximum likelihood estimator is still preserving  a similar asymptotic behavior. Furthermore, the variance of the estimates is smaller ....
 
 
 \subsection{Proprietors of Proposed Approach}
@@ -281,7 +298,7 @@ Thus, the random variable $\sqrt{n}\ (\hat{p}_{i,j} - {p}_{i,j})$ has asymptotic
  \end{aligned}
 \end{equation}
 
-\par Thus, our proposed synchronization operation of the $k$ transition matrices has the same proprieties as maximum likelihood estimator over a combined sequence (i.e., a serial sequence of all $k$ sequences) of $k$ sequences of the transition matrices, but with skipping $k-1$ transitions between any two different sequences, which is a small number can be neglected comparing to the total transitions count $k \times n$. Therefor, the estimates of global model of our proposed operation within the distributed online learning protocol has the same proprieties as maximum likelihood estimates, in particular, the the random variable $\sqrt{t}\ (\hat{\pi}_{i,j} - {p}_{i,j})$ has asymptotically normal distribution with mean $\mu=0$ following Equation ~\ref{eq:lim_dist}
+\par Thus, our proposed synchronization operation of the $k$ transition matrices has the same proprieties as maximum likelihood estimator over a combined sequence (i.e., a serial sequence of all $k$ sequences) of $k$ sequences of the transition matrices, but with skipping $k-1$ transitions between any two different sequences, which is a small number can be neglected comparing to the total transitions count $k \times n$. Therefor, the estimates of global model of our proposed operation within the distributed online learning protocol has the same proprieties as maximum likelihood estimates, in particular, the the random variable $\sqrt{N}\ (\hat{\pi}_{i,j} - {p}_{i,j})$ has asymptotically normal distribution with mean $\mu=0$ following Equation ~\ref{eq:lim_dist}
 \begin{equation}
 \lim_{n\to\infty} \sqrt{N}\ (\hat{\pi}_{i,j} - {p}_{i,j}) \sim \mathcal{N}(\mu,\,\sigma^{2})\,.
 \end{equation} 
