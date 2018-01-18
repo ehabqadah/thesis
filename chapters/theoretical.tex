@@ -1,0 +1,135 @@
+\section{Theoretical Analysis of Proposed Approach}
+ 
+ In this section, we present preliminaries of Markov chain and the maximum like-hood estimator of the transition probabilities, and we describe the theoretical properties of our proposed synchronization operator and its relation with the maximum likelihood estimator. 
+ 
+ % take the mc matrix from pmc paper and try to derive the varince 
+ 
+ \subsection*{Preliminaries}
+ In this section, we first present some definitions related to Markov chain theory, 
+where the theoretical definitions presented  are based 
+on the work described in \cite{bertsekas2002introduction,Billingsley1961,anderson1957statistical,howard2012dynamic}.
+
+\begin{definition}
+	Let $\{s_0, s_1, \ldots s_n\}$ be a sequence of random variables as \textbf{Markov chain}, where $s_i$ belongs to a finite state space $\mathbf{S =\{1,\ldots m\}}$ and represents the observed state of the chain at time $i$. Let the transition probabilities of the Markov chain $p_{ij}(t+1)$ such that $i,j \in S$ and $t=0,\ldots, n$, where  $p_{ij}(t+1)$ is the probability of the state $j$ at time $t+1$, given state $i$ at time $t$, where the sequence $\{s_0, s_1, \ldots s_n\}$ satisfies the \textbf{Markov property} 
+	
+	\begin{equation}
+	\begin{aligned}
+	P(s_{t+1}=j|s_{t}=i,s_{t-1}=i_{t-1},\ldots ,s_{0}=i_{0})=P(s_{t+1}=j|s_{t}=i)\\
+	\forall i,j,i_{t-1},i_{0} \in S
+	\end{aligned}
+	\end{equation}
+
+	
+	Thus, the probability of moving to a future state only depends on the current  state (first-order Markov chain). While for higher order $m$ Markov chains the conditional probabilities can be modeled to be dependent on the last $m$ states. 
+	
+	When the conditional probabilities $P(s_{t+1}=j|s_{t}=i)$ are independent of the time $t$, the Markov chain is called \textbf{homogeneous} such that $p_{ij}:=P(s_{t+1}=j|s_{t}=i)$.
+	
+
+	
+\end{definition}
+
+The transition probabilities of the Markov chain are represented by a $m \times m$ matrix that called \textbf{transition probability matrix} $\boldsymbol{\Pi}$ with $p_{ij}$ elements
+
+
+\begin{equation}
+\label{eq:matrix_example}
+\boldsymbol{\Pi} = 
+\begin{pmatrix} 
+p_{1,1}	   &p_{1,2}  &. 		&. 		& . &  	p_{1,m} \\
+p_{2,1}		   &.  & .		& .	    & .	& . \\
+. 		   &.  & .		& .	    & .	& . \\
+.		   &.  & .		& .		& .	& . \\
+.		   &.  & .		& .		& .	& .\\
+p_{m,1}	   & p_{m,1}	&.		& .	& .	&p_{m,m}
+\end{pmatrix}
+\end{equation}
+
+where $0 \leq p_{i,j}\leq 1 $ and the rows sum up to one 
+\begin{equation}
+\sum_{j=1}^{m} p_{i,j}= 1\ \ \ \ \ \ \ \ \ i=1,2 \ldots m
+\end{equation}
+
+\textbf{Learning the Transition Probability Matrix}. In practice the underlying  transition probability matrix is unknown, and desirable to estimate or learn it form the observed sequence $\{s_0, s_1, \ldots s_n\}$. The maximum likelihood estimator (MLE) is a common method to estimate the transition probability matrix \cite{anderson1957statistical}.
+
+
+\begin{definition}
+	Let $\boldsymbol{\Pi}$ is the transition probability matrix of a Markov chain with a set of states $S$, 
+	$\pi_{i,j}$ the transition probability from state $i$ to state $j$,
+	$n_{i,j}$ the number of observed transitions from state $i$ to state $j$,
+	then the maximum likelihood estimator finds $\boldsymbol{\hat{\Pi}}$ as an estimate for $\boldsymbol{\Pi}$, where its elements $\hat{p}_{i,j}$ are
+	\begin{equation}
+	\label{eq:pi_estim}
+	\hat{p}_{i,j}=\frac{n_{i,j}}{\sum_{l \in S} n_{i,l}}=\frac{n_{i,j}}{n_{i}}
+	\end{equation}
+	
+\end{definition} 
+
+
+	The maximum likelihood estimates of transition probabilities are obtained based on the observed transitions between the states of the chain. That is, the maximum likelihood estimates are basically the count of transitions from $i$ to $j$ divided by the total count of the chain being in state $i$.  
+	
+	\par ~\citet{anderson1957statistical} have shown that 
+	
+	
+%	\begin{equation}
+%	\label{eq:lim_dist}
+%	\lim_{n\to\infty} \sqrt{n}\ (\hat{p}_{i,j} - {p}_{i,j}) \sim \mathcal{N}(\mu,\,\sigma^{2}_{mle})\,.
+%	\end{equation}
+
+	\begin{equation}
+	\begin{aligned}
+	\label{eq:lim_dist}
+	 \sqrt{n}\ (\hat{p}_{i,j} - {p}_{i,j}) \xrightarrow{d} \mathcal{N}(\mu,\,\sigma^{2}_{mle_n})\\
+	 as\ n \xrightarrow{} \infty
+	 \end{aligned}
+	\end{equation}
+Thus, the random variable $\sqrt{n}\ (\hat{p}_{i,j} - {p}_{i,j})$ has asymptotically normal distribution with mean $\mu=0$. Therefore, the MLE is an asymptotically normal. While the variance  $\sigma^{2}_{mle_n}$ is given by   
+
+	\begin{equation}
+\begin{aligned}
+\sigma^{2}_{mle_n}=\mathrm{Var}(\sqrt{n}\ (\hat{p}_{i,j} - {p}_{i,j})) \approx \frac {\sum_{l=1}^{m} \sum_{t=1}^{n} n_{l}\ p_{l,j}^{t-1} \ {p}_{i,j}\ (1- {p}_{i,j})} {n} \\
+\end{aligned}
+\end{equation}
+
+Where $p_{l,j}^{t-1}$ is the probability of state $j$ at time  $t-1$ given that the state $l$ at time $0$  ~\cite{anderson1957statistical}.It is clearly seen that increasing the sample size $n$ reduces the variances.  In next, we will show that our proposed approach of synchronizing the maximum likelihood estimators over $k$ chains is preserving  a similar asymptotic behavior. 
+
+
+\subsection{Proprietors of Proposed Approach}
+ %in Equation ~\ref{eq:dis_pi_estim}% 
+\par The proposed synchronization operator is basically aggregating the maximum likelihood estimates over $k$ observed sequences (i.e., sequences of the DFA states based on the consumed event streams), the operator estimates the maximum likelihood of the probabilities for a set of $k$ sequences, which are arranged in serial order as one large chain with length $ N=k \times n$ where we assume that all $k$ sequences have $n$ observations. For simplicity, we assume that the synchronization phase happens on batch size equals $n$ (i.e., $b=n$) the, then it follows that 
+\begin{equation}
+\label{eq:dis_pi_estim2}
+	\begin{aligned}
+\hat{\pi}_{i,j}=\frac{\sum_{k \in K} n_{k,i,j}}{\sum_{k \in K} \sum_{l \in L} n_{k,i,l}} = \hat{p}_{i,j}(N)\\\\
+ where\ N = k \times n.
+ \end{aligned}
+\end{equation}
+
+\par Thus, our proposed synchronization operation of the $k$ transition matrices has the same proprieties as the maximum likelihood estimator over a serial sequence of all $k$ sequences, but with skipping $k-1$ transitions between each two consecutive sequences, which is a small number in practice that can be neglected comparing to the total transitions count $k \times n$. Therefore, the probabilities estimates of the global model given by our proposed operation within the distributed online learning protocol have the same proprieties as maximum likelihood estimates, in particular, the the random variable $\sqrt{N}\ (\hat{\pi}_{i,j} - {p}_{i,j})$ has asymptotically normal distribution with mean $\mu=0$ following Equation ~\ref{eq:lim_dist} shown by 
+
+\begin{equation}
+\begin{aligned}
+\label{eq:lim_dist2}
+\sqrt{N}\ (\hat{p}_{i,j} - {p}_{i,j}) \xrightarrow{d} \mathcal{N}(\mu,\,\sigma^{2}_{mle_N})\\
+as\ N \xrightarrow{} \infty\\
+where\ N = k \times n.
+\end{aligned}
+\end{equation}
+
+
+
+Furthermore, since $N \gg n$ the variances of our method estimates are smaller than the estimates of MLE over an isolated sequence. To summarize, our approach aggregating the MLE estimates over $k$ sequences speeds up the convergence rate to reach the true transition probabilities as result of the  smaller variances.
+ 
+\subsection{Computing the Transition Matrix From the Matrix of \pmcmr }
+
+\par In order to empirically study the asymptotic behavior of our proposed synchronization operator, we will introduce how to compute the transition probability matrix of the underlying Markov chain based on the transition matrix ($\Pi$) of \pmcmr.
+
+~\citet{nuel_pattern_2008} showed in \textbf{Theorem 3} the relation between the elements  of 
+$\Pi$ and the conditional probabilities of the $m-$order Markov chain $X=\{X_1, X_2, \ldots X_n\}$ described by 
+
+\[ \Pi(p, q) =
+\begin{cases}
+P(X_{m+1}=b|X_1\ldots X_m=\delta^{-m}(p))       & \quad \text{if } \delta(p,q)=b \\
+0  & \quad \text{if } p \notin  \delta(p,X)
+\end{cases}
+\]
+Using this theorem, we can compute the transition probabilities of the Markov chain $X$.
