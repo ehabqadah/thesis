@@ -84,18 +84,30 @@ where $0 \leq p_{i,j}\leq 1 $ and the rows sum up to one
 	\end{equation}
 Thus, the random variable $\sqrt{n}\ (\hat{p}_{i,j} - {p}_{i,j})$ has asymptotically normal distribution with mean $\mu=0$. Therefore, the MLE is an asymptotically normal. While the variance  $\sigma^{2}_{mle_n}$ is given by   
 
-	\begin{equation}
+
+
+
+\begin{equation}
 \begin{aligned}
-\sigma^{2}_{mle_n}=\mathrm{Var}(\sqrt{n}\ (\hat{p}_{i,j} - {p}_{i,j})) \approx \frac {\sum_{l=1}^{m} \sum_{t=1}^{n} n_{l}\ p_{l,j}^{t-1} \ {p}_{i,j}\ (1- {p}_{i,j})} {n} \\
+\sigma^{2}_{mle_n}=\mathrm{Var}(\sqrt{n}\ (\hat{p}_{i,j} - {p}_{i,j})) = \frac {{p}_{i,j}\ (1- {p}_{i,j})} {\phi_{i}} \\
+\text{s.t.}\ \phi_{i} = \sum_{l=1}^{m} \sum_{t=1}^{n} \eta_{l} \ p_{l,j}^{t-1}
 \end{aligned}
 \end{equation}
 
-Where $p_{l,j}^{t-1}$ is the probability of state $j$ at time  $t-1$ given that the state $l$ at time $0$  ~\cite{anderson1957statistical}.It is clearly seen that increasing the sample size $n$ reduces the variances.  In next, we will show that our proposed approach of synchronizing the maximum likelihood estimators over $k$ chains is preserving  a similar asymptotic behavior. 
+Where $p_{l,j}^{t-1}$ is the probability of state $j$ at time  $t-1$ given that the state $l$ at time $0$  ~\cite{anderson1957statistical}. We are interested in the variances of $\mathrm{Var}(\hat{p}_{i,j} - {p}_{i,j})$ to study the quality of the estimates, which can be computed as follows:
+
+	\begin{equation}
+\begin{aligned}
+	\mathrm{Var} (\hat{p}_{i,j} - {p}_{i,j}) = \frac {\sigma^{2}_{mle_n}}{n} 
+\end{aligned}
+\end{equation}
+
+It is clearly seen that variances are dropping as the sample size $n$ grows large.  In next, we will show that our proposed approach of synchronizing the maximum likelihood estimators over $k$ chains is preserving  a similar asymptotic behavior. 
 
 
-\subsection{Proprietors of Proposed Approach}
+\subsection{Properties of Proposed Approach}
  %in Equation ~\ref{eq:dis_pi_estim}% 
-\par The proposed synchronization operator is basically aggregating the maximum likelihood estimates over $k$ observed sequences (i.e., sequences of the DFA states based on the consumed event streams), the operator estimates the maximum likelihood of the probabilities for a set of $k$ sequences, which are arranged in serial order as one large chain with length $ N=k \times n$ where we assume that all $k$ sequences have $n$ observations. For simplicity, we assume that the synchronization phase happens on batch size equals $n$ (i.e., $b=n$) the, then it follows that 
+\par The proposed synchronization operator is basically aggregating the maximum likelihood estimates over $k$ observed sequences (i.e., sequences of the DFA states based on the consumed event streams), the operator estimates the maximum likelihood of the probabilities for a set of $k$ sequences, which are arranged in serial order as one large chain with length $ N=k \times n$ where we assume that all $k$ sequences have $n$ observations. For the sake of simplicity, we assume that the synchronization phase happens on batch size equals $n$ (i.e., $b=n$) the, then it follows that 
 \begin{equation}
 \label{eq:dis_pi_estim2}
 	\begin{aligned}
@@ -109,19 +121,28 @@ Where $p_{l,j}^{t-1}$ is the probability of state $j$ at time  $t-1$ given that 
 \begin{equation}
 \begin{aligned}
 \label{eq:lim_dist2}
-\sqrt{N}\ (\hat{p}_{i,j} - {p}_{i,j}) \xrightarrow{d} \mathcal{N}(\mu,\,\sigma^{2}_{mle_N})\\
+\sqrt{N}\ (\hat{\pi}_{i,j} - {p}_{i,j}) \xrightarrow{d} \mathcal{N}(0,\,\sigma^{2}_{mle_N})\\
 as\ N \xrightarrow{} \infty\\
-where\ N = k \times n.
+where\ N = k \times n.\\
+and\ \mathrm{Var} (\hat{\pi}_{i,j} - {p}_{i,j}) = \frac {\sigma^{2}_{mle_N}}{N} =  \frac {\sigma^{2}_{mle_n}}{k \times n}
 \end{aligned}
 \end{equation}
 
 
 
-Furthermore, since $N \gg n$ the variances of our method estimates are smaller than the estimates of MLE over an isolated sequence. To summarize, our approach aggregating the MLE estimates over $k$ sequences speeds up the convergence rate to reach the true transition probabilities as result of the  smaller variances.
+That is, since $N > n$ combining $k$ sequences, the variances  of our method estimates $\mathrm{Var} (\hat{\pi}_{i,j} - {p}_{i,j})$  are smaller than the estimates of MLE over an isolated sequence $\mathrm{Var} (\hat{p}_{i,j} - {p}_{i,j})$. Thus, by Chebyshev's inequality \cite{feller1968introduction} we have the guarantee  ..
+
+
+
+
+
+
+
+To summarize, our approach aggregating the MLE estimates over $k$ sequences speeds up the convergence  to reach the true transition probabilities as result of the  smaller variances.
  
 \subsection{Computing the Transition Matrix From the Matrix of \pmcmr }
 
-\par In order to empirically study the asymptotic behavior of our proposed synchronization operator, we will introduce how to compute the transition probability matrix of the underlying Markov chain based on the transition matrix ($\Pi$) of \pmcmr.
+\par In order to empirically study the asymptotic behavior of our proposed synchronization operator, we need to compute the transition probability matrix of the underlying Markov chain that the events belong to, and we introduce to calculate it  based on the transition matrix ($\Pi$) of \pmcmr that describes the Markov chain of the pattern.
 
 ~\citet{nuel_pattern_2008} showed in \textbf{Theorem 3} the relation between the elements  of 
 $\Pi$ and the conditional probabilities of the $m-$order Markov chain $X=\{X_1, X_2, \ldots X_n\}$ described by 
