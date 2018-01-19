@@ -1,5 +1,6 @@
 \section{Theoretical Analysis of Proposed Approach}
  
+ %SAY something about the relation between transition probabilities and prediction%
  In this section, we present preliminaries of Markov chain and the maximum like-hood estimator of the transition probabilities, and we describe the theoretical properties of our proposed synchronization operator and its relation with the maximum likelihood estimator. 
  
  % take the mc matrix from pmc paper and try to derive the varince 
@@ -53,7 +54,7 @@ where $0 \leq p_{i,j}\leq 1 $ and the rows sum up to one
 
 
 \begin{definition}
-	Let $\boldsymbol{\Pi}$ is the transition probability matrix of a Markov chain with a set of states $S$, 
+	Let $\boldsymbol{\Pi}$ is the transition probability matrix of a single Markov chain with a set of states $S$, 
 	$\pi_{i,j}$ the transition probability from state $i$ to state $j$,
 	$n_{i,j}$ the number of observed transitions from state $i$ to state $j$,
 	then the maximum likelihood estimator finds $\boldsymbol{\hat{\Pi}}$ as an estimate for $\boldsymbol{\Pi}$, where its elements $\hat{p}_{i,j}$ are
@@ -65,7 +66,7 @@ where $0 \leq p_{i,j}\leq 1 $ and the rows sum up to one
 \end{definition} 
 
 
-	The maximum likelihood estimates of transition probabilities are obtained based on the observed transitions between the states of the chain. That is, the maximum likelihood estimates are basically the count of transitions from $i$ to $j$ divided by the total count of the chain being in state $i$.  
+	The maximum likelihood estimates of transition probabilities of a single sequence $\{s_0, s_1, \ldots s_n\}$   are obtained based on the observed transitions between the states of the chain. That is, the maximum likelihood estimates are basically the count of transitions from $i$ to $j$ divided by the total count of the chain being in state $i$.  
 	
 	\par ~\citet{anderson1957statistical} have shown that 
 	
@@ -94,7 +95,7 @@ Thus, the random variable $\sqrt{n}\ (\hat{p}_{i,j} - {p}_{i,j})$ has asymptotic
 \end{aligned}
 \end{equation}
 
-Where $p_{l,j}^{t-1}$ is the probability of state $j$ at time  $t-1$ given that the state $l$ at time $0$  ~\cite{anderson1957statistical}. We are interested in the variances of $\mathrm{Var}(\hat{p}_{i,j} - {p}_{i,j})$ to study the quality of the estimates, which can be computed as follows:
+Where $p_{l,j}^{t-1}$ is the probability of state $j$ at time  $t-1$ given that the state $l$ at time $0$  ~\cite{anderson1957statistical}. We are interested in the variances of $(\hat{p}_{i,j} - {p}_{i,j})$ that represents the error in estimating ${p}_{i,j}$ by MLE, which is given by:
 
 	\begin{equation}
 \begin{aligned}
@@ -107,38 +108,85 @@ It is clearly seen that variances are dropping as the sample size $n$ grows larg
 
 \subsection{Properties of Proposed Approach}
  %in Equation ~\ref{eq:dis_pi_estim}% 
-\par The proposed synchronization operator is basically aggregating the maximum likelihood estimates over $k$ observed sequences (i.e., sequences of the DFA states based on the consumed event streams), the operator estimates the maximum likelihood of the probabilities for a set of $k$ sequences, which are arranged in serial order as one large chain with length $ N=k \times n$ where we assume that all $k$ sequences have $n$ observations. For the sake of simplicity, we assume that the synchronization phase happens on batch size equals $n$ (i.e., $b=n$) the, then it follows that 
+\par The proposed synchronization operator is basically aggregating the maximum likelihood estimates over $k$ observed sequences (i.e., sequences of the DFA states based on the consumed event streams), the operator estimates the maximum likelihood of the probabilities for a set of $k$ sequences, which are arranged in serial order as one large chain with length $ N=kn$ where we assume that all $k$ sequences have $n$ observations. For the sake of simplicity, we assume that the synchronization phase happens on batch size equals $n$ (i.e., $b=n$) the, then it follows that 
 \begin{equation}
 \label{eq:dis_pi_estim2}
 	\begin{aligned}
 \hat{\pi}_{i,j}=\frac{\sum_{k \in K} n_{k,i,j}}{\sum_{k \in K} \sum_{l \in L} n_{k,i,l}} = \hat{p}_{i,j}(N)\\\\
- where\ N = k \times n.
+ where\ N = kn.
  \end{aligned}
 \end{equation}
+%This is equivalent to
 
-\par Thus, our proposed synchronization operation of the $k$ transition matrices has the same proprieties as the maximum likelihood estimator over a serial sequence of all $k$ sequences, but with skipping $k-1$ transitions between each two consecutive sequences, which is a small number in practice that can be neglected comparing to the total transitions count $k \times n$. Therefore, the probabilities estimates of the global model given by our proposed operation within the distributed online learning protocol have the same proprieties as maximum likelihood estimates, in particular, the the random variable $\sqrt{N}\ (\hat{\pi}_{i,j} - {p}_{i,j})$ has asymptotically normal distribution with mean $\mu=0$ following Equation ~\ref{eq:lim_dist} shown by 
+\par Thus, this operation it allows to observe more samples, which is naturally producing a better estimates of the transition probabilities. In addition, our proposed synchronization operation of the $k$ transition matrices has the same proprieties as the maximum likelihood estimator over a serial sequence of all $k$ sequences, but with skipping $k-1$ transitions between each two consecutive sequences, which is in practice a small number that can be neglected comparing to the total transitions count $kn$. As result, the probabilities estimates of our estimator (i.e.,global) based on the proposed operation within the distributed online learning protocol have the same properties as maximum likelihood estimates, in particular, the the random variable $\sqrt{N}\ (\hat{\pi}_{i,j} - {p}_{i,j})$ has asymptotically normal distribution with mean $\mu=0$ following Equation ~\ref{eq:lim_dist} we have 
 
 \begin{equation}
 \begin{aligned}
 \label{eq:lim_dist2}
 \sqrt{N}\ (\hat{\pi}_{i,j} - {p}_{i,j}) \xrightarrow{d} \mathcal{N}(0,\,\sigma^{2}_{mle_N})\\
 as\ N \xrightarrow{} \infty\\
-where\ N = k \times n.\\
-and\ \mathrm{Var} (\hat{\pi}_{i,j} - {p}_{i,j}) = \frac {\sigma^{2}_{mle_N}}{N} =  \frac {\sigma^{2}_{mle_n}}{k \times n}
+where\ N = nk .\\
+\end{aligned}
+\end{equation}
+
+So, 
+\begin{equation}
+\begin{aligned}
+\label{eq:var_sync}
+ \mathrm{Var} (\hat{\pi}_{i,j} - {p}_{i,j}) = \frac {\sigma^{2}_{mle_N}}{N} =  \frac {\sigma^{2}_{mle_n}}{kn}
 \end{aligned}
 \end{equation}
 
 
+That is, since $N > n$ combining $k$ sequences, the variances  of our method estimates $\mathrm{Var} (\hat{\pi}_{i,j} - {p}_{i,j})$  are smaller than the estimates of MLE over an isolated sequence $\mathrm{Var} (\hat{p}_{i,j} - {p}_{i,j})$. Thus, it follows from the  Chebyshev's inequality \cite{feller1968introduction} that we have for the random variable $\hat{p}_{i,j} - {p}_{i,j}$, for any constant $c > 0$  
 
-That is, since $N > n$ combining $k$ sequences, the variances  of our method estimates $\mathrm{Var} (\hat{\pi}_{i,j} - {p}_{i,j})$  are smaller than the estimates of MLE over an isolated sequence $\mathrm{Var} (\hat{p}_{i,j} - {p}_{i,j})$. Thus, by Chebyshev's inequality \cite{feller1968introduction} we have the guarantee  ..
-
-
-
-
+\[ \Pr\left( |(\hat{p}_{i,j} - {p}_{i,j}) - \mu| \geq c \right) \leq
+\frac{\mathrm{Var} (\hat{p}_{i,j} - {p}_{i,j})}{c^2} \]
 
 
+ where the mean $\mu=0$ is zero and the $\mathrm{Var} (\hat{p}_{i,j} - {p}_{i,j})$ equals  $\frac {\sigma^{2}_{mle_n}}{n}$, and therefore 
+ 
+ \[ \Pr\left( |\hat{p}_{i,j} - {p}_{i,j}| \geq c \right) \leq
+ \frac{\sigma^{2}_{mle_n}}{c^2 n} \]
+ 
+ 
+$\hat{p}_{i,j} - {p}_{i,j}$  represents the deviation/error between the estimates of MLE over a single (i.e., isolated) sequence and the true probabilities. On the other hand, we can obtain, in the same way, the probability bound of deviations for our synchronization operator estimates as follows:
 
-To summarize, our approach aggregating the MLE estimates over $k$ sequences speeds up the convergence  to reach the true transition probabilities as result of the  smaller variances.
+\[ \Pr\left( |\hat{\pi}_{i,j} - {p}_{i,j}| \geq c \right) \leq
+\frac{\sigma^{2}_{mle_n}}{c^2 nk} \]
+
+
+Using Equation ~\ref{eq:var_sync} we obtained the value $\mathrm{Var} (\hat{\pi}_{i,j} - {p}_{i,j})$. Since $k \ge 1$ we have that the variance of $(\hat{\pi}_{i,j} - {p}_{i,j})$  is less than or equal to the variance of $\hat{p}_{i,j} - {p}_{i,j}$
+
+\[ 
+\frac{\sigma^{2}_{mle_n}}{c^2 nk} \leq
+\frac{\sigma^{2}_{mle_n}}{c^2 n}
+ \]
+
+This is equivalent to,for any constant $c > 0$ and $k \ge 1$ we have
+
+\[ \Pr\left( |\hat{\pi}_{i,j} - {p}_{i,j}| \geq c \right) \leq
+ \Pr\left( |\hat{p}_{i,j} - {p}_{i,j}| \geq c \right)
+ \]
+
+
+To summarize, our approach is based aggregating the MLE estimates over $k$ sequences, which speeds up the convergence to reach the true transition probabilities as result of the  smaller variances.
+
+%The weak law of large
+%numbers states that, if $X_1, X_2, X_3, \ldots$ are independent and identically
+%distributed random variables with mean $\mu$ and standard deviation $\sigma$,
+%then for any constant $\epsilon > 0$ we have 
+%%
+%\[ \lim_{n \rightarrow \infty} \Pr \left( \left| \frac{X_1 + X_2 + \cdots +
+%	X_n}{n} - \mu \right| > \epsilon \right) = 0. \]
+%Use Chebychev's inequality to prove the weak law of large numbers.
+
+
+
+
+
+
+
  
 \subsection{Computing the Transition Matrix From the Matrix of \pmcmr }
 
