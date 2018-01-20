@@ -1,5 +1,6 @@
 \section{Technological Background}
 % ADD high lever overviews of flink and kafka like execution engigne graph or kafka cluster%
+
 \par In the last years, many systems for large-scale and distributed stream processing have been proposed, including Spark Streaming \cite{Spark},  Apache Storm \cite{Storm} and Apache Flink \cite{Flink}. These frameworks can ingest and process real-time data streams, published from different distributed message queuing platforms, such as Apache Kafka \cite{Kafka} or  Amazon Kinesis \cite{Kinesis}. In this work, we implemented the proposed system in Apache Flink. Flink provides the distributed stream processing components of the distributed event pattern predictors. It works alongside Apache Kafka,
 which is used for streaming the input event streams and as a messaging platform to enable the distributed online learning functionalities.
 
