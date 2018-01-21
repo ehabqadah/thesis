@@ -23,7 +23,15 @@ We define an input event and a stream of input events as follows:
 A stream $s=\langle e_1,e_3,...,e_t,...\rangle$  is a time-ordered sequence of events.
 \end{definition}
 
-\par A user-defined pattern $\mathcal{P}$ is given in the form of a regular expression (i.e., using operators for \textit{sequence}, \textit{disjunction}, and \textit{iteration}) over $\Sigma$ (i.e., event types) \cite{alevizos2017event}.
+
+\par A user-defined pattern $\mathcal{P}$ is given in the form of a regular expression over  a set of event types $\Sigma$ (i.e., alphabet). Let a word over $\Sigma$ be a sequence of event types, and the set of words over $\Sigma$ be a language  $L$. Then $L(\mathcal{P})$ is the regular language defined by the regular expression ($\mathcal{P}$) \cite{hopcroft2006automata,nuel_pattern_2008,alevizos2017event},  where a regular expression is an empty word or an event type $\in$ $\Sigma$, or  defined using the following operators over regular expressions:
+ %formlize them more and try to connect regexp with event recognization operators%
+\begin{itemize}[noitemsep]
+	\item \textit{sequence} that represents a concatenation of two regular expressions languages 
+	\item \textit{disjunction} i.e., union, which is the language that its words belong to one of the languages of the two regular expressions 
+	\item \textit{iteration} operation to define the set of all possible concatenation over a regular expression
+\end{itemize}
+
 More formally, a pattern is given through the following grammar:
 \begin{definition}
 $\mathcal{P} := E\ |\ \mathcal{P}_{1} ; \mathcal{P}_{2}\ | \mathcal{P}_{1} \vee \mathcal{P}_{2}\ |\ \mathcal{P}_{1}^{*}  $, where $E \in \Sigma$ is a constant event type. $;$ stands for sequence, $\vee$ for disjunction and $*$ for $\mathit{Kleene}-*$.
@@ -32,25 +40,37 @@ The other cases are matched as in standard automata theory.
 \end{definition}
 
 
-The problem at hand may then be stated as follows: given a stream $s$ of low-level events and a pattern $\mathcal{P}$, 
+The problem setting can be summarized as follows: given a stream $s$ of low-level events and a pattern $\mathcal{P}$, 
 the goal is to estimate at each new event arrival the number of future events
 that we will need to wait for until the pattern is satisfied (and therefore a full match is detected).
 
 \subsection{Base Model}
 \label{sec:Event-Forecasting-PMC}
 
-For our work presented in this paper,
-we use the approach presented in \cite{alevizos2017event}.
-For the sake of self-containment,
-we briefly describe this approach in the following,
-first assuming that only a single stream is consumed
-and then adjusting for the case of multiple streams.
+In this thesis,
+we use the Event Forecasting with Pattern Markov Chains approach \cite{alevizos2017event} as the base model for constructing a pattern prediction over an event stream. In next, we describe the details of this approach. We first provide an overview of the Patten Markov Chain framework. We then describe how this framework is used to build a pattern prediction model.  
 
-\subsubsection*{Constructing Pattern Markov Chain}
-As a first step, event patterns are converted to deterministic finite automata (DFA) through standard conversion algorithms.
-As an example, see Figure ~\ref{fig:dfatcc} for the DFA of the simple sequential pattern $\mathcal{P}=a ; c ; c$ and an alphabet $\Sigma=\{a,b,c\}$
-(note that the DFA has no dead states since we need to handle streams and not strings).
-The next step is to derive a Markov chain that will be able to provide a probabilistic description of the DFA's run-time behavior.
+%first assuming that only a single stream is consumed
+%and then adjusting for the case of multiple streams.
+
+\subsubsection*{Construction of Pattern Markov Chains (PMCs)}
+
+~\citet{alevizos2017event} proposed to employ the Pattern Markov Chain (PMC) \cite{nuel_pattern_2008}to build an online prediction associated with a pattern over an event stream. The algorithm of constructing a PMC associated with a pattern $\mathcal{P}$ consists of the following steps:
+
+\begin{itemize}[noitemsep]
+	\item Build a deterministic finite automata (DFA) that accepts the regular expression $\Sigma^{*};\mathcal{P}$. 
+	
+	\begin{definition}[\cite{hopcroft2006automata}]
+	 $(\Sigma,Q,s,F,\delta)$ is a deterministic finite automaton (DFA)  where  $\Sigma$ a finite alphabet of event types, and $Q$ is a finite set of states, $s \in Q$ a start state and $F \subset Q$ represents all final states. $\delta: Q \times \Sigma \rightarrow Q$ is a transition function from a state to another state given an input event type, which is defined as recursive function $\delta(q,e_{1}e_{2}\ldots e_{d})=\delta(\delta(q,e_{1}e_{2}...e_{d-1}),e_{d})$. If $\delta(s,w) \in F$ of a word $w=e_{1}e_{2}\ldots e_{d} \in \Sigma^{*}$, then the word $w$ is said to be accepted by the DFA. 
+\end{definition}
+	
+	First, the regular expression $\Sigma^{*};\mathcal{P}$ is converted to  non-deterministic finite automata (NFA), then an equivalent DFA of the constructed NFA is computed using the subset construction \cite{hopcroft2006automata}. 
+ Figure ~\ref{fig:dfatcc} shows an associated DFA of a sequential pattern $\mathcal{P}=a ; c ; c$ over an alphabet $\Sigma=\{a,b,c\}$.
+
+
+%(note that the DFA has no dead states since we need to handle streams and not strings).
+
+\item The next step is to derive a Markov chain that will be able to provide a probabilistic description of the DFA's run-time behavior.
 \par Towards this goal, we use Pattern Markov Chains, as was proposed in \cite{nuel_pattern_2008}.
 Under the assumption that the input events are independent and identically distributed (i.i.d.), it can be shown that there is a direct mapping of the states of the DFA to states of a Markov chain and the transitions of the DFA to transitions of the Markov chain.
 \par The transition probabilities of the Markov chain are the occurrence probabilities of the various event types.
@@ -62,7 +82,10 @@ In any case,
 we call such a derived Markov chain a Pattern Markov Chain (PMC) of order $m$
 and denote by \pmcmr , where $\mathcal{P}$ is the initial pattern and $m$ the assumed order.
 As an example, see Figure \ref{fig:mctcc1}, which depicts the PMC of order 1 for the generated DFA of Figure \ref{fig:dfatcc}.
-%\begin{comment}
+
+\end{itemize}
+
+
 \begin{figure}[!ht]
 \begin{centering}
 
@@ -82,6 +105,7 @@ As an example, see Figure \ref{fig:mctcc1}, which depicts the PMC of order 1 for
 %\end{comment}
 
 \subsubsection*{Constructing Pattern Prediction Model}
+\label{sec:pmc_prediction}
 \par After constructing a PMC, we can use it to calculate the so-called \textit{waiting-time} distributions.
 Given a specific state of the PMC, a \textit{waiting-time} distribution gives us the probability of reaching a set of absorbing states in $n$ transition from now (absorbing states are states with self-loops and probability equal to $1.0$).
 By mapping the final states of the initial DFA to absorbing states of the PMC
@@ -140,7 +164,7 @@ Each node $n_i$ handles a single event stream $s_i$ associated with a moving obj
 %
 %The defined pattern $\mathcal{P}$ is monitored over each event stream $s_i$  by a  predictor nodes  $n_i$  that maintains a local prediction model $f_i$, where there is one node for each vessel's event stream.  The prediction model $f_i$ gives the ability to provide an online predictions about when the pattern will be completed in the form of an expected number of future events before a full match does occur.
 
-\subsection{The Proposed Approach}
+\subsection{Proposed Approach}
 \label{sec:proposed_approach}
 \par We designed and developed a scalable and distributed patterns prediction system over a massive input event streams of moving objects. As the base prediction model, we use the PMC forecasting method \cite{alevizos2017event}. Moreover,  we propose to enable the information exchange between the distributed predictors/learners of the input event streams, by adapting the distributed online prediction protocol of \cite{kamp2014communication} to synchronize the prediction models, i.e., the transitions probabilities matrix of the PMC predictors.
 
