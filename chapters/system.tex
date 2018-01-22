@@ -42,47 +42,50 @@ The other cases are matched as in standard automata theory.
 
 The problem setting can be summarized as follows: given a stream $s$ of low-level events and a pattern $\mathcal{P}$, 
 the goal is to estimate at each new event arrival the number of future events
-that we will need to wait for until the pattern is satisfied (and therefore a full match is detected).
+that we will need to wait for until the pattern is completed (and therefore a full match is detected).
 
 \subsection{Base Model}
 \label{sec:Event-Forecasting-PMC}
 
-In this thesis,
-we use the Event Forecasting with Pattern Markov Chains approach \cite{alevizos2017event} as the base model for constructing a pattern prediction over an event stream. In next, we describe the details of this approach. We first provide an overview of the Patten Markov Chain framework. We then describe how this framework is used to build a pattern prediction model.  
+\par In this thesis, we use the Event Forecasting with Pattern Markov Chains approach \cite{alevizos2017event} as the base to construct a pattern prediction model over an event stream. In next, we describe the details of this approach. We first provide an overview of the Patten Markov Chain framework. We then describe how this framework is used to build a pattern prediction model.  
 
 %first assuming that only a single stream is consumed
 %and then adjusting for the case of multiple streams.
 
 \subsubsection*{Construction of Pattern Markov Chains (PMCs)}
 
-~\citet{alevizos2017event} proposed to employ the Pattern Markov Chain (PMC) \cite{nuel_pattern_2008}to build an online prediction associated with a pattern over an event stream. The algorithm of constructing a PMC associated with a pattern $\mathcal{P}$ consists of the following steps:
+~\citet{alevizos2017event} proposed to employ the Pattern Markov Chain (PMC) \cite{nuel_pattern_2008}to build an online prediction associated with a pattern over an event stream. The algorithm of constructing a PMC associated with a pattern $\mathcal{P}$ over a stream of events $s$ consists of the following steps:
 
 \begin{itemize}[noitemsep]
-	\item Build a deterministic finite automata (DFA) that accepts the regular expression $\Sigma^{*};\mathcal{P}$. 
+	\item Build a deterministic finite automata (DFA) that accepts the regular expression $\Sigma^{*};\mathcal{P}$. We define the the DFA as following:
 	
 	\begin{definition}[\cite{hopcroft2006automata}]
-	 $(\Sigma,Q,s,F,\delta)$ is a deterministic finite automaton (DFA)  where  $\Sigma$ a finite alphabet of event types, and $Q$ is a finite set of states, $s \in Q$ a start state and $F \subset Q$ represents all final states. $\delta: Q \times \Sigma \rightarrow Q$ is a transition function from a state to another state given an input event type, which is defined as recursive function $\delta(q,e_{1}e_{2}\ldots e_{d})=\delta(\delta(q,e_{1}e_{2}...e_{d-1}),e_{d})$. If $\delta(s,w) \in F$ of a word $w=e_{1}e_{2}\ldots e_{d} \in \Sigma^{*}$, then the word $w$ is said to be accepted by the DFA. 
+	 $(\Sigma,Q,s,F,\delta)$ is a deterministic finite automaton (DFA)  where  $\Sigma$ a finite alphabet of event types, and $Q$ is a finite set of states, $s \in Q$ a start state and $F \subset Q$ represents all final states. $\delta: Q \times \Sigma \rightarrow Q$ is a transition function from a state to another state given an input event type, which is defined as recursive function $\delta(q,e_{1}e_{2}\ldots e_{d})=\delta(\delta(q,e_{1}e_{2}...e_{d-1}),e_{d})$. If $\delta(s,w) \in F$ of a word $w=e_{1}e_{2}\ldots e_{d} \in \Sigma^{*}$, then the word $w$ is said to be accepted by the DFA. In addition,  $\delta(q)^{-m}$ is the set of words of size $m$ defined as $\{w \in \Sigma^{m} \mid \exists q \in Q,\ \delta(p,w)=q \}$
 \end{definition}
 	
-	First, the regular expression $\Sigma^{*};\mathcal{P}$ is converted to  non-deterministic finite automata (NFA), then an equivalent DFA of the constructed NFA is computed using the subset construction \cite{hopcroft2006automata}. 
+	First, the regular expression $\Sigma^{*};\mathcal{P}$ is converted to non-deterministic finite automata (NFA), then an equivalent DFA of the constructed NFA is computed using the subset construction \cite{hopcroft2006automata,alevizos2017event}. And the events stream $s$ is considered as the input word of the DFA. 
  Figure ~\ref{fig:dfatcc} shows an associated DFA of a sequential pattern $\mathcal{P}=a ; c ; c$ over an alphabet $\Sigma=\{a,b,c\}$.
 
+Furthermore, if $\forall q \in Q$ of a DFA the all $\delta(q)^{-m}$ are sets of cardinality 1, then the DFA is called \textit{m-unambiguous}. ~\citet{nuel_pattern_2008} proposed a procedure to transform any DFA to an \textit{m-unambiguous} DFA, which is achieved by incrementally duplicate all states have m-ambiguity (i.e., $\vert\delta(q)^{-m}\vert > 1$).   
 
 %(note that the DFA has no dead states since we need to handle streams and not strings).
 
-\item The next step is to derive a Markov chain that will be able to provide a probabilistic description of the DFA's run-time behavior.
-\par Towards this goal, we use Pattern Markov Chains, as was proposed in \cite{nuel_pattern_2008}.
-Under the assumption that the input events are independent and identically distributed (i.i.d.), it can be shown that there is a direct mapping of the states of the DFA to states of a Markov chain and the transitions of the DFA to transitions of the Markov chain.
-\par The transition probabilities of the Markov chain are the occurrence probabilities of the various event types.
-On the other hand, if the occurrence probabilities of the events are dependent on some of the previous events  seen in the stream (i.e., the stream is generated by an $m^{th}$ order Markov process), we might need to perform a more complex transformation 
-(see \cite{nuel_pattern_2008} for details)
-in order to obtain a ``proper'' Markov chain.
-The transition probabilities are then conditional probabilities on the event types.
-In any case,
-we call such a derived Markov chain a Pattern Markov Chain (PMC) of order $m$
-and denote by \pmcmr , where $\mathcal{P}$ is the initial pattern and $m$ the assumed order.
-As an example, see Figure \ref{fig:mctcc1}, which depicts the PMC of order 1 for the generated DFA of Figure \ref{fig:dfatcc}.
+\item Assuming that the input events stream $s=\langle e_1,e_3,...,e_t,...\rangle$ is a $m$-order Markov sequence, where $m \geq 1$.  Given a constructed \textit{m-unambiguous} DFA for the pattern $\mathcal{P}$, ~\citet{nuel_pattern_2008} showed that the sequence of states of the DFA that generated by consuming the input events stream $s$ is a first-order Markov chain, which is represented by $\langle q_{0},q_{1},...,q_{t},...\rangle$, where $q_{0}=s$ and $q_{t}=\delta(q_{t-1},e_{t})$. We denote by \pmcmr  the derived Markov chain associated with a pattern $\mathcal{P}$ that is called a Pattern Markov Chain (PMC) of order $m$  \cite{nuel_pattern_2008}. This basically a mapping of the states of the DFA to states of a Markov chain and the transitions of the DFA to transitions of the Markov chain.Thus, the terms \textit{m-unambiguous} DFA of a pattern and the corresponding \pmcmr  we will be used interchangeably. 
 
+\par Furthermore, the \pmcmr is characterized by $\vert Q \vert \times \vert Q \vert$ transition probability matrix $\Pi$ where $Q$ is again the set of states of the  \textit{m-unambiguous} DFA. Figure \ref{fig:mctcc1} depicts the PMC of order 1 for the generated DFA of Figure \ref{fig:dfatcc}.
+
+%\par The next step is to derive a Markov chain that will be able to provide a probabilistic description of the DFA's run-time behavior.
+%\par Towards this goal, we use Pattern Markov Chains, as was proposed in \cite{nuel_pattern_2008}.
+%, it can be shown that there is a direct mapping of the states of the DFA to states of a Markov chain and the transitions of the DFA to transitions of the Markov chain.
+%\par The transition probabilities of the Markov chain are the occurrence probabilities of the various event types.
+%On the other hand, if the occurrence probabilities of the events are dependent on some of the previous events  seen in the stream (i.e., the stream is generated by an $m^{th}$ order Markov process), we might need to perform a more complex transformation 
+%(see \cite{nuel_pattern_2008} for details)
+%in order to obtain a ``proper'' Markov chain.
+%The transition probabilities are then conditional probabilities on the event types.
+%In any case,
+%we call such a derived Markov chain a Pattern Markov Chain (PMC) of order $m$
+%and denote by \pmcmr , where $\mathcal{P}$ is the initial pattern and $m$ the assumed order.
+ 
 \end{itemize}
 
 
@@ -106,17 +109,23 @@ As an example, see Figure \ref{fig:mctcc1}, which depicts the PMC of order 1 for
 
 \subsubsection*{Constructing Pattern Prediction Model}
 \label{sec:pmc_prediction}
-\par After constructing a PMC, we can use it to calculate the so-called \textit{waiting-time} distributions.
-Given a specific state of the PMC, a \textit{waiting-time} distribution gives us the probability of reaching a set of absorbing states in $n$ transition from now (absorbing states are states with self-loops and probability equal to $1.0$).
-By mapping the final states of the initial DFA to absorbing states of the PMC
-(see again Figure \ref{fig:dfa_mc_example}),
-we can therefore calculate the probability of reaching a final state,
-or, in other words, of detecting a full match of the original regular expression in $n$ events from now.
 
-\par In order to estimate the final forecasts, another step is required,
-since our aim is not to provide a single future point with the highest probability but an interval. 
-Predictions are given in the form of intervals, like $I=(\mathit{start},\mathit{end})$. 
-The meaning of such an interval is that the DFA is expected to reach a final state sometime in the future between $\mathit{start}$ and $\mathit{end}$ with probability at least some constant threshold $\theta_{fc}$ (provided by the user). 
+~\citet{alevizos2017event} proposed to use the constructed \pmcmr to build a probabilistic prediction model that describes the DFA's run-time behavior. The method is based on calculating the \textit{waiting-time} distributions. Given a specific state of the \pmcmr, a \textit{waiting-time} distribution provides the probability of reaching a set of absorbing states in $n$ transition from current state. So by mapping the final states of the DFA to absorbing states of the \pmcmr by adding self-loops with probabilities equal to $1.0$. Therefore, we can calculate the probability of reaching a final state in $n$ transitions,  which means predicting a full match of the defined pattern $\mathcal{P}$.
+
+\par We denote by $W_{\mathcal{P}}(q)$  the waiting-time random variable that represents the
+number of transitions until from a current state $q$ of DFA to reach a final state\cite{alevizos2017event}, which is given by 
+
+\begin{equation*}
+W_{\mathcal{P}}(q)=inf\{n: q_{0},q_{1},...,q_{n}, q_{0}=q, q \in Q \backslash F, q_{n} \in F\}
+\end{equation*}
+
+However, the \textit{waiting-time} distribution of the $W_{\mathcal{P}}(q)$ random variable can be computed based on the transition probability matrix $\Pi$ of the \pmcmr, where it has $h$ non-final states and $d$ final states (absorbing states) \cite{alevizos2017event}, then distribution is calculated by the following equation 
+
+\begin{equation*}
+P(W_{\mathcal{P}}(q)=n)=\boldsymbol{\xi_{q}}\boldsymbol{N}^{n-1}(\boldsymbol{I}-\boldsymbol{N})\boldsymbol{1}
+\end{equation*}
+where $\boldsymbol{N}$ is $h \times h$ matrix that obtained by re-arranging the transition matrix $\Pi$ to include transitions between the non-final states of the DFA, $\boldsymbol{I}$ is an identity matrix of size $d \times d$, and  $\boldsymbol{1}$ is $h \times 1$ vector of ones. The $\boldsymbol{\xi_{q}}$ is $1 \times h$ row of elements that contains zeros except $1.0$ in the cell corresponding to $q$. 
+\par Finally, we provide the prediction reports in the form of intervals i.e.,  $I=(\mathit{start},\mathit{end})$. Which means that the DFA is expected to reach a final state in after future transitions between $\mathit{start}$ and $\mathit{end}$ with probability at least some constant threshold $\theta_{fc}$ that defined by the user. 
 These intervals are estimated by a single-pass algorithm that scans a waiting-time distribution and finds the smallest (in terms of length) interval that exceeds this threshold. 
 An example is shown in Figure \ref{fig:wtdfas},
 where the DFA in Figure \ref{fig:dfa1} is in state $1$,
@@ -138,14 +147,8 @@ $\mathcal{P}=a ; b ; b ; b$, $\Sigma=\{a,b\}$, $m=1$, $\theta_{\mathit{fc}}=0.5$
 \end{centering}
 \end{figure}
 
-\par The above described method assumes that we know the (possibly conditional) occurrence probabilities of the various event types appearing in a stream
-(as would be the case with synthetically generated streams).
-However, this is not always the case in real-world situations.
-Therefore, it is crucial for a system implementing this method to have the capability to learn the values of the PMC's transition matrix.
-One way to do this is to use some part of the stream to obtain the maximum-likelihood estimators for the transition probabilities as illustrated in Section ~\ref{sec:theoretical}. 
-
-Executing this learning step on a single node might require a vast amount of time until we arrive at a sufficiently good model.
-In this paper, we present a distributed method for learning the transition probability matrix.
+\par The proposed method assumes that the transition probability matrix $\Pi$ is available to build the prediction intervals. However, this is not true in the real-world applications.
+Therefore, it is essential to learn the values of the \pmcmr's transition probability matrix in order apply this method. One common way, is to use the maximum-likelihood estimator to learn the transition probabilities as illustrated in Section ~\ref{sec:theoretical}. This model is performing the learning over a single event stream $s$ that might requires a large amount of time until convergence to a sufficiently good model. In this thesis, we present a technique to distribute the learning of  transition probability matrix over multiple input event streams.
 
 \section{Pattern Prediction on multiple Streams}
 
@@ -166,7 +169,7 @@ Each node $n_i$ handles a single event stream $s_i$ associated with a moving obj
 
 \subsection{Proposed Approach}
 \label{sec:proposed_approach}
-\par We designed and developed a scalable and distributed patterns prediction system over a massive input event streams of moving objects. As the base prediction model, we use the PMC forecasting method \cite{alevizos2017event}. Moreover,  we propose to enable the information exchange between the distributed predictors/learners of the input event streams, by adapting the distributed online prediction protocol of \cite{kamp2014communication} to synchronize the prediction models, i.e., the transitions probabilities matrix of the PMC predictors.
+\par We design and develop a scalable and distributed patterns prediction system over a massive input event streams of moving objects. As the base prediction model, we use the PMC forecasting method \cite{alevizos2017event}. Moreover, we propose to enable the information exchange between the distributed predictors/learners of the input event streams, by adapting the distributed online prediction protocol of \cite{kamp2014communication} to synchronize the prediction models, i.e., the transitions probabilities matrix of the PMC predictors.
 
 \par Algorithm~\ref{algonline:dol} presents the distributed online prediction protocol by dynamic model synchronization on both the predictor nodes and the coordinator. We refer to the PMC's transition matrix $\boldsymbol{\Pi}_i$ on predictor node $n_i$ by $f_i$. That is, when a predictor $n_i:\ i \in[k]$ observes an event $e_j$ it revises its internal model state (i.e., $f_i$) and provides a prediction report. Then it checks the local conditions  (batch size $b$ and local model divergence from a reference model $f_r$) to decide whether there is a need to synchronize its local model with the coordinator [or not].  $f_r$ is maintained in the predictor node as a copy of the last computed aggregated model $\hat{f}$ from the previous full synchronization step, which is shared between all local predictors/learners. By monitoring the local condition $\|f_i - f_r\|^2 > \Delta$ on all local predictors, we have a guarantee that if none of the local conditions is violated, the divergence (i.e., variance of local models $\delta(f)=\frac{1}{k} \sum_{j=1}^{k}\|f_i - \hat{f}\|^2$) does not exceed the threshold $\Delta$ \cite{kamp2014communication}. 
 
