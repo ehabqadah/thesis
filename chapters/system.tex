@@ -126,6 +126,8 @@ P(W_{\mathcal{P}}(q)=n)=\boldsymbol{\xi_{q}}\boldsymbol{N}^{n-1}(\boldsymbol{I}-
 \end{equation*}
 where $\boldsymbol{N}$ is $h \times h$ matrix that obtained by re-arranging the transition matrix $\Pi$ to include transitions between the non-final states of the DFA, $\boldsymbol{I}$ is an identity matrix of size $d \times d$, and  $\boldsymbol{1}$ is $h \times 1$ vector of ones. The $\boldsymbol{\xi_{q}}$ is $1 \times h$ row of elements that contains zeros except $1.0$ in the cell corresponding to $q$. 
 \par Finally, we provide the prediction reports in the form of intervals i.e.,  $I=(\mathit{start},\mathit{end})$. Which means that the DFA is expected to reach a final state in after future transitions between $\mathit{start}$ and $\mathit{end}$ with probability at least some constant threshold $\theta_{fc}$ that defined by the user. 
+%ADD equation of I as in %
+
 These intervals are estimated by a single-pass algorithm that scans a waiting-time distribution and finds the smallest (in terms of length) interval that exceeds this threshold. 
 An example is shown in Figure \ref{fig:wtdfas},
 where the DFA in Figure \ref{fig:dfa1} is in state $1$,
