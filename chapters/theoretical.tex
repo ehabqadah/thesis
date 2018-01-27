@@ -1,11 +1,14 @@
-\section{Theoretical Analysis of Proposed Approach}
+
+
+
+\subsection{Theoretical Analysis}
  %probability gaurantee %
  %SAY something about the relation between transition probabilities and prediction%
  In this section, we present preliminaries of Markov chain and the maximum like-hood estimator of the transition probabilities, and we describe the theoretical properties of our proposed synchronization operator and its relation with the maximum likelihood estimator. 
  
  % take the mc matrix from pmc paper and try to derive the varince 
  
- \subsection*{Preliminaries}
+ \subsubsection*{Preliminaries}
  In this section, we first present some definitions related to Markov chain theory, 
 where the theoretical definitions presented  are based 
 on the work described in \cite{bertsekas2002introduction,Billingsley1961,anderson1957statistical,howard2012dynamic}.
@@ -106,7 +109,7 @@ Where $p_{l,j}^{t-1}$ is the probability of state $j$ at time  $t-1$ given that 
 It is clearly seen that variances are dropping as the sample size $n$ grows large.  In next, we will show that our proposed approach of synchronizing the maximum likelihood estimators over $k$ chains is preserving  a similar asymptotic behavior. 
 
 
-\subsection{Properties of Proposed Approach}
+\subsubsection{Properties of the Synchronization Operator}
  %in Equation ~\ref{eq:dis_pi_estim}% 
 \par The proposed synchronization operator is basically aggregating the maximum likelihood estimates over $k$ observed sequences (i.e., sequences of the DFA states based on the consumed event streams), the operator estimates the maximum likelihood of the probabilities for a set of $k$ sequences, which are arranged in serial order as one large chain with length $ N=kn$ where we assume that all $k$ sequences have $n$ observations. For the sake of simplicity, we assume that the synchronization phase happens on batch size equals $n$ (i.e., $b=n$) the, then it follows that 
 \begin{equation}
@@ -169,7 +172,6 @@ This is equivalent to,for any constant $c > 0$ and $k \ge 1$ we have
  \Pr\left( |\hat{p}_{i,j} - {p}_{i,j}| \geq c \right)
  \]
 
-
 To summarize, our approach is based aggregating the MLE estimates over $k$ sequences, which speeds up the convergence to reach the true transition probabilities as result of the  smaller variances.
 
 %The weak law of large
@@ -181,14 +183,8 @@ To summarize, our approach is based aggregating the MLE estimates over $k$ seque
 %	X_n}{n} - \mu \right| > \epsilon \right) = 0. \]
 %Use Chebychev's inequality to prove the weak law of large numbers.
 
-
-
-
-
-
-
  
-\subsection{Computing the Transition Matrix From the Matrix of \pmcmr }
+\subsubsection{Computing the Transition Matrix of the Underlaying Markov Chain}
 
 \par In order to empirically study the asymptotic behavior of our proposed synchronization operator, we need to compute the transition probability matrix of the underlying Markov chain that the events belong to, and we introduce to calculate it  based on the transition matrix ($\Pi$) of \pmcmr that describes the Markov chain of the pattern.
 
@@ -197,7 +193,7 @@ $\Pi$ and the conditional probabilities of the $m-$order Markov chain $X=\{X_1, 
 
 \[ \Pi(p, q) =
 \begin{cases}
-P(X_{m+1}=b|X_1\ldots X_m=\delta^{-m}(p))       & \quad \text{if } \delta(p,q)=b \\
+P(X_{m+1}=b|X_1\ldots X_m=\delta^{-m}(p))     & \quad \text{if } \delta(p,q)=b \\
 0  & \quad \text{if } p \notin  \delta(p,X)
 \end{cases}
 \]
