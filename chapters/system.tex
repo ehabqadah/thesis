@@ -9,7 +9,7 @@
 %based on the state space model.
 
 
-This chapter introduces the problem that we address in this thesis, including the formal definition of the pattern prediction over single event stream and multiple streams. First, we introduce the base model for pattern prediction, and our proposed approach to leverage the distributed online protocol to enable knowledge sharing between prediction models over multiple event streams. Furthermore, we provide an analysis of the theoretical efficiency of distributing the pattern prediction models.
+This chapter introduces the problem that we address in this thesis, including the formal definition of the pattern prediction over a single event stream and multiple streams. First, we introduce the base model for pattern prediction, and our proposed approach to leverage the distributed online protocol to enable knowledge sharing between prediction models over multiple event streams. Furthermore, we provide an analysis of the theoretical efficiency of distributing the pattern prediction models.
 We follow the general notation and terminology of \cite{agrawal2008efficient,schultz2009distributed,luckham2008power,alevizos2015complex,zhou_pattern_2015,kamp2014communication} to formalize the problem we tackle and our solution approach.
 
 \subsection{Problem Formulation}
@@ -42,19 +42,17 @@ The other cases are matched as in standard automata theory.
 
 The problem setting can be summarized as follows: given a stream $s$ of low-level events and a pattern $\mathcal{P}$, 
 the goal is to estimate at each new event arrival the number of future events
-that we will need to wait for until the pattern is completed (and therefore a full match is detected).
+that we will need to wait for until the pattern is completed (full match).
 
 \subsection{Base Model}
 \label{sec:Event-Forecasting-PMC}
 
-\par In this thesis, we use the Event Forecasting with Pattern Markov Chains approach \cite{alevizos2017event} as the base to construct a pattern prediction model over an event stream. In next, we describe the details of this approach. We first provide an overview of the Patten Markov Chain framework. We then describe how this framework is used to build a pattern prediction model.  
+\par In this thesis, we use the Event Forecasting with Pattern Markov Chains method \cite{alevizos2017event} as the base to construct a pattern prediction model over an event stream. In next, we describe the details of this approach. We first provide an overview of the Patten Markov Chain framework \cite{nuel_pattern_2008}. We then describe how this framework is used to build a pattern prediction model \cite{alevizos2017event}.  
 
-%first assuming that only a single stream is consumed
-%and then adjusting for the case of multiple streams.
 
 \subsubsection*{Construction of Pattern Markov Chains (PMCs)}
 
-~\citet{alevizos2017event} proposed to employ the Pattern Markov Chain (PMC) \cite{nuel_pattern_2008}to build an online prediction associated with a pattern over an event stream. The algorithm of constructing a PMC associated with a pattern $\mathcal{P}$ over a stream of events $s$ consists of the following steps:
+~\citet{alevizos2017event} proposed to employ the Pattern Markov Chain (PMC) \cite{nuel_pattern_2008} to build an online prediction associated with a pattern over an event stream. The algorithm of constructing a PMC associated with a pattern $\mathcal{P}$ over a stream of events $s$ consists of the following steps:
 
 \begin{itemize}[noitemsep]
 	\item Build a deterministic finite automata (DFA) that accepts the regular expression $\Sigma^{*};\mathcal{P}$. We define the the DFA as following:
@@ -64,9 +62,11 @@ that we will need to wait for until the pattern is completed (and therefore a fu
 \end{definition}
 	
 	First, the regular expression $\Sigma^{*};\mathcal{P}$ is converted to non-deterministic finite automata (NFA), then an equivalent DFA of the constructed NFA is computed using the subset construction \cite{hopcroft2006automata,alevizos2017event}. And the events stream $s$ is considered as the input word of the DFA. 
- Figure ~\ref{fig:dfatcc} shows an associated DFA of a sequential pattern $\mathcal{P}=a ; c ; c$ over an alphabet $\Sigma=\{a,b,c\}$.
 
-Furthermore, if $\forall q \in Q$ of a DFA the all $\delta(q)^{-m}$ are sets of cardinality 1, then the DFA is called \textit{m-unambiguous}. ~\citet{nuel_pattern_2008} proposed a procedure to transform any DFA to an \textit{m-unambiguous} DFA, which is achieved by incrementally duplicate all states have m-ambiguity (i.e., $\vert\delta(q)^{-m}\vert > 1$).   
+Furthermore, if $\forall q \in Q$ of a DFA the all $\delta(q)^{-m}$ are sets of cardinality 1, then the DFA is called \textit{m-unambiguous}. ~\citet{nuel_pattern_2008} proposed a procedure to transform any DFA to an \textit{m-unambiguous} DFA, which is achieved by incrementally duplicate all states have m-ambiguity (i.e., $\vert\delta(q)^{-m}\vert > 1$).   Figure ~\ref{fig:dfa_adc} shows an associated DFA of a sequential pattern $\mathcal{P}=a ; d ; c$ over an alphabet $\Sigma=\{a,b,c,d\}$. 
+
+
+\input{dfa_figure}
 
 %(note that the DFA has no dead states since we need to handle streams and not strings).
 
@@ -98,7 +98,7 @@ Furthermore, if $\forall q \in Q$ of a DFA the all $\delta(q)^{-m}$ are sets of 
 ~\citet{alevizos2017event} proposed to use the constructed \pmcmr to build a probabilistic prediction model that describes the DFA's run-time behavior. The method is based on calculating the \textit{waiting-time} distributions. Given a specific state of the \pmcmr, a \textit{waiting-time} distribution provides the probability of reaching a set of absorbing states in $n$ transition from current state. So by mapping the final states of the DFA to absorbing states of the \pmcmr by adding self-loops with probabilities equal to $1.0$. Therefore, we can calculate the probability of reaching a final state in $n$ transitions,  which means predicting a full match of the defined pattern $\mathcal{P}$.
 
 \par We denote by $W_{\mathcal{P}}(q)$  the waiting-time random variable that represents the
-number of transitions until from a current state $q$ of DFA to reach a final state\cite{alevizos2017event}, which is given by 
+number of transitions from a current state $q$ of DFA to reach a final state \cite{alevizos2017event}, where it also represents the expected number of future events from the current time event to  a full match of the pattern $\mathcal{P}$, which is given by 
 
 \begin{equation*}
 W_{\mathcal{P}}(q)=inf\{n: q_{0},q_{1},...,q_{n}, q_{0}=q, q \in Q \backslash F, q_{n} \in F\}
@@ -110,14 +110,21 @@ However, the \textit{waiting-time} distribution of the $W_{\mathcal{P}}(q)$ rand
 P(W_{\mathcal{P}}(q)=n)=\boldsymbol{\xi_{q}}\boldsymbol{N}^{n-1}(\boldsymbol{I}-\boldsymbol{N})\boldsymbol{1}
 \end{equation*}
 where $\boldsymbol{N}$ is $h \times h$ matrix that obtained by re-arranging the transition matrix $\Pi$ to include transitions between the non-final states of the DFA, $\boldsymbol{I}$ is an identity matrix of size $d \times d$, and  $\boldsymbol{1}$ is $h \times 1$ vector of ones. The $\boldsymbol{\xi_{q}}$ is $1 \times h$ row of elements that contains zeros except $1.0$ in the cell corresponding to $q$. 
-\par Finally, we provide the prediction reports in the form of intervals i.e.,  $I=(\mathit{start},\mathit{end})$. Which means that the DFA is expected to reach a final state in after future transitions between $\mathit{start}$ and $\mathit{end}$ with probability at least some constant threshold $\theta_{fc}$ that defined by the user. 
-%ADD equation of I as in %
+\par Finally, the model provides the prediction reports in the form of intervals i.e.,  $I=(\mathit{start},\mathit{end})$. Which means that the DFA is expected to reach a final state  after future transitions ( number of events $n$) between $\mathit{start}$ and $\mathit{end}$ with probability $P(I)$ at least some constant threshold $\theta_{p}$ that defined by the user, given by: 
+ given by:
+\begin{equation*}
+P(I)=\sum_{n \in I}{P(W_{\mathcal{P}}(q)=n)}\ where\  P(I) \geq \theta_{p} 
+\end{equation*}
+where $P(I)$ equals the sum of probabilities of all number of future events $n$ that fall within $I$ ($start\leq n\leq end$). Furthermore, the length of the intervals ($spread(I) = end - start$)  can be restricted to not be greater than a maximum spread threshold $\theta_{s}$.  
 
-These intervals are estimated by a single-pass algorithm that scans a waiting-time distribution and finds the smallest (in terms of length) interval that exceeds this threshold. 
-An example is shown in Figure \ref{fig:wtdfas},
-where the DFA in Figure \ref{fig:dfa1} is in state $1$,
-the \textit{waiting-time} distributions for all of its non-final states are shown in Figure \ref{fig:wt1}
-and the distribution, along with the prediction interval, for state $1$ are depicted in green.
+\begin{equation*}
+spread(I)\leq \theta_{s}
+\end{equation*}
+
+These intervals are estimated by a single-pass algorithm that scans a waiting-time distribution and finds the smallest (in terms of length) interval that exceeds the $\theta_{p}$ and has a spread  not greater that $\theta_{s}$. Figure \ref{fig:wtdfas} shows an example of how the predictions intervals are produced, where Figure \ref{fig:wt1} shows the \textit{waiting-time} distributions for all non-final states of the DFA presented in Figure ~\ref{fig:dfa_adc}, and the generated intervals are  depicted in Figure ~\ref{fig:predictionsIntervals}.
+
+
+
 
 \begin{figure}[!ht]
 	\begin{centering}
@@ -132,24 +139,26 @@ and the distribution, along with the prediction interval, for state $1$ are depi
 			\label{fig:predictionsIntervals}
 		}
 		
-		\caption{Example of how prediction intervals are produced. 
-			$\mathcal{P}=a ; d ; c$, $\Sigma=\{a,b,c,d\}$, $m=1$, $\theta_{\mathit{fc}}=0.5$.}
+		\caption{Example of computed prediction intervals for
+			$\mathcal{P}=a ; d ; c$, $\Sigma=\{a,b,c,d\}$, $m=1$, $\theta_{p}=0.5\ and\ \theta_{s}=20$.}
 		\label{fig:wtdfas}
 	\end{centering}
 \end{figure}
 
 \par The proposed method assumes that the transition probability matrix $\Pi$ is available to build the prediction intervals. However, this is not true in the real-world applications.
-Therefore, it is essential to learn the values of the \pmcmr's transition probability matrix in order apply this method. One common way, is to use the maximum-likelihood estimator to learn the transition probabilities as illustrated in Section ~\ref{sec:theoretical}. This model is performing the learning over a single event stream $s$ that might requires a large amount of time until convergence to a sufficiently good model. In this thesis, we present a technique to distribute the learning of  transition probability matrix over multiple input event streams.
+Therefore, it is essential to learn the values of the \pmcmr's transition probability matrix in order apply this method. One common way, is to use the maximum-likelihood estimator to learn the transition probabilities as illustrated in Section ~\ref{sec:theoretical}. 
+
+\par This model is performing the learning over an event stream $s$ that might requires a large amount of time until convergence to a sufficiently good model.  Where in the case of multiple event streams, a unique model associated with each stream is needed. Accordingly, we present in this work, a technique to share information among  \pmcmr predictors over multiple input event streams (i.e., distributed learning of the transition probability matrix).
 
 \section{Pattern Prediction over Multiple Event Streams}
 
 \subsection{Problem Formulation Extension}
 
-\par In this section, we extend the problem of pattern prediction over an event stream to consider the setting where there are multiple input event stream: 
+\par In this section, we extend the problem of pattern prediction over an event stream to consider the setting where there are multiple input event streams: 
 Let $O = \{ o_1, ..., o_k\}$ be a set of \emph{$K$} objects/entities (e.g., moving objects), each of which is generating an event stream $s_i$, hence, we have a set of real-time input event streams $S = \{ s_1, ..., s_k\}$.
 %ADD comment about the streams distribution%
 
-\par Let $\mathcal{P}$ be a user-defined pattern given in the form of regular expression, which is monitored in every stream $s_i \in S$. Then, we have a system consisting of \emph{$K$} distributed predictor (i.e., learner) nodes $n_1,n_2...,n_k$, each of which receives an input event stream $s_i\in S$ associated with an object $o_i \in O$.
+\par Let $\mathcal{P}$ be a user-defined pattern given in the form of regular expression, which is monitored in every stream $s_i \in S$. Then, we have a system consists of \emph{$K$} distributed predictor (learner) nodes $n_1,n_2...,n_k$, each of which receives an input event stream $s_i\in S$ associated with an object $o_i \in O$.
 
 \par  The goal is to provide online predictions about the completion of the pattern $\mathcal{P}$ within each stream $s_i$. Toward this goal, each node maintains a local prediction model $f_i$ associated the user-defined pattern $\mathcal{P}$. Then for each new arriving event tuple  $e_t \in s_i$, the $f_i$ model provides an online prediction interval about the future full match of the pattern $\mathcal{P}$.
 
@@ -214,13 +223,13 @@ Let $O = \{ o_1, ..., o_k\}$ be a set of \emph{$K$} objects/entities (e.g., movi
 \label{eq:dis_pi_varinace}
 \|w_k - w_r\|^2=\sum_{i,j} (\hat{\pi}_k{i,j} -\hat{\pi}_r{i,j})^2
 \end{equation*}
-
+%ADD something about modes%
 
 \section{Analysis of Proposed Approach}
 
 \par Generally, our approach relies on enabling the collaborative learning among the distributed predictors. Each predictor node receives a stream of events related to a distinct moving object, and the central coordinator is responsible of synchronizing their prediction models using the \textit{synchronization operation}. Moreover, the predictors they only need to share the parameters of their models. 
 
-\par In addition, our approach relies on enabling the collaborative learning between the prediction models of  the input event streams. By doing so, we assume that the underlying event streams belong to the same  distribution and share the same behavior (e.g., mobility patterns). We claim this assumption is reasonable in many application domains: for instance, in the context of maritime surveillance, vessels travel through standard routes, defined by the International Maritime Organization (IMO). Additionally, vessels have similar mobility patterns in specific areas such as moving with low speed and multiple turns near the ports \cite{pallotta2013vessel,liu2014knowledge}. That allows our system to construct a coherent global prediction model dynamically for all input event streams based on merging their local prediction models.
+\par In addition, our approach relies on enabling the collaborative learning between the prediction models of  the input event streams. By doing so, we assume that the underlying event streams belong to the same  distribution and share the same behavior (e.g., mobility patterns). We claim this assumption is reasonable in many application domains: for example, in the context of maritime surveillance, vessels travel through standard routes, defined by the International Maritime Organization (IMO). Additionally, vessels have similar mobility patterns in specific areas such as moving with low speed and multiple turns near the ports \cite{pallotta2013vessel,liu2014knowledge}. That allows our system to construct a coherent global prediction model dynamically for all input event streams based on merging their local prediction models.
 
 % may add it to conclusion 
 %\par By enabling collaborative learning our approach is imposing an acceleration of learning of the underlying prediction models with less training data, in addition, it provides an improvement of the predictive performance compared to the no-distributed  version of event forecasting with Pattern Markov Chains system. 

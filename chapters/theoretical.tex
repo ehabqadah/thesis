@@ -2,6 +2,7 @@
 
 
 \subsection{Theoretical Analysis}
+\label{sec:theoretical}
  %probability gaurantee %
  %SAY something about the relation between transition probabilities and prediction%
  In this section, we present preliminaries of Markov chain and the maximum like-hood estimator of the transition probabilities, and we describe the theoretical properties of our proposed synchronization operator and its relation with the maximum likelihood estimator. 
@@ -197,6 +198,20 @@ P(X_{m+1}=b|X_1\ldots X_m=\delta^{-m}(p))     & \quad \text{if } \delta(p,q)=b \
 0  & \quad \text{if } p \notin  \delta(p,X)
 \end{cases}
 \]
-Using this theorem, we can compute the transition probabilities of the Markov chain $X$.
+Using this theorem, we can compute the transition probabilities of the Markov chain $X$. For example, the transition probability matrix of the DFA of  the pattern $\mathcal{P}=a ; d ; c$ over  $\Sigma=\{a,b,c,d\}$ can be represented by: 
+
+\begin{equation*}
+\label{eq:matrix}
+\boldsymbol{\Pi} = 
+\begin{Bmatrix} 
+0 \\ 1 \\ 2 \\ 3 
+\end{Bmatrix}
+\begin{pmatrix} 
+P(b)+P(c) 	& P(a) 		& 0 		& 0 \\
+P(b) 		& P(a)		& P(c)		& 0 \\
+P(b)		& P(a)		& 0			& P(c) \\
+0			& 0			& 0			& 1.0
+\end{pmatrix}
+\end{equation*} 
 
 %ADD figure example for the figure in the PMC section%
