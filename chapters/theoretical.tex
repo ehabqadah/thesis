@@ -39,14 +39,14 @@ The transition probabilities of the Markov chain are represented by a $m \times 
 \begin{equation}
 \label{eq:matrix_example}
 \boldsymbol{\Pi} = 
-\begin{pmatrix} 
+\begin{bmatrix} 
 p_{1,1}	   &p_{1,2}  &. 		&. 		& . &  	p_{1,m} \\
 p_{2,1}		   &.  & .		& .	    & .	& . \\
 . 		   &.  & .		& .	    & .	& . \\
 .		   &.  & .		& .		& .	& . \\
 .		   &.  & .		& .		& .	& .\\
 p_{m,1}	   & p_{m,1}	&.		& .	& .	&p_{m,m}
-\end{pmatrix}
+\end{bmatrix}
 \end{equation}
 
 where $0 \leq p_{i,j}\leq 1 $ and the rows sum up to one 
@@ -198,20 +198,22 @@ P(X_{m+1}=b|X_1\ldots X_m=\delta^{-m}(p))     & \quad \text{if } \delta(p,q)=b \
 0  & \quad \text{if } p \notin  \delta(p,X)
 \end{cases}
 \]
-Using this theorem, we can compute the transition probabilities of the Markov chain $X$. For example, the transition probability matrix of the DFA of  the pattern $\mathcal{P}=a ; d ; c$ over  $\Sigma=\{a,b,c,d\}$ can be represented by: 
+Using this theorem, we can compute the transition probabilities of the Markov chain $X$. For example, the transition probability matrix of the DFA of  the pattern $\mathcal{P}=a ; d ; c$ over  $\Sigma=\{a,b,c,d\}$ is  represented by: 
 
-\begin{equation*}
+\begin{equation}
 \label{eq:matrix}
 \boldsymbol{\Pi} = 
 \begin{Bmatrix} 
-0 \\ 1 \\ 2 \\ 3 
+ 1          \\ 2        \\3             \\4         \\5         \\ 6 
 \end{Bmatrix}
-\begin{pmatrix} 
-P(b)+P(c) 	& P(a) 		& 0 		& 0 \\
-P(b) 		& P(a)		& P(c)		& 0 \\
-P(b)		& P(a)		& 0			& P(c) \\
-0			& 0			& 0			& 1.0
-\end{pmatrix}
-\end{equation*} 
+\begin{bmatrix} 
+P(a|a) 	& P(b|a) 		& P(c|a) 		& 0			  & p(d|a) 	& 0  \\
+P(a|b) 	& P(b|b) 		& P(c|b) 		& P(d|b)	  & 0 	    & 0  \\
+P(a|c) 	& P(b|c) 		& P(c|c) 		& P(d|c) 	  & 0 	    & 0  \\
+P(a|d) 	& P(b|d) 		& P(c|d) 		& P(d|d)	  & 0 	    & 0  \\
+P(a|d) 	& P(b|d) 		&  0	 	    & P(d|d)	  & 0 	    & P(c|d)  \\
+0			& 0			& 0		        & 0    		  & 0		& 1.0
+\end{bmatrix}
+\end{equation} 
 
 %ADD figure example for the figure in the PMC section%
