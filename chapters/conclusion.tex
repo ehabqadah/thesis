@@ -1,6 +1,29 @@
 
-\chapter{Conclusion}
+\chapter{Discussion, Conclusion, and Future Work}
 \label{chap:conclusions}
 
-\label{sec:concl}
-In this paper, we have presented a system that provides  a distributed pattern prediction over multiple large-scale event streams of moving objects (vessels). The system uses the event forecasting with Pattern Markov Chain (PMC) \cite{alevizos2017event} as the base prediction model on each event stream, and it applies the protocol for distributed online prediction \cite{kamp2014communication} to exchange information between the prediction models over multiple input event streams.  Our proposed system has been implemented using Apache Flink and Apache Kafka, and empirically tested against large real-world event streams related to trajectories of moving vessels. As future work, we will investigate the effect of grouping the input event streams on the predictive performance of our proposed system. Furthermore,  we will study the interrelation between precision and spread scores.
+In this chapter, we discuss the results of our system, and some of the aspects of underlying method. Also we give some proposals for future work.
+
+
+\section{Discussion}
+
+
+\section{Conclusion}
+%In this paper, we have presented a system that provides  a distributed pattern prediction over multiple large-scale event streams of moving objects (vessels). The system uses the event forecasting with Pattern Markov Chain (PMC) \cite{alevizos2017event} as the base prediction model on each event stream, and it applies the protocol for distributed online prediction \cite{kamp2014communication} to exchange information between the prediction models over multiple input event streams.  Our proposed system has been implemented using Apache Flink and Apache Kafka, and empirically tested against large real-world event streams related to trajectories of moving vessels. As future work, we will investigate the effect of grouping the input event streams on the predictive performance of our proposed system. Furthermore,  we will study the interrelation between precision and spread scores.
+
+
+
+\section{Future Work}
+%\begin{itemize}[noitemsep]
+%	\item In some practical applications the input event streams may belong to different distributions, we propose to divide the input event streams into similar groups, in order to combine the corresponding predictions models to construct a representative global model in each group. The aggregation operation refers to the synchronization operation (e.g., joint average of the local models) in the distributed online learning protocol, which is performed by a central coordinator that constructs and distributes a global prediction model for the input event streams based on the  local models.
+%	\item temporal patterns 
+%	\item another communication media  
+%	\item theoretical analysis of dynamic protocol 
+%	\item another transition probabilities learning technique 
+%	\item another weighted sync operator
+%	
+%	
+%	%	 it seems that predicted patterns currently concern individual objects (hence each one is monitored by a distinct predictor), although in reality there may be interactions and correlations among moving objects. As a future research direction, perhaps it would be worth briefly discussing whether and how this method could be extended to handle such correlated events involving multiple objects (e.g., a group of vessels heading to a place).
+%	
+%	
+%\end{itemize}

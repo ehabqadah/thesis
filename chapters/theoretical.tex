@@ -5,9 +5,8 @@
 \label{sec:theoretical}
  %probability gaurantee %
  %SAY something about the relation between transition probabilities and prediction%
- In this section, we present preliminaries of Markov chain and the maximum like-hood estimator of the transition probabilities, and we describe the theoretical properties of our proposed synchronization operator and its relation with the maximum likelihood estimator. 
+ In this section, we present preliminaries of Markov chain and the maximum like-hood estimator of the transition probabilities, and we describe the theoretical properties of our proposed synchronization operator and its relation with the maximum likelihood estimator. Also, we derive the probabilistic guarantee of our method estimations fo the transition probabilities. 
  
- % take the mc matrix from pmc paper and try to derive the varince 
  
  \subsubsection*{Preliminaries}
  In this section, we first present some definitions related to Markov chain theory, 
@@ -25,12 +24,11 @@ on the work described in \cite{bertsekas2002introduction,Billingsley1961,anderso
 	\end{equation}
 
 	
-	Thus, the probability of moving to a future state only depends on the current  state (first-order Markov chain). While for higher order $m$ Markov chains the conditional probabilities can be modeled to be dependent on the last $m$ states. 
+	Thus, the probability of moving to a future state only depends on the current state (first-order Markov chain). While for higher order $m$ Markov chains the conditional probabilities can be modeled to be dependent on the last $m$ states. 
 	
 	When the conditional probabilities $P(s_{t+1}=j|s_{t}=i)$ are independent of the time $t$, the Markov chain is called \textbf{homogeneous} such that $p_{ij}:=P(s_{t+1}=j|s_{t}=i)$.
 	
 
-	
 \end{definition}
 
 The transition probabilities of the Markov chain are represented by a $m \times m$ matrix that called \textbf{transition probability matrix} $\boldsymbol{\Pi}$ with $p_{ij}$ elements
@@ -185,7 +183,7 @@ To summarize, our approach is based aggregating the MLE estimates over $k$ seque
 %Use Chebychev's inequality to prove the weak law of large numbers.
 
  
-\subsubsection{Computing the Transition Matrix of the Underlaying Markov Chain}
+\subsubsection{Transition Matrix of the Underlaying Markov Chain}
 
 \par In order to empirically study the asymptotic behavior of our proposed synchronization operator, we need to compute the transition probability matrix of the underlying Markov chain that the events belong to, and we introduce to calculate it  based on the transition matrix ($\Pi$) of \pmcmr that describes the Markov chain of the pattern.
 
