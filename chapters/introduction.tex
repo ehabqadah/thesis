@@ -1,4 +1,4 @@
-\chapter{INTRODUCTION}
+\chapter{Introduction}
 
 
 \section{Motivation}
@@ -11,20 +11,26 @@
 
 \section{Thesis Overview}
 % we describe the design and implementation of a system called% 
-\par In this thesis, we present the design, implementation, and evaluation of a scalable and distributed system that provides online pattern prediction over multiple real-time streams of events. The proposed approach is based on a novel method that combines a distributed online learning protocol \cite{dekel2012optimal,kamp2014communication} with an event forecasting method based on Markov chains \cite{alevizos2017event}. Our system introduces a new synchronization operator within the distributed online learning protocol, which enables us to synchronize the parameters of distributed pattern prediction models, where we provide the theoretical aspects of this operation.
+\par In this thesis, we present the design, implementation, and evaluation of a scalable and distributed system that provides online pattern prediction over multiple real-time streams of events. The proposed approach is based on a novel method that combines a distributed online learning protocol \cite{dekel2012optimal,kamp2014communication} with an event forecasting method based on Markov chains \cite{alevizos2017event}. The key concept of our method is to make the distributed predictors of event streams to collectively learn a global model. 
 
-Furthermore, we implemented our system on top of the Big Data framework for stream processing Apache Flink \cite{Flink}, and the distributed streaming platform Apache Kafka \cite{Kafka}. We evaluate our proposed system over synthetic event streams, and real-world data streams of moving vessels, which are provided in the context of the datAcron project\footnote{\url{http://www.datacron-project.eu/}}.
+\par In our system we introduce a new synchronization operator within the distributed online learning protocol, which enables us to synchronize the parameters of distributed pattern prediction models, where we provide the theoretical aspects of this operation. 
+
+Furthermore, we implemented our system on top of the Big Data framework for stream processing Apache Flink \cite{Flink}, and the distributed streaming platform Apache Kafka \cite{Kafka}. We evaluate our proposed system over synthetic event streams, and real-world data streams related to trajectories of moving vessels, which are provided in the context of the datAcron project\footnote{\url{http://www.datacron-project.eu/}}.
 
 In summary, the main contributions of this thesis are the following:
 
 \begin{itemize}
-	\item An architecture design of a distributed system for  event patterns prediction over massive event streams, alongside the implementation details on the top of Apache Flink and Apache Kafka.  
-	\item We introduce a new model synchronization operation within a distributed online learning protocol. Additionally, we provide a theoretical analysis of the proposed synchronization operation, in which we derive an  efficiency probabilistic guarantee. 
-	\item Experimental performance evaluation of the proposed method over real-world and synthetic streams of events.
+	
+	\item We propose a new method of combining a distributed online learning protocol with pattern Markov chain predictors over multiple input event streams. The main idea is based on enabling the collaborative learning and information exchange among the predictors.  
+	
+	\item We study the characteristics of the proposed method, by providing a theoretical analysis of the proposed synchronization operation within the distributed online learning protocol, in which we derive a probabilistic guarantee of the learning efficiency. 
+	\item We provide an architecture design of a distributed system for event patterns prediction over massive event streams, alongside the implementation details on the top of Apache Flink and Apache Kafka.  
+	
+	\item We present experimental performance evaluations of the proposed method over real-world and synthetic streams of events.
   
 \end{itemize}
 
-
+\newpage
 \section{Publication}
 
 Parts of this thesis have been published in \cite{Qadah}:\\ \\
@@ -32,10 +38,25 @@ Parts of this thesis have been published in \cite{Qadah}:\\ \\
 
 \section{Outline }
 
-\par The rest of this thesis is structured as follows. Chapter ~\ref{chap:realred_work} provides a review  of the related work and used frameworks. In Chapter ~\ref{chapter:system}, we describe the problem of events pattern prediction, and our approach along with its practical and theoretical aspects.
- Chapter ~\ref{chapter:overview} presents how the proposed system was built, its architecture,  and the implementation details in Flink and Kafka.
- Chapter ~\ref{chapter:evaluation} presents the experimental setup and results of our system over event streams of moving vessels and synthetic event streams. Finally, we give the overall conclusions of this thesis, and we discuss some potential future directions in Chapter ~\ref{chap:conclusions}.
+%\par The rest of this thesis is structured as follows. Chapter  provides a review  of the related work and used frameworks. In Chapter ~\ref{chapter:system}, we describe the problem of events pattern prediction, and our approach along with its practical and theoretical aspects.
+% Chapter ~\ref{chapter:overview} presents how the proposed system was built, its architecture,  and the implementation details in Flink and Kafka.
+% Chapter ~\ref{chapter:evaluation} presents the experimental setup and results of our system over event streams of moving vessels and synthetic event streams. Finally, we give the overall conclusions of this thesis, and we discuss some potential future directions in Chapter ~\ref{chap:conclusions}.
 	
+\par The rest of this thesis is organized as follows:\\
+\\
+\textbf{Chapter ~\ref{chap:realred_work}} provides an overview of the related work on pattern prediction over event steams, distributed online learning techniques, and used Big Data frameworks.
+\\
+\\
+\textbf{Chapter ~\ref{chapter:system}} describes the problem of events pattern prediction over a single event stream and introduces the base used model. Then it presents the proposed method for pattern prediction over multiple input event streams by leveraging the distributed online learning protocol. 
+\\
+\\
+\textbf{Chapter ~\ref{chapter:overview}}  presents the architecture of the proposed system, and the implementation details in Flink and Kafka.
+\\
+\\
+In \textbf{Chapter ~\ref{chapter:evaluation}}, experiments and results over real-world event streams of moving vessels and synthetic event streams are presented.
+\\
+\\
+Finally, conclusions are given in \textbf{Chapter ~\ref{chap:conclusions}} along with potential directions for future work.
 
 
 

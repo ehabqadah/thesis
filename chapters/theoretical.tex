@@ -1,20 +1,25 @@
+\section{Analysis of Proposed Approach}
 
+\par Generally, our approach relies on enabling the collaborative learning among the distributed predictors. Each predictor node receives a stream of events related to a distinct moving object, and the central coordinator is responsible of synchronizing their prediction models using the \textit{synchronization operation}. Moreover, the predictors they only need to share the parameters of their models without aggregating all input event streams. 
+
+\par In addition, our approach relies on enabling the collaborative learning between the prediction models of the input event streams. By doing so, we assume that the underlying event streams belong to the same  distribution and share the same behavior (e.g., mobility patterns). We claim this assumption is reasonable in many application domains: for example, in the context of maritime surveillance, vessels travel through standard routes, defined by the International Maritime Organization (IMO). Additionally, vessels have similar mobility patterns in specific areas such as moving with low speed and multiple turns near the ports \cite{pallotta2013vessel,liu2014knowledge}. That allows our system to construct a coherent global prediction model dynamically for all input event streams based on merging their local prediction models.
+
+\par The underlaying learning process is based on estimating the transition probability matrix of the \pmcmr models, where in our approach we use the synchronization operation (Equation ~\ref{eq:dis_pi_estim}) to build a global estimation of the transition probability matrix among the \emph{$K$}  predictors. In next, we provide a theoretical analysis of the proposed operation, where we further present a probabilistic guarantee of the efficiency of our distributed learning estimation against the isolated estimations.   
+% may add it to conclusion 
+%\par By enabling collaborative learning our approach is imposing an acceleration of learning of the underlying prediction models with less training data, in addition, it provides an improvement of the predictive performance compared to the no-distributed  version of event forecasting with Pattern Markov Chains system. 
 
 
 \subsection{Theoretical Analysis}
 \label{sec:theoretical}
- %probability gaurantee %
- %SAY something about the relation between transition probabilities and prediction%
- In this section, we present preliminaries of Markov chain and the maximum like-hood estimator of the transition probabilities, and we describe the theoretical properties of our proposed synchronization operator and its relation with the maximum likelihood estimator. Also, we derive the probabilistic guarantee of our method estimations fo the transition probabilities. 
+
+ In this section, we present preliminaries of Markov chain and the maximum like-hood estimator of the transition probabilities, and we describe the theoretical properties of our proposed synchronization operator and its relation with the maximum likelihood estimator. Also, we derive the probabilistic guarantee of our method estimations for the transition probabilities. 
  
  
  \subsubsection*{Preliminaries}
- In this section, we first present some definitions related to Markov chain theory, 
-where the theoretical definitions presented  are based 
-on the work described in \cite{bertsekas2002introduction,Billingsley1961,anderson1957statistical,howard2012dynamic}.
+ In this section, we first present some definitions related to Markov chain theory, where the theoretical definitions presented  are based on the work described in \cite{bertsekas2002introduction,Billingsley1961,anderson1957statistical,howard2012dynamic}.
 
 \begin{definition}
-	Let $\{s_0, s_1, \ldots s_n\}$ be a sequence of random variables as \textbf{Markov chain}, where $s_i$ belongs to a finite state space $\mathbf{S =\{1,\ldots m\}}$ and represents the observed state of the chain at time $i$. Let the transition probabilities of the Markov chain $p_{ij}(t+1)$ such that $i,j \in S$ and $t=0,\ldots, n$, where  $p_{ij}(t+1)$ is the probability of the state $j$ at time $t+1$, given state $i$ at time $t$, where the sequence $\{s_0, s_1, \ldots s_n\}$ satisfies the \textbf{Markov property} 
+	Let $\{q_0, q_1, \ldots q_n\}$ be a sequence of random variables as \textbf{Markov chain}, where $X_i$ belongs to a finite state space $\mathbf{S =\{1,\ldots m\}}$ and represents the observed state of the chain at time $i$. Let the transition probabilities of the Markov chain $p_{ij}(t+1)$ such that $i,j \in S$ and $t=0,\ldots, n$, where  $p_{ij}(t+1)$ is the probability of the state $j$ at time $t+1$, given state $i$ at time $t$, where the sequence $\{q_0, q_1, \ldots q_n\}$ satisfies the \textbf{Markov property} 
 	
 	\begin{equation}
 	\begin{aligned}
@@ -52,7 +57,12 @@ where $0 \leq p_{i,j}\leq 1 $ and the rows sum up to one
 \sum_{j=1}^{m} p_{i,j}= 1\ \ \ \ \ \ \ \ \ i=1,2 \ldots m
 \end{equation}
 
-\textbf{Learning the Transition Probability Matrix}. As mentioned in Section ~\ref{sec:pmc_prediction}, we rely on the transition probability matrix of \pmcmr to build the predictions table. However, in practice the underlying  transition probability matrix is unknown, and desirable to estimate or learn it form the observed sequence $\{s_0, s_1, \ldots s_n\}$. The maximum likelihood estimator (MLE) is a common method to estimate the transition probability matrix \cite{anderson1957statistical}.
+\subsection{Learning the Transition Probability Matrix for a Single Markov Chain}
+ 
+\par As mentioned in Section ~\ref{sec:pmc_prediction}, we rely on the transition probability matrix of \pmcmr to build the prediction intervals. Given that the sequence of the states $\{q_0, q_1, \ldots q_n\}$ that DFA visits after consuming the input event stream is a 1-order Markov chain.
+
+
+\par However, in practice the underlying transition probability matrix is unknown, and desirable to estimate or learn it form the observed sequence $\{q_0, q_1, \ldots q_n\}$. The maximum likelihood estimator (MLE) is a common method to estimate the transition probability matrix \cite{anderson1957statistical}.
 
 
 \begin{definition}
@@ -68,7 +78,9 @@ where $0 \leq p_{i,j}\leq 1 $ and the rows sum up to one
 \end{definition} 
 
 
-	The maximum likelihood estimates of transition probabilities of a single sequence $\{s_0, s_1, \ldots s_n\}$   are obtained based on the observed transitions between the states of the chain. That is, the maximum likelihood estimates are basically the count of transitions from $i$ to $j$ divided by the total count of the chain being in state $i$.  
+
+\textbf{Proprieties of the maximum likelihood estimates}. 
+	The maximum likelihood estimates of transition probabilities of a single sequence $\{q_0, q_1, \ldots q_n\}$  are obtained based on the observed transitions between the states of the chain. That is, the maximum likelihood estimates are basically the count of transitions from $i$ to $j$ divided by the total count of the chain being in state $i$.  
 	
 	\par ~\citet{anderson1957statistical} have shown that 
 	
@@ -108,9 +120,9 @@ Where $p_{l,j}^{t-1}$ is the probability of state $j$ at time  $t-1$ given that 
 It is clearly seen that variances are dropping as the sample size $n$ grows large.  In next, we will show that our proposed approach of synchronizing the maximum likelihood estimators over $k$ chains is preserving  a similar asymptotic behavior. 
 
 
-\subsubsection{Properties of the Synchronization Operator}
+\subsubsection{Probabilistic Learning Guarantee}
  %in Equation ~\ref{eq:dis_pi_estim}% 
-\par The proposed synchronization operator is basically aggregating the maximum likelihood estimates over $k$ observed sequences (i.e., sequences of the DFA states based on the consumed event streams), the operator estimates the maximum likelihood of the probabilities for a set of $k$ sequences, which are arranged in serial order as one large chain with length $ N=kn$ where we assume that all $k$ sequences have $n$ observations. For the sake of simplicity, we assume that the synchronization phase happens on batch size equals $n$ (i.e., $b=n$) the, then it follows that 
+\par The proposed synchronization operator is aggregating the maximum likelihood estimates over $k$ observed sequences (i.e., sequences of the DFA states based on the consumed event streams), the operator estimates the maximum likelihood of the probabilities for a set of $k$ sequences, which are arranged in serial order as one large chain with length $ N=kn$ where we assume that all $k$ sequences have $n$ observations. For the sake of simplicity, we assume that the synchronization phase happens on batch size equals $n$ (i.e., $b=n$) the, then it follows that 
 \begin{equation}
 \label{eq:dis_pi_estim2}
 	\begin{aligned}
@@ -170,8 +182,7 @@ This is equivalent to,for any constant $c > 0$ and $k \ge 1$ we have
 \[ \Pr\left( |\hat{\pi}_{i,j} - {p}_{i,j}| \geq c \right) \leq
  \Pr\left( |\hat{p}_{i,j} - {p}_{i,j}| \geq c \right)
  \]
-
-To summarize, our approach is based aggregating the MLE estimates over $k$ sequences, which speeds up the convergence to reach the true transition probabilities as result of the  smaller variances.
+ where $\hat{p}_{i,j}$ presents an estimated transition probability on a single predictor, and the $\hat{\pi}_{i,j}$ is the corresponding global estimation by the synchronization operator. To summarize, our approach is based aggregating the MLE estimates over $k$ sequences, which speeds up the convergence to reach the true transition probabilities as result of the smaller variances.
 
 %The weak law of large
 %numbers states that, if $X_1, X_2, X_3, \ldots$ are independent and identically
@@ -183,11 +194,9 @@ To summarize, our approach is based aggregating the MLE estimates over $k$ seque
 %Use Chebychev's inequality to prove the weak law of large numbers.
 
  
-\subsubsection{Transition Matrix of the Underlaying Markov Chain}
+\subsection{Transition Matrix of the Underlaying Markov Chain}
 
-\par In order to empirically study the asymptotic behavior of our proposed synchronization operator, we need to compute the transition probability matrix of the underlying Markov chain that the events belong to, and we introduce to calculate it  based on the transition matrix ($\Pi$) of \pmcmr that describes the Markov chain of the pattern.
-
-~\citet{nuel_pattern_2008} showed in \textbf{Theorem 3} the relation between the elements  of 
+\par In order to empirically study the learning efficiency of our distributed learning based proposed approach against the isolated approach, we need to map the transition probabilities of the underlying Markov chain with the transition probability matrix ($\hat{\Pi}$) of the \pmcmr model. ~\citet{nuel_pattern_2008} showed in \textbf{Theorem 3} the relation between the elements  of 
 $\Pi$ and the conditional probabilities of the $m-$order Markov chain $X=\{X_1, X_2, \ldots X_n\}$ described by 
 
 \[ \Pi(p, q) =
@@ -196,7 +205,7 @@ P(X_{m+1}=b|X_1\ldots X_m=\delta^{-m}(p))     & \quad \text{if } \delta(p,q)=b \
 0  & \quad \text{if } p \notin  \delta(p,X)
 \end{cases}
 \]
-Using this theorem, we can compute the transition probabilities of the Markov chain $X$. For example, the transition probability matrix of the DFA of  the pattern $\mathcal{P}=a ; d ; c$ over  $\Sigma=\{a,b,c,d\}$ is  represented by: 
+Using this theorem, in the case of the underlaying transition probability matrix is known (e.g., synthetic event streams),  we then can compare the estimation efficiency of the different approaches for the transition probabilities of the underlaying Markov chain $X$.  For example, the transition probability matrix of the \pmcmr model for the pattern $\mathcal{P}=a ; d ; c$ over  $\Sigma=\{a,b,c,d\}$ is represented by: 
 
 \begin{equation}
 \label{eq:matrix}
