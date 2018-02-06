@@ -5,7 +5,7 @@
 \par We follow the general notation and terminology of \cite{agrawal2008efficient,schultz2009distributed,luckham2008power,alevizos2015complex,zhou_pattern_2015,kamp2014communication} to formalize the problem we tackle and our solution approach.
 
 \label{chapter:system}
-\section{Pattern Prediction Over an Event Stream}
+\section{Pattern Prediction over an Event Stream}
 
 
 In this section, We first define the problem of predicting the completion of user-defined patterns over a single event stream. Then, we give a brief introduction of the event patterns prediction model over an event stream using the Event Forecasting with Pattern Markov Chains method \cite{alevizos2017event}.
@@ -147,7 +147,7 @@ Therefore, it is essential to learn the values of the \pmcmr's transition probab
 
 \par This model is performing the learning over an event stream $s$ that  usually requires a large amount of time until convergence to a sufficiently good model.  Where in the case of multiple event streams, a unique model associated with each stream is needed. Accordingly, we present in this work, a technique to share information among the \pmcmr predictors over multiple input event streams (i.e., distributed learning of the transition probability matrix).
 
-\section{Pattern Prediction Over Multiple Event Streams}
+\section{Pattern Prediction over Multiple Event Streams}
 
 In this section, We extend the pattern prediction problem over a single event stream to the case of multiple and distributed input event streams, where there is an associated prediction model for each event stream. And We further present our proposed cooperative learning based approach by using a distributed online prediction protocol \cite{kamp2014communication} to synchronize the distributed prediction models in a communication-efficient manner. 
 
@@ -177,10 +177,10 @@ Let $O = \{ o_1, ..., o_k\}$ be a set of \emph{$K$} objects/entities (e.g., movi
 %Thus, the prediction model $f_i$ on a predictor node is represented by \pmcmr and its associated DFA.
 
 \subsection*{Distributed Online Learning for Pattern Prediction Models}
-\par In next, we describe the details of adapting this protocol with the pattern prediction (\pmcmr) models.
+\par In next, we describe the details of adapting the distributed online learning protocol \cite{kamp2014communication}  with the pattern prediction (\pmcmr) models. Where this protocol provides a communication-efficient dynamic synchronization scheme based on a periodic static scheme.
 
 
-Our proposed method is based on distributed online prediction protocol adapting .This protocol provides a communication-efficient dynamic synchronization scheme based on a periodic static scheme. 
+
 
 \par Algorithm~\ref{algonline:dol} presents the distributed online prediction protocol by dynamic model synchronization on both the predictor nodes and the coordinator. We refer to the PMC's transition matrix $\boldsymbol{\Pi}_i$ on predictor node $n_i$ by $w_i$. That is, when a predictor $n_i:\ i \in[k]$ observes an event $e_j$ it revises its internal model state (i.e., $f_i$) and provides a prediction report. Then it checks the local conditions  (batch size $b$ and local model divergence from a reference model $w_r$) to decide whether there is a need to synchronize its local model with the coordinator [or not].  $w_r$ is maintained in the predictor node as a copy of the last computed aggregated model $\hat{w}$ from the previous full synchronization step, which is shared between all local predictors/learners. By monitoring the local condition $\|w_i - w_r\|^2 > \Delta$ on all local predictors, we have a guarantee that if none of the local conditions is violated, the divergence (i.e., variance of local models $\delta(w)=\frac{1}{k} \sum_{j=1}^{k}\|w_i - \hat{w}\|^2$) does not exceed the threshold $\Delta$ \cite{kamp2014communication}. 
 
@@ -191,12 +191,14 @@ Our proposed method is based on distributed online prediction protocol adapting 
 	\begin{algorithmic}[1] 
 	
 		\Statex \Indm  \textbf{Predictor} node $n_i$: at observing event $e_j$
-		\Statex \Indp update the parameters of the local prediction model $w_i$ and provide a prediction interval $I$ \; 
+		
+		\Statex \Indp update the parameters of the local prediction model $w_i$ and provide a prediction interval $I$ \;
+	 
 
 		\Statex \If {$j\mod b = 0\ and\ \|w_i - w_r\|^2 > \Delta$}  
 		\Statex send  $w_i$ to the Coordinator (violation) \;
 		\Statex \Indm \textbf{Coordinator}:
-		\Statex \Indp receive local models with violation 
+		\Statex \Indp receive parameters of local models with violation 
 		 $B=\{w_i\}_{i=1}^m$ \;
 	
 	
