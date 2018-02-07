@@ -3,6 +3,8 @@
 \chapter{System Overview}
 \label{chapter:overview}
 %ADD more details and interfacse structure%
+%CHECK Towards Flexible Event Processing in Distributed Data Streams%
+%SEE delevriable%
 \section{System Architecture}
 \label{sec:architecture}
 Our system consumes as an input\footnote{In practice, the aggregated input events stream is composed of multiple event streams (partitions) from a set of moving objects.} an aggregated stream of events coming from a large number of moving objects, which is continuously collected and fed into the system. It allows users to register a pattern $\mathcal{P}$ to be monitored over each event stream of a moving object. The output stream consists of original input events and predictions of full matches of $\mathcal{P}$, displayed to the end users. Figure ~\ref{fig:architecture} presents the overview of our system architecture and its main components.      

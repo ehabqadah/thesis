@@ -1,17 +1,19 @@
 \chapter{Problem and proposed Approach }
 
-\par This chapter introduces the problem that we address in this thesis, including the formal definition of the pattern prediction over a single event stream and multiple streams. First, we present the base model for events pattern prediction, and our proposed approach to leverage the distributed online protocol to enable knowledge sharing between prediction models over multiple event streams. Furthermore, we provide an analysis of the theoretical efficiency of distributing the learning phase of the pattern prediction models.
+\label{chapter:system}
+
+\par This chapter introduces the problem that we address in this thesis, divided into two parts: we start with the formal definition of the pattern prediction over an individual event stream, then we extended to the case of multiple streams. We present the base used model for event pattern prediction, and our proposed approach to leverage the distributed online protocol to enable knowledge sharing between prediction models over multiple event streams. Furthermore, we provide an analysis of the theoretical aspects of our approach.
 
 \par We follow the general notation and terminology of \cite{agrawal2008efficient,schultz2009distributed,luckham2008power,alevizos2015complex,zhou_pattern_2015,kamp2014communication} to formalize the problem we tackle and our solution approach.
 
-\label{chapter:system}
+
 \section{Pattern Prediction over an Event Stream}
 
 
-In this section, We first define the problem of predicting the completion of user-defined patterns over a single event stream. Then, we give a brief introduction of the event patterns prediction model over an event stream using the Event Forecasting with Pattern Markov Chains method \cite{alevizos2017event}.
+In this section, we define the first part of the problem that we tackle in this thesis, by defining the user-defined pattern prediction over a single event stream. We also give a brief introduction of the event patterns prediction model over an event stream using the Event Forecasting with Pattern Markov Chains method \cite{alevizos2017event}.
 
 
-\subsection{Problem Formulation}
+\subsection{Basic Problem Formulation}
 
 We first define the input event and the stream of events as follows:  
 \begin{definition}
@@ -23,7 +25,7 @@ A stream $s=\langle e_1,e_3,...,e_t,...\rangle$  is a time-ordered sequence of e
 \end{definition}
 
 
-\par A user-defined pattern $\mathcal{P}$ is given in the form of a regular expression over a set of event types $\Sigma$ (i.e., alphabet). Let a word over $\Sigma$ be a sequence of event types, and the set of words over $\Sigma$ be a language $L$. Then $L(\mathcal{P})$ is the regular language defined by the regular expression ($\mathcal{P}$) \cite{hopcroft2006automata,nuel_pattern_2008,alevizos2017event},  where a regular expression is an event type $\in$ $\Sigma$, or  defined using the following operators over regular expressions:
+\par A user-defined pattern $\mathcal{P}$ is given in the form of a regular expression over a set of event types $\Sigma$ (i.e., alphabet). Let a word over $\Sigma$ be a sequence of event types, and the set of words over $\Sigma$ be a language $L$. Then $L(\mathcal{P})$ is the regular language defined by the regular expression ($\mathcal{P}$) \cite{hopcroft2006automata,nuel_pattern_2008,alevizos2017event},  where a regular expression is an event type $\in$ $\Sigma$, or defined using the following operators over regular expressions:
  
 \begin{itemize}[noitemsep]
 	\item \textit{sequence} that represents a concatenation of two regular expressions languages 
@@ -46,7 +48,7 @@ that we will need to wait for until the pattern is completed (full match).
 \subsection{Base Prediction Model}
 \label{sec:Event-Forecasting-PMC}
 
-\par In this thesis, we use the Event Forecasting with Pattern Markov Chains method \cite{alevizos2017event} to construct a pattern prediction model over an event stream. In next, we describe the details of this approach. We first provide an overview of the Patten Markov Chain framework \cite{nuel_pattern_2008}. We then describe how this framework is used to build a pattern prediction model \cite{alevizos2017event}.  
+\par In this thesis, we use the Event Forecasting with Pattern Markov Chains method \cite{alevizos2017event} to construct a pattern prediction model over an event stream. In next, we describe the details of this approach. We first provide an overview of the Patten Markov Chain framework \cite{nuel_pattern_2008}. Then, we describe how this framework is used to build a pattern prediction model \cite{alevizos2017event}.  
 
 
 \subsubsection*{Pattern Markov Chain (PMC)}
@@ -149,42 +151,46 @@ Therefore, it is essential to learn the values of the \pmcmr's transition probab
 
 \section{Pattern Prediction over Multiple Event Streams}
 
-In this section, We extend the pattern prediction problem over a single event stream to the case of multiple and distributed input event streams, where there is an associated prediction model for each event stream. And We further present our proposed cooperative learning based approach by using a distributed online prediction protocol \cite{kamp2014communication} to synchronize the distributed prediction models in a communication-efficient manner. 
+We extend the pattern prediction problem over a single event stream to the case of multiple and distributed input event streams, where there is an associated prediction model for each event stream. And We further present our proposed cooperative learning based approach by using a distributed online prediction protocol \cite{kamp2014communication} to synchronize the distributed prediction models in a communication-efficient manner. 
 
 
-\subsection{Problem Formulation Extension}
+\subsection{Extended Problem Formulation}
 
 \par In this section, we extend the problem of pattern prediction over a single event stream to consider the setting where there are multiple input event streams: 
 Let $O = \{ o_1, ..., o_k\}$ be a set of \emph{$K$} objects/entities (e.g., moving objects), each of which is generating an event stream $s_i$, hence, we have a set of real-time input event streams $S = \{ s_1, ..., s_k\}$, where these streams are produced independently from the same distribution.
 
 
-\par Again, let $\mathcal{P}$ be a user-defined pattern given in the form of regular expression, which is monitored in every stream $s_i \in S$. Then, we have a system consists of \emph{$K$} local predictor (learner) nodes $n_1,n_2...,n_k$, each of which receives an input event stream $s_i\in S$ that is associated with a single object $o_i \in O$.
+\par Again, let $\mathcal{P}$ be a user-defined pattern given in the form of regular expression, which is monitored in every stream $s_i \in S$. Then, we have a system consists of \emph{$K$} local predictor (learner) nodes $n_1,n_2\dots,n_k$, each of which receives an input event stream $s_i\in S$ that is associated with a single object $o_i \in O$.
 
 \par  The goal is to provide online predictions about the completion of the pattern $\mathcal{P}$ within each stream $s_i$. Toward this goal, each node maintains a local prediction model $f_i$. Then for each new arriving event tuple  $e_t \in s_i$, the $f_i$ model provides an online prediction interval about the future full match of the pattern $\mathcal{P}$.
 
-\par In other words, we have multiple running instances of an online prediction algorithm on distributed nodes for multiple input event streams. For example, massive streams of events that describe trajectories of moving vessels in the context of maritime surveillance, where there is one predictor node for each vessel's event stream.
+\par In other words, we have separated running instances of an online prediction algorithm on distributed nodes for \emph{$K$} input event streams. For example, massive streams of events that describe trajectories of group of moving vessels in the context of maritime monitoring, where there is one predictor node for each vessel's event stream.
   
   
-  \par In this work, we employee the \pmcmr models on the distributed local predictor nodes, while these predictors can work in isolation with no communication with other local predictors, but this non-cooperative way leads to inefficiently in the terms of learning convergence and predictive performance among all predictors. Thus, in this work, we propose to use the distributed online prediction protocol \cite{kamp2014communication} to enable the communication among the local predictors to synchronize their models.     
+  \par In this work, we employee the \pmcmr models on the distributed predictor nodes, each model is associated with a particular event stream. While these predictors can work in isolation with no communication with other local predictors, but this non-cooperative way leads to inefficiently in the terms of learning convergence and predictive performance among all predictors. Thus, in this work, we propose to use the distributed online prediction protocol \cite{kamp2014communication} to enable the communication among the local predictors to synchronize their models.     
 %
 %The defined pattern $\mathcal{P}$ is monitored over each event stream $s_i$  by a  predictor nodes  $n_i$  that maintains a local prediction model $f_i$, where there is one node for each vessel's event stream.  The prediction model $f_i$ gives the ability to provide an online predictions about when the pattern will be completed in the form of an expected number of future events before a full match does occur.
 
 \subsection{The Proposed Method}
 \label{sec:proposed_approach}
+
 \par This work proposes a scalable and distributed prediction system for user-defined patterns over multiple massive input event streams. The system  uses the PMC forecasting method \cite{alevizos2017event} as the base prediction model, where there is a \pmcmr model associated with each input event stream $s_i$ on a predictor node $n_i$. And it employees the distributed online learning protocol \cite{kamp2014communication} to exchange information among the distributed predictors of the input event streams, which allows to synchronize the parameters of their prediction models, which are represented by the transitions probabilities matrices.
 
 %
 %Thus, the prediction model $f_i$ on a predictor node is represented by \pmcmr and its associated DFA.
 
 \subsection*{Distributed Online Learning for Pattern Prediction Models}
-\par In next, we describe the details of adapting the distributed online learning protocol \cite{kamp2014communication}  with the pattern prediction (\pmcmr) models. Where this protocol provides a communication-efficient dynamic synchronization scheme based on a periodic static scheme.
+
+\par In next, we describe the details of adapting the distributed online learning protocol \cite{kamp2014communication} with the pattern prediction (\pmcmr) models. Where this protocol provides a communication-efficient dynamic synchronization scheme based on a periodic static scheme.
 
 
+\par Algorithm~\ref{algonline:dol} presents the distributed online prediction protocol by dynamic model synchronization on both the predictor nodes and the coordinator. We refer to the PMC's transition matrix $\boldsymbol{\Pi}_i$ on predictor node $n_i$ by $w_i$, which represents the parameters of the local prediction model $f_i$. 
 
+\par That is, when a predictor $n_i:\ i \in[k]$ observes an event $e_j$ it revises its internal model state ($fw_i$) and provides a prediction report. Then it checks the local conditions, including consuming a batch size $b$ of events and the local model divergence from a reference model $w_r$, to decide whether there is a need to synchronize its local model with the coordinator [or not]. $w_r$ is maintained in the predictor node as a copy of the last computed aggregated model $\hat{w}$ from the previous full synchronization step, which is shared among all distributed predictors.
 
-\par Algorithm~\ref{algonline:dol} presents the distributed online prediction protocol by dynamic model synchronization on both the predictor nodes and the coordinator. We refer to the PMC's transition matrix $\boldsymbol{\Pi}_i$ on predictor node $n_i$ by $w_i$. That is, when a predictor $n_i:\ i \in[k]$ observes an event $e_j$ it revises its internal model state (i.e., $f_i$) and provides a prediction report. Then it checks the local conditions  (batch size $b$ and local model divergence from a reference model $w_r$) to decide whether there is a need to synchronize its local model with the coordinator [or not].  $w_r$ is maintained in the predictor node as a copy of the last computed aggregated model $\hat{w}$ from the previous full synchronization step, which is shared between all local predictors/learners. By monitoring the local condition $\|w_i - w_r\|^2 > \Delta$ on all local predictors, we have a guarantee that if none of the local conditions is violated, the divergence (i.e., variance of local models $\delta(w)=\frac{1}{k} \sum_{j=1}^{k}\|w_i - \hat{w}\|^2$) does not exceed the threshold $\Delta$ \cite{kamp2014communication}. 
+ \par By monitoring the local condition $\|w_i - w_r\|^2 > \Delta$ on all local predictors, we have a guarantee that if none of the local conditions is violated, the divergence (i.e., variance of local models $\delta(w)=\frac{1}{k} \sum_{j=1}^{k}\|w_i - \hat{w}\|^2$) does not exceed the threshold $\Delta$ \cite{kamp2014communication}. This is the key point of this protocol that reduces the communication overhead comparing to the static based communication scheme, where the predictors always communicate periodically after observing a fixed number ($b$) of events ~\cite{dekel2012optimal}.  
 
-\par On the other hand, the coordinator receives the parameters of prediction models from the predictor nodes that requested for model synchronization (violation). Then it tries to keep incrementally querying other nodes for their local prediction models until reaching out all nodes, or the variance of the aggregated model $\hat{w}$ that is computed from the already received models less or equal than the divergence threshold  $\Delta$. Finally, the aggregated model $\hat{w}$ is sent back to the predictor nodes that sent their models after the violation or have been queried by the coordinator.
+\par On the other hand, the coordinator receives the parameters of prediction models from the predictor nodes that requested for model synchronization (violation). Then it tries to keep incrementally querying other nodes for their local prediction models until reaching out all nodes, or the variance of the aggregated parameters $\hat{w}$ that is computed from the already received models less or equal than the divergence threshold  $\Delta$. The coordinator uses a synchronization operation to compute the parameters of a global model  $\hat{w}$. Finally, $\hat{w}$ is sent back to the predictor nodes that sent their models after the violation or have been queried by the coordinator. 
 
 \begin{algorithm}[h]
 	\caption{Communication-efficient Distributed Online Learning \cite{kamp2014communication}.} 
@@ -218,23 +224,25 @@ Let $O = \{ o_1, ..., o_k\}$ be a set of \emph{$K$} objects/entities (e.g., movi
 \end{algorithm}
 
 
-\par  We use this protocol for the pattern prediction models, which are internally based on the \pmcmr. This allows the distributed \pmcmr predictors for multiple event streams to synchronize their models (i.e., the transition probability matrix of each predictor) within the system in a communication-efficient way. 
+\par  We use this protocol for the pattern prediction models, which are internally based on the \pmcmr. This allows the distributed \pmcmr predictors for multiple event streams to synchronize their models (i.e., the transition probability matrix of each predictor), and learn a shared model in a communication-efficient way. 
 
 
 \subsection*{Learning a Global Transition Probability Matrix}
-\par We propose a \textit{synchronization operation} for the transition probability matrices ($w_i=\boldsymbol{\Pi}_i :i \in[k]$) of the $k$ distributed \pmcmr predictors. The operation is based on distributing the maximum-likelihood estimation \cite{anderson1957statistical} for the transition probabilities of the \pmcmr models described by: 
+
+\par We propose a \textit{synchronization operation} for the transition probability matrices ($w_i=\boldsymbol{\Pi}_i :i \in[k]$) of the $k$ distributed \pmcmr predictors. The operation is based on distributing the maximum-likelihood estimation \cite{anderson1957statistical} for the transition probabilities of the \pmcmr models described by:
+ 
 \begin{equation}
 \label{eq:dis_pi_estim}
-\hat{\pi}_{i,j}=\frac{\sum_{k \in K} n_{k,i,j}}{\sum_{k \in K} \sum_{l \in L} n_{k,i,l}}
+\hat{\pi}_{i,j} = \frac{\sum_{k \in K} n_{k,i,j}}{\sum_{k \in K} \sum_{l \in L} n_{k,i,l}}
 \end{equation}
 
 Where $\hat{\Pi}$ is the global transition probability matrix that will be shared among all \pmcmr predictors. 
-\par Moreover, we measure the divergence of the local models from the reference model  $\|w_k - w_r\|^2$ by calculating the sum of square difference between the transition probabilities  $\boldsymbol{\Pi}_i$ and  $\boldsymbol{\Pi}_r$:
+\par Moreover, we measure the divergence of the local models from the reference model  $\|w_i - w_r\|^2$ by calculating the sum of square difference between the transition probabilities  $\boldsymbol{\Pi}_i$ and  $\boldsymbol{\Pi}_r$:
 \begin{equation*}
 \label{eq:dis_pi_varinace}
-\|w_k - w_r\|^2=\sum_{i,j} (\hat{\pi}_k{i,j} -\hat{\pi}_r{i,j})^2
+\|w_i - w_r\|^2=\sum_{l,j} (\hat{\pi}_i{l,j} -\hat{\pi}_r{l,j})^2
 \end{equation*}
-%ADD something about modes%
+
 
 
 
