@@ -1,23 +1,28 @@
 \chapter{Empirical Evaluation}
-
 \label{chapter:evaluation}
 
-\section{Evaluation Over Synthetic Event Streams}
+\par In this chapter, we provide a brief overview of the used event streams for our evaluation. We evaluate our system over synthetic and real-world event streams. In next, we present the experimental setup, and discuss the results of the proposed method.   
 
-\section{Evaluation Over Real-word Event Streams}
-\label{sec:results_real}
+\section{Setup}
+\subsection*{Experimental setup}
+\par We ran our experiments on single-node standalone Flink cluster deployed on an Ubuntu Server 17.04 with Intel(R) Core(TM) i7-7700 CPU @ 3.60GHz X 8 processors and 32GB RAM. We used Apache Flink v1.4.0 and Apache Kafka v0.10.2.1 for our experiment.
 
-In this section, we evaluate our proposed system by analyzing the predictive performance and communication complexity  using real-world event streams provided by the datAcron project in the context of maritime monitoring. The used event streams describe critical points (i.e., synopses) of moving vessels trajectories, which are derived from raw AIS messages as described in \cite{synopses1}. In particular, for our evaluation experiments we used a data set of synopses that contains $4,684,444$ critical points of $5055$ vessels sailing in the Atlantic Ocean during the period from 1 October 2015 to 31 March 2016.
+
+
+\subsection*{Real-word Event Streams}
+We use real-world event streams provided by the datAcron project in the context of maritime monitoring. The used event streams describe critical points (i.e., synopses) of moving vessels trajectories, which are derived from raw AIS messages as described in \cite{synopses1}. In particular, for our evaluation experiments we used a data set of synopses that contains $4,684,444$ critical points of $5055$ vessels sailing in the Atlantic Ocean during the period from 1 October 2015 to 31 March 2016.
 
 \par We used the synopses data set to generate a simulated stream of event tuples  i.e., \textit{(id, timestamp, longitude, latitude, annotation, speed, heading)}, which are processed by the system to attach an extra attribute \textit{type} that represents the event value,  where $type$ $\in \Sigma$,  and $ \Sigma= \Sigma_1=$$\{$\textit{VerySlow, Slow, Moving,  Sailing, Stopping}$\}$, which is based on a discretization of the speed values. That is, $\Sigma_1$ includes a simple derived event types based on the speed value that can be used over streams of  raw AIS  or critical points. Or $\Sigma=\Sigma_2=$ $\{$\textit{stopStart, stopEnd, changeInSpeedStart, changeInSpeedEnd,  slowMotionStart, slowMotionEnd, gapStart, gapEnd, changeInHeading}$\}$, which is derived based on the values of the $annotation$ attribute that encodes the extracted trajectory movement events \cite{synopses1}. $\Sigma_2$ represents the set of possible mobility changes in the vessel's trajectory \cite{synopses1}, each critical point has at least one event. Where in the case of multiple values we generate duplicate points each of which corresponding to one event in the same order of $\Sigma_2$.
 
 \par In our experiments, we monitor a pattern $\mathcal{P}_1=Sailing$ with $\Sigma_1$ that detects when the vessel is underway (sailing). Likewise, we test a second pattern  $\mathcal{P}_2=$\textit{changeInHeading; gapStart; gapEnd; changeInHeading} with $\Sigma_2$ that describes a potential illegal fishing activity \cite{alevizos2017event}. 
 
 
-\subsubsection*{Experimental setup} We ran our experiments on single-node standalone Flink cluster deployed on an Ubuntu Server 17.04 with Intel(R) Core(TM) i7-7700 CPU @ 3.60GHz X 8 processors and 32GB RAM. We used Apache Flink v1.3.2 and Apache Kafka v0.10.2.1 for our tests.
+\subsection*{Synthetic Event Streams}
+In order to get a better insight of our proposed approach we evaluate it on synthetic event streams, we generate  synthetic event streams based on a predefined Markov chain source over $\Sigma=\{a, b, c, d\}$. We define a simple pattern $\mathcal{P}=a ; d ; c$ to study the predictive performance along with the learning efficiency of the transition probability matrix of the Markov chain source, we compare the underlaying matrix of \pmcmr models in our approach and the isolated case as was mentioned in Section  ~\ref{sec:underlaying_mc}.
+   
 
 
-\subsubsection*{Evaluation criteria} Our goal is to evaluate our distributed pattern prediction system, which enables the synchronization of prediction models (i.e., PMC models) on the distributed predictor nodes. Our proposed system can operate in three different modes of  protocols/schemes of models synchronization: \begin{enumerate}[label=(\roman*)] 
+\subsection*{Evaluation Metrics} Our goal is to evaluate our distributed pattern prediction system, which enables the synchronization of prediction models (i.e., PMC models) on the distributed predictor nodes. Our proposed system can operate in three different modes of  protocols/schemes of models synchronization: \begin{enumerate}[label=(\roman*)] 
 	\item static scheme based on synchronizing the prediction models periodically every $b$ of input events in each stream, 
 	\item continuous, full synchronization for each incoming event (hypothetical), 
 	\item dynamic synchronization protocol based on making the predictors communicate their local prediction models periodically but only under condition that the divergence of the local models from a reference model exceeds a variance threshold $\Delta$ (recommended).  	   
@@ -30,18 +35,56 @@ In this section, we evaluate our proposed system by analyzing the predictive per
 	
 	\item $\mathit{Spread}$$ =end(I) -start(I)$ is the width of the prediction interval $I$, which represents the number of events between the start and the end of $I$. 
 	
+	\item  Moreover, we study the communication cost by measuring the $\mathit{cumulative\ communication}$ that captures the number of messages, which are required to perform the distributed online learning modes to synchronize the prediction models.
 \end{enumerate} 
-\par Moreover, we study the communication cost by measuring the $\mathit{cumulative\ communication}$ that captures the number of messages, which are required to perform the distributed online learning modes to synchronize the prediction models. Next, we present the experimental results for the patterns  $\mathcal{P}_1=Sailing$ with an order of $m=2$, and   $\mathcal{P}_2=$\textit{changeInHeading; gapStart; gapEnd; changeInHeading} with first order $m=1$. All experiments are performed with setting the batch size to 100  ($b=100$), the variance threshold of 2 ($\Delta=2$), $80\%$ as PMC prediction threshold ($\theta_{c}=80\%$), and 200 for the maximum spread.
 
-\begin{figure}[h]
+
+
+
+\section{Results on Synthetic Event Streams}
+In this section, we presnet the results over synthetic streams.
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\textwidth,height=.62\textheight]{chapters/figures/synthetic/precision_synthetic_15_0001.png}
 	
-	\includegraphics[width=\textwidth,height=.4\textheight]{chapters/figures/precision_p1.png}
+	\caption{Precision scores with respect to the number of input events over time for $\mathcal{P}=a;d;c$.}
+	\label{fig:precsion_synthetic}
+\end{figure}
+
+
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\textwidth,height=.62\textheight]{chapters/figures/synthetic/spread_synthetic_15_0001.png}
+	
+	\caption{Average spread  with respect to the number of input events over time for $\mathcal{P}=a;d;c$.}
+	\label{fig:spread_synthetic}
+\end{figure}
+
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\textwidth,height=.62\textheight]{chapters/figures/synthetic/error_synthetic_15_0001.png}
+	
+	\caption{Average of transition probabilities estimation error for $\mathcal{P}=a;d;c$.}
+	\label{fig:error_synthetic}
+\end{figure}
+
+
+\section{Results on Real-word Event Streams}
+\label{sec:results_real}
+
+In this section, we evaluate our proposed system by analyzing the predictive performance and communication complexity  using , we present the experimental results for the patterns  $\mathcal{P}_1=Sailing$ with an order of $m=2$, and   $\mathcal{P}_2=$\textit{changeInHeading; gapStart; gapEnd; changeInHeading} with first order $m=1$. All experiments are performed with setting the batch size to 100  ($b=100$), the variance threshold of 2 ($\Delta=2$), $80\%$ as PMC prediction threshold ($\theta_{c}=80\%$), and 200 for the maximum spread.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\textwidth,height=.62\textheight]{chapters/figures/synopses/p1_precision_100_2_08.png}
 	
 	\caption{Precision scores with respect to the number of input events over time for $\mathcal{P}_1$.}
 	\label{fig:precsions}
 \end{figure}
 
-\subsubsection*{Experimental results} Figure ~\ref{fig:precsions} depicts the average precision scores of predictions models (one prediction model per vessel) of all synchronization modes for the first pattern $\mathcal{P}_1=Sailing$, namely, isolated without synchronization, continuous (full-sync), static, and our recommended approach based on the dynamic synchronization scheme. It can be clearly seen that all methods of distributed learning outperform the isolated prediction models. The hypothetical method of full continuous synchronization has the highest precision rates, while the static and dynamic synchronization schemes have close precision scores. Consequently, dynamic synchronization is not much weaker than the static synchronization, but requires much less communication, as explained below.
+Figure ~\ref{fig:precsions} depicts the average precision scores of predictions models (one prediction model per vessel) of all synchronization modes for the first pattern $\mathcal{P}_1=Sailing$, namely, isolated without synchronization, continuous (full-sync), static, and our recommended approach based on the dynamic synchronization scheme. It can be clearly seen that all methods of distributed learning outperform the isolated prediction models. The hypothetical method of full continuous synchronization has the highest precision rates, while the static and dynamic synchronization schemes have close precision scores. Consequently, dynamic synchronization is not much weaker than the static synchronization, but requires much less communication, as explained below.
 
 
 
@@ -49,9 +92,9 @@ In this section, we evaluate our proposed system by analyzing the predictive per
 
 \begin{center}
 	
-	\begin{figure}[h]
+	\begin{figure}[H]
 		
-		\includegraphics[width=\textwidth,height=.4\textheight]{chapters/figures/messages_p1.png}
+		\includegraphics[width=\textwidth,height=.62\textheight]{chapters/figures/synopses/p1_messages_100_2_08.png}
 		
 		\caption{Cumulative communication with respect to the number of input events over time for $\mathcal{P}_1$.}
 		\label{fig:comm}
@@ -63,25 +106,24 @@ In this section, we evaluate our proposed system by analyzing the predictive per
 
 \begin{center}
 	
-	\begin{figure}[ht]
+	\begin{figure}[H]
 		
-		\includegraphics[width=\textwidth,height=.5\textheight]{chapters/figures/spread_p1.png}
+		\includegraphics[width=\textwidth,height=.62\textheight]{chapters/figures/synopses/p1_spread_100_2_08.png}
 		
 		\caption{Average spread value for $\mathcal{P}_1$.}
 		\label{fig:spread}
 	\end{figure}
 \end{center}
 
-\begin{figure}[h]
+\begin{figure}[H]
 	
-	\includegraphics[width=\textwidth]{chapters/figures/precision_p2.png}
+	\includegraphics[width=\textwidth,height=.62\textheight]{chapters/figures/synopses/p2_precision_100_2_08.png}
 	
 	\caption{Precision scores of $\mathcal{P}_2$  for \textit{PLEASURE CRAFT} vessels.}
 	\label{fig:precsions_p2}
 \end{figure}
 
-\par In Figure ~\ref{fig:precsions}, we also noted that the precision is going down in a first phase and stabilizes then. This seems to be counter-intuitive, as the models should improve when getting more data up to a certain point. For explanation, we have investigated the effect of the distributed synchronization of the prediction models on the average spread value, Figure  ~\ref{fig:spread}  shows the spread results for all approaches. It can be seen that the spread is higher for the distributed learning based methods comparing to the isolated approach. Furthermore, the average spread is decreasing over time until convergence, as result of confidence increase in the models. This may explain the drop in the precision scores from the beginning until reaching the convergence. We will investigate further in the interrelation between precision and spread in future work. 
-
+\par In Figure ~\ref{fig:precsions}, we also noted that the precision is going down in a first phase and stabilizes then. This seems to be counter-intuitive, as the models should improve when getting more data up to a certain point. For explanation, we have investigated the effect of the distributed synchronization of the prediction models on the average spread value, Figure  ~\ref{fig:spread}  shows the spread results for all approaches. It can be seen that the spread is higher for the distributed learning based methods comparing to the isolated approach. Furthermore, the average spread is decreasing over time until convergence, as result of confidence increase in the models. The  drop in the precision scores from the beginning until reaching the convergence is inherited from the \pmcmr model.
 
 \par For the second, more complex pattern ($\mathcal{P}_2$), we have found that the precision was worse for a distributed model generated over all vessels than in the model created for each vessel in isolation. This indicates that there is no  global model describing the behavior of all models consistently. However, when looking at specific groups of vessels, we achieved an improvement in terms of precision. As initial experiment, we only enable the synchronization of the prediction models associated with vessels that belong to the same vessel class. Currently, this change is technically performed by an extra filter step that passes only one type of vessels, while multiple runs of the system are required for all vessel types. For example, Figure ~\ref{fig:precsions_p2} shows the precision scores for vessels of class \textit{PLEASURE CRAFT}. This case might seem to contradict of our assumption that the input event streams belong to the same distribution and share the same behavior, but it actually follows the same assumption but between the predictors of vessels within the same type group. An interesting observation is that the dynamic synchronization approach still has a higher precision scores than the isolated approach. We will further investigate the effect of groupings and more patterns in future work.
 
