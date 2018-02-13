@@ -15,7 +15,7 @@
 
 \section{Thesis Overview}
 % we describe the design and implementation of a system called% 
-\par In this thesis, we present the design, implementation, and evaluation of a scalable and distributed system that provides online pattern prediction over multiple real-time streams of events. The proposed approach is based on a novel method that combines a distributed online learning protocol \cite{kamp2014communication}, with online probabilistic prediction models based on pattern Markov chain technique \cite{alevizos2017event} that forecast when an event pattern is expected to be matched in an event stream, where the patterns are defined in the form of regular expressions . 
+\par In this thesis, we present the design, implementation, and evaluation of a scalable and distributed system that provides online pattern prediction over multiple real-time streams of events. The proposed approach is based on a novel method that combines a distributed online learning protocol \cite{kamp2014communication}, with online probabilistic prediction models based on pattern Markov chain technique \cite{alevizos2017event}. The underlying model provides online predictions about when a pattern is expected to be completed within each event stream, where the patterns are defined in the form of regular expressions over the event types in the stream.
 
 \par In particular, we consider the setting when there are \emph{$K$} input event streams, and for each of these streams a local prediction model is built on a distinct node. As a result, \emph{$K$} models that are maintained separately on \emph{$K$} distributed predictor nodes each of which is consuming a single event stream.
 
