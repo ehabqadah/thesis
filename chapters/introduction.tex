@@ -2,9 +2,11 @@
 
 
 \section{Motivation}
-\par In the past decade, technological advances have led to a growing availability of massive amounts of continuous streaming data (i.e., data streams observing events) in many application domains such as social networks \cite{reuter2012event,mathioudakis2010twittermonitor}, Internet of Things (IoT) \cite{miorandi2012internet}, user activities on the web \cite{banerjee2001clickstream,metwally2005duplicate} and maritime monitoring \cite{patroumpas2015event,laxhammar2010conformal}. Where these data streams  used to be stored and processed later, while monitoring and processing them in real-time increases their valuable \cite{carney2002monitoring}.
+\par In the past decade, technological advancements have led to a growing availability of massive amounts of continuous streaming data (i.e., data streams observing events) in many application domains such as social networks \cite{reuter2012event,mathioudakis2010twittermonitor}, Internet of Things (IoT) \cite{miorandi2012internet}, user activities on the web \cite{banerjee2001clickstream,metwally2005duplicate} and maritime monitoring \cite{patroumpas2015event,laxhammar2010conformal}.
 
- Moreover, these event streams provide the opportunity to implement reactive components within these domains.  For instance, the ability to detect and predict the full matches of a pattern of interest (e.g., a certain sequence of events), defined by a domain expert, is typically important for operational decision-making tasks in the respective domains.
+
+
+\par These event streams used to be stored and processed later, while monitoring and processing them in real-time increases their valuable \cite{carney2002monitoring}. Moreover, the real-time streams provide the opportunity to implement reactive components within these domains.  For example, the ability to detect and predict the full matches of a pattern of interest (e.g., a certain sequence of events), defined by a domain expert, is typically important for operational decision-making tasks in the respective domains.
 
 \par An event stream is an unbounded collection of time-ordered data observations in the form of a tuple of attributes that is composed of a value from finite event types along with other categorical and numerical attributes \cite{agrawal2008efficient,schultz2009distributed,zhou_pattern_2015,flouris2017issues}.  On the other hand, event patterns are defined using a pattern language such as SQL-based \cite{schultz2009distributed} or regular expressions based \cite{alevizos2017event}.
 
@@ -17,23 +19,23 @@
 % we describe the design and implementation of a system called% 
 \par In this thesis, we present the design, implementation, and evaluation of a scalable and distributed system that provides online pattern prediction over multiple real-time streams of events. The proposed approach is based on a novel method that combines a distributed online learning protocol \cite{kamp2014communication}, with online probabilistic prediction models based on pattern Markov chain technique \cite{alevizos2017event}. The underlying model provides online predictions about when a pattern is expected to be completed within each event stream, where the patterns are defined in the form of regular expressions over the event types in the stream.
 
-\par In particular, we consider the setting when there are \emph{$K$} input event streams, and for each of these streams a local prediction model is built on a distinct node. As a result, \emph{$K$} models that are maintained separately on \emph{$K$} distributed predictor nodes each of which is consuming a single event stream.
+\par In particular, we consider the setting when there are \emph{$K$} input event streams, and for each of these streams a local prediction model is built on a distinct node. As a result, \emph{$K$} models are maintained separately on \emph{$K$} distributed predictor nodes each of which is consuming a single event stream.
 
 
- \par We propose to make the predictors of the event streams to collectively learn a global model in a distributed and communication-efficient fashion. Toward this, we adapt the distributed online learning protocol \cite{kamp2014communication}, where the pattern predictors \cite{alevizos2017event} send their local models to a coordinator node. We introduce a new synchronization operator that combines these independent local models to create a stronger global model and share it among the predictors.
+ \par We propose to make the predictors of the event streams collectively learn a global model in a distributed and communication-efficient fashion. Toward this, we have adapted the distributed online learning protocol \cite{kamp2014communication}, where the pattern predictors \cite{alevizos2017event} send their local models to a coordinator node. We introduce a new synchronization operator that combines these independent local models to create a stronger global model and share it among all the predictors.
   
 
-\par In addition, we implemented our system on top of the Big Data framework for distributed stream processing Apache Flink \cite{Flink}, and the streaming platform Apache Kafka \cite{Kafka}. Furthermore, we evaluate our proposed system over synthetic event streams, and large-scale real-world data streams related to trajectories of moving vessels, which are provided in the context of the datAcron project\footnote{\url{http://www.datacron-project.eu/}}.\\
+\par In addition, we have implemented our system on top of the Big Data framework for distributed stream processing Apache Flink \cite{Flink}, and the streaming platform Apache Kafka \cite{Kafka}. We also evaluated our proposed system over synthetic event streams, and large-scale real-world data streams related to trajectories of moving vessels, which are provided in the context of the datAcron project\footnote{\url{http://www.datacron-project.eu/}}.\\
 
 In summary, the main contributions of this thesis are the following:
 
 \begin{itemize}
 	
-	\item We propose a new method of combining a distributed online learning protocol with pattern Markov chain predictors over multiple input event streams. It is based on enabling the collaborative learning and information exchange among the predictors.  
+	\item We propose a new method of combining a distributed online learning protocol with pattern Markov chain predictors over multiple input event streams. It is based on enabling the collaborative learning and information exchange among the predictors in a communication efficient manner.  
 	
-	\item We study the characteristics of the proposed method, by providing a theoretical analysis of the proposed synchronization operation within the distributed online learning protocol, in which we provide a probabilistic guarantee of the learning efficiency. 
+	\item We study the characteristics of the our method, by providing a theoretical analysis of the proposed synchronization operation within the distributed online learning protocol, in which we provide a probabilistic guarantee of the learning efficiency. 
 	
-	\item We describe the architecture of our distributed system for event patterns prediction over massive event streams, along with the building blocks for workflow processing. We also present the implementation details of  the system on the top of Apache Flink and Apache Kafka. 
+	\item We describe the architecture of our distributed system for event patterns prediction over massive event streams, along with the building blocks for the system's workflow processing. We also present the implementation details of  the system on top of Apache Flink and Apache Kafka. 
 	%The implementation is open
 	%source9 source code: http:.....
 	
@@ -55,16 +57,16 @@ Parts of this thesis have been published in \cite{Qadah}:\\ \\
 	
 \par The rest of this thesis is organized as follows:\\
 \\
-\textbf{Chapter~\ref{chap:realred_work}} provides an overview of the related work on pattern prediction over event streams, distributed online learning techniques, and used Big Data frameworks.
+\textbf{Chapter~\ref{chap:realred_work}} provides an overview of the related work on pattern prediction over event streams, and the distributed online learning techniques. It also gives a brief introduction to Apache Flink and Apache Kafka.
 \\
 \\
-\textbf{Chapter~\ref{chapter:system}} describes the problem of  pattern prediction over a single event stream and introduces the base used model. Then it presents the our method for pattern prediction over multiple input event streams by leveraging the distributed online learning protocol. Also, it provides the theoretical analysis and probabilistic learning guarantee of the proposed approach.  
+\textbf{Chapter~\ref{chapter:system}} describes the problem of pattern prediction over a single event stream and it introduces the base used model. It also presents the our method for pattern prediction over multiple input event streams by leveraging the distributed online learning protocol. In addition, it provides the theoretical analysis and a probabilistic learning guarantee of the proposed approach.  
 \\
 \\
 \textbf{Chapter~\ref{chapter:overview}}  presents the architecture of the proposed system, and the implementation details in Flink and Kafka.
 \\
 \\
-In \textbf{Chapter~\ref{chapter:evaluation}}, experiments and results over real-world event streams of moving vessels and synthetic event streams are presented.
+In \textbf{Chapter~\ref{chapter:evaluation}}, the experiments and results over real-world event streams of moving vessels and synthetic event streams are presented.
 \\
 \\
 Finally, conclusions are given in \textbf{Chapter~\ref{chap:conclusions}} along with potential directions for future work.
