@@ -12,7 +12,7 @@
 \label{sec:exp_setu}
 \par We ran our experiments on a single-node standalone Flink cluster deployed on an Ubuntu Server 17.04 with Intel(R) Core(TM) i7-7700 CPU @ 3.60GHz X 8 processors and 32GB RAM. We used Apache Flink v1.4.0 and Apache Kafka v0.10.2.1 for our experiment.
 
-\par We also conducted experiments to measure the throughput of our system on a Hadoop YARN \footnote{\url{https://hadoop.apache.org/docs/current/hadoop-yarn/hadoop-yarn-site/YARN.html}} cluster (v2.7.2) with 9 physical nodes, where each node has 10 cores CPU, and 100 GB memory.
+\par We also conducted experiments to measure the throughput of our system on a YARN \cite{vavilapalli2013apache} cluster (v2.7.2) with 9 physical nodes, where each node has 10 cores CPU, and 100 GB memory.
 
 
 
@@ -155,7 +155,7 @@ We further extend the evaluation of our system by reporting the results of exper
 	\label{fig:spread_synthetic}
 \end{figure}
 
-As discussed in Section ~\ref{sec:theoretical}, our proposed method improves the estimation of the transition probabilities of the underlaying Markov chain for the \pmcmr models. Figure~\ref{fig:error_synthetic} shows the difference between the estimated transition probabilities and the reference probabilities of the Markov chain source ($\sum_{i,j} |\hat{p}_{i,j} - {p}_{i,j}|$), the results confirm the derived learning guarantee of our proposed approach that gives a better estimation of the transition probability matrix. It can be seen that the distributed modes have less estimation error and are faster in reaching the correct probabilities than the isolated approach.  
+As discussed in Section ~\ref{sec:theoretical}, our proposed method improves the estimation of the transition probabilities of the underlying Markov chain for the \pmcmr models. Figure~\ref{fig:error_synthetic} shows the difference between the estimated transition probabilities and the reference probabilities of the Markov chain source ($\sum_{i,j} |\hat{p}_{i,j} - {p}_{i,j}|$), the results confirm the derived learning guarantee of our proposed approach that gives a better estimation of the transition probability matrix. It can be seen that the distributed modes have less estimation error and are faster in reaching the correct probabilities than the isolated approach.  
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=\textwidth]{chapters/figures/synthetic/error_synthetic_15_0001.png}

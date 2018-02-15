@@ -4,14 +4,14 @@
 \label{chapter:overview}
 
 
-\par In this chapter, we present the architecture of the proposed system for pattern prediction over multiple input event streams in a scalable distributed setting. To build a scalable and distributed system, we implemented the system on top of Apache Flink engine for distributed and large-scale stream processing. We also use Apache Kafka for the distributed communication and to ingest and emit the input/output data streams. In what follows we describe the building blocks of the proposed system and the important aspects of the implementation.
+\par In this chapter, we present the architecture of the proposed system for pattern prediction over multiple input event streams in a scalable distributed setting. To build a scalable and distributed system, we implement the system on top of Apache Flink engine for distributed and large-scale stream processing. We also use Apache Kafka for the distributed communication and to ingest and emit the input/output data streams. In what follows we describe the building blocks of the proposed system and the important aspects of the implementation.
 
 %ADD more details and interfacse structure%
 %CHECK Towards Flexible Event Processing in Distributed Data Streams%
 %SEE delevriable%
 \section{System Architecture}
 \label{sec:architecture}
-Our system consumes as an input an aggregated stream of events coming from a large number of  objects, which is continuously collected and fed into the system. In practice, the aggregated input events stream is composed of multiple event streams (partitions) from a set of objects. Our system allows the users to register a pattern $\mathcal{P}$ to be monitored over each event stream. The output stream consists of original input events along with  the prediction intervals of the full matches of monitored pattern $\mathcal{P}$, which are displayed to the end users. Figure~\ref{fig:architecture} presents the overview of our system architecture and its main components.      
+The input to our system is an aggregated stream of events coming from a large number of  objects, which is continuously collected and fed into the system. In practice, the aggregated input events stream is composed of multiple event streams (partitions) from a set of objects. Our system allows the users to register a pattern $\mathcal{P}$ to be monitored over each event stream. The output stream consists of original input events along with  the prediction intervals of the full matches of monitored pattern $\mathcal{P}$, which are displayed to the end users. Figure~\ref{fig:architecture} presents the overview of our system architecture and its main components.      
 
 
 \begin{figure}[h]
@@ -25,9 +25,9 @@ Our system consumes as an input an aggregated stream of events coming from a lar
 The system is composed of three main processing elements:   
 \begin{itemize}
 	
-	\item pre-processing operators that receive the input event stream and perform filtering and ordering operations, before partitioning the input event stream to multiple event streams based on the associated moving object 
-	\item predictor nodes (learners), which are responsible for maintaining a prediction model for the input event streams. Each prediction node is configured to handle an event stream from the same moving object, in order to provide online predictions for a predefined pattern $\mathcal{P}$  
-	\item a coordinator node that communicates through Kafka stream channels with the predictors to realize the distributed online learning protocol. It builds a global prediction model, based on the received local models, and then shares it among the predictors.
+	\item The pre-processing operators: Operators receive the input event stream and perform filtering and ordering operations, before partitioning the input event stream to multiple event streams based on the associated object. 
+	\item The predictor nodes (learners): Each predictor is responsible for maintaining a prediction model for an input event stream. Each prediction node is configured to handle an event stream from the same  object, in order to provide online predictions for the user-defined pattern $\mathcal{P}$.  
+	\item The coordinator node:  A central node communicates through Kafka stream channels with the predictors to realize the distributed online learning protocol. It builds a global prediction model, based on the received local models, and then shares it among the predictors.
 \end{itemize}
 
 \par Our distributed system consists of multiple pre-processing operators, prediction nodes, and a central coordinator node. All units run in parallel and are arranged as a data processing pipeline, depicted in Figure ~\ref{fig:architecture}. We leverage Apache Kafka as a messaging platform to ingest the input event streams and to publish the resulting streams. Also, it is used as the communication channel between the predictor nodes and the coordinator. Apache Flink is employed to execute the system's distributed processing units over the input event streams, namely, the pre-processing operators,  the prediction units, and the coordinator node. Our system architecture can be modeled as a logical network of processing nodes, organized in the form of a DAG, inspired by the Flink runtime dataflow programs \cite{carbone2015apache}. 
@@ -67,7 +67,7 @@ Figure~\ref{fig:class_diagram} presents the general class hierarchy of the predi
  
  \begin{figure}[H]
  	\centering
- 	\includegraphics[width=\textwidth]{chapters/figures/predictor_diagram.png}
+ 	\includegraphics[width=\textwidth,height=\linewidth]{chapters/figures/predictor_diagram.png}
  	
  	\caption{Predictor Class Hierarchy.}
  	\label{fig:class_diagram}
@@ -92,9 +92,9 @@ Figure~\ref{fig:class_diagram} presents the general class hierarchy of the predi
 
 \end{center}
 
-\textbf{Coordinator.} Listing~\ref{algonline:flink2} presents the workflow of the coordinator node that manages the distributed online learning protocol operations, which is implemented as Flink program. The coordinator receives messages from the local predictors through a Kafka Stream of a topic named \textit{"LocalToCoordinatorTopicId"}. It is implemented as a single \textit{map} function over the messages stream, by setting the \textit{parallelism} level of the Flink program to \textit{"1"}. Increasing the parallelism will scale up the number of parallel coordinator instances, for example, in order to handle different groupings of the input event streams. The map operator of the coordinator  handles three message types from the predictors: \begin{enumerate}[]
-	\item \textbf{RegisterNode} that contains  a registration request for a new predictor node,
-	\item \textbf{RequestSync} to receive a local model after violation,
+\textbf{Coordinator.} Listing~\ref{algonline:flink2} presents the workflow of the coordinator node that manages the distributed online learning protocol operations, which is implemented as Flink program. The coordinator receives messages from the local predictors through a Kafka Stream of a topic named \textit{LocalToCoordinatorTopicId}. It is implemented as a single \textit{map} function over the messages stream, by setting the \textit{parallelism} level of the Flink program to \textit{1}. Increasing the parallelism will scale up the number of parallel coordinator instances, for example, in order to handle different groupings of the input event streams. The map operator of the coordinator  handles three message types from the predictors: \begin{enumerate}[]
+	\item \textbf{RegisterNode} that contains  a registration request for a new predictor node.
+	\item \textbf{RequestSync} to receive a local model after violation.
 	\item \textbf{ResolutionAnswer} to receive a resolution response from a local predictor node.  
 \end{enumerate}  
  On the other hand, it sends \textbf{CoordinatorSync} messages for all predictors after creating a new global prediction model, or \textit{UpdateReference} to set the reference model. It also send  \textbf{RequestResolution} messages to a ask the local predictors for their prediction models.
@@ -102,7 +102,6 @@ Figure~\ref{fig:class_diagram} presents the general class hierarchy of the predi
 \begin{center}
 	\centering
 \begin{lstlisting}[caption={The coordinator Flink program.},label={algonline:flink2},frame=single]
-    ...
     streamExecutionEnvironment.setParallelism(1);
 	// Read messages from local predictors
 	DataStream<TopicMessage> messagesStream = readKafkaStream(env, "LocalToCoordinatorTopicId");	
@@ -112,6 +111,5 @@ Figure~\ref{fig:class_diagram} presents the general class hierarchy of the predi
 	DataStream<CoordinatorMessage> coordinatorMessagesStream = messageStream.map(coordinatorNode);	
 	// Send the messages from the coordinator to the local predictors
 	writeToKafka(coordinatorMessagesStream, CoordinatorToLocalTopicId);
-	...
 \end{lstlisting}
 \end{center}
