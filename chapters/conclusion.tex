@@ -1,20 +1,36 @@
 
-\chapter{Conclusion and Future Work}
+\chapter{Discussion, Future Work and Conclusion}
 \label{chap:conclusions}
 
-In this chapter, we discuss the results of our system, and some of the aspects of underlying method. Also we give some proposals for future work.
+%In this chapter, we discuss the results of our system, and some of the aspects of underlying method. Also we give some proposals for future work.
+
+\section{Discussion}
+
+\par In our experiments, it has been shown that our proposed approach, which enables the learning between distributed Markov based predictors, performs better than the isolated approach. In particular, our approach operates in three modes, namely, full continuous, static, and dynamic synchronization. The evaluation results show that the dynamic synchronization scheme provides the best performance both in terms of predictive accuracy and communication overhead.
 
 
+\par In this work, we have provided a probabilistic guarantee of the learning efficiency for the proposed synchronization operation, which aggregates a global transition probability matrix for the underlying pattern Markov chain prediction models. We have also empirically shown the improved estimates of the transition probabilities by our approach using synthetic event streams.  
 
 
-\section{Conclusion}
-%In this paper, we have presented a system that provides  a distributed pattern prediction over multiple large-scale event streams of moving objects (vessels). The system uses the event forecasting with Pattern Markov Chain (PMC) \cite{alevizos2017event} as the base prediction model on each event stream, and it applies the protocol for distributed online prediction \cite{kamp2014communication} to exchange information between the prediction models over multiple input event streams.  Our proposed system has been implemented using Apache Flink and Apache Kafka, and empirically tested against large real-world event streams related to trajectories of moving vessels. As future work, we will investigate the effect of grouping the input event streams on the predictive performance of our proposed system. Furthermore,  we will study the interrelation between precision and spread scores.
+\par We have also described the architecture of our system, and we have presented its implementation details in Flink and Kafka, where Flink provides the stream processing units, and Kafka manages the event streaming and the communication channels to perform the distributed online learning protocol. The Flink APIs simplify the development of the distributed stream processing components in our system. We have also deployed our system on a YARN cluster, in which the  system's throughput is measured over real-world event streams of moving vessels. The results show the processing scalability of our system.  
+
 
 
 
 \section{Future Work}
+
+There are several directions in which we propose to extend our work. The main ones are presented in the following:
+
+\begin{itemize}[noitemsep]
+	
+\item In some applications the input event streams may belong to different distributions, we propose to dynamically divide the input event streams into similar groups, in order to only enable the learning between the predictors in each group.  Such grouping can be obtained using some clustering methods. For example, along with the events streams of moving objects (i.e., vessels), trajectory-based clustering techniques \cite{lee2007trajectory,liu2014knowledge} could be used.
+ 
+\item  The proposed synchronization operation aggregates the maximum-likelihood estimates of the transition probabilities for the \pmcmr models over $k$ input event streams, which creates a global transition probability matrix based on the transition counts in each model. We would like to investigate the effects of introducing a weighted based synchronization operation. For example, the transition counts could be weighted by the number of the full matches of the monitored pattern in the associated event stream. 
+
+\item The probabilistic learning guarantee that has been obtained for the proposed method relies on the static-like synchronization scheme, where the mini-batch size is equal to the assumed uniform size of the input event streams, and the variance threshold is zero. Therefore, it would be interesting to study the effects of the dynamic synchronization scheme on the learning guarantee.
+\end{itemize}
+%As future work, we will investigate the effect of grouping the input event streams on the predictive performance of our proposed system. Furthermore,  we will study the interrelation between precision and spread scores.
 %\begin{itemize}[noitemsep]
-%	\item In some practical applications the input event streams may belong to different distributions, we propose to divide the input event streams into similar groups, in order to combine the corresponding predictions models to construct a representative global model in each group. The aggregation operation refers to the synchronization operation (e.g., joint average of the local models) in the distributed online learning protocol, which is performed by a central coordinator that constructs and distributes a global prediction model for the input event streams based on the  local models.
 %	\item temporal patterns 
 %	\item another communication media  
 %	\item theoretical analysis of dynamic protocol 
@@ -26,3 +42,8 @@ In this chapter, we discuss the results of our system, and some of the aspects o
 %	
 %	
 %\end{itemize}
+
+
+\section{Conclusion}
+
+\par In this thesis, we have presented a system that provides a distributed pattern prediction over multiple large-scale event streams. The system uses the event forecasting with Pattern Markov Chain (PMC) \cite{alevizos2017event} as the base prediction model on each event stream, and it applies the protocol for distributed online prediction \cite{kamp2014communication} to exchange the information among the distributed predictors.  Our proposed system has been implemented using Apache Flink and Apache Kafka. Experimental results over synthetic event streams and large real-world event streams related to trajectories of moving vessels show the effectiveness of our proposed approach.

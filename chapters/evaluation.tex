@@ -169,18 +169,16 @@ As discussed in Section ~\ref{sec:theoretical}, our proposed method improves the
 
 \section{Throughput Results}
 \label{sec:throughput}
-Figure 4.8 presents the throughput measurements of our system on the YARN cluster.  
+Figure 4.8 reports the throughput results of our system on the YARN cluster using the first pattern $\mathcal{P}_1$.  As we can observe, our system is capable of increasing the throughput by utilizing the distributed processing nodes by increasing the Flink's parallelism level. It can also be seen that as we scale up (parallelism), the throughput grows to $5X$.
 
 % As we scale up the  hroughput grows to 3X.
 
 
-
-
 \begin{figure}[H]
 	
-	\includegraphics[width=\textwidth,height=.62\textheight]{chapters/figures/throughput/throughput.png}
+	\includegraphics[width=\textwidth]{chapters/figures/throughput/throughput.png}
 	
-	\caption{Throughput of the proposed system on YARN cluster.}
+	\caption{Throughput of the system on YARN cluster.}
 	\label{fig:throughput}
 \end{figure}
  
