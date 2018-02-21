@@ -7,7 +7,7 @@
 \par We follow the general notation and terminology of \cite{agrawal2008efficient,schultz2009distributed,luckham2008power,alevizos2015complex,zhou_pattern_2015,kamp2014communication} to formalize the problem we tackle and our solution approach.
 
 
-\section{Pattern Prediction over an Event Stream}
+\section{Pattern Prediction over a Single Event Stream}
 
 
 \par In this section, we define the first part of the problem that we tackle in this thesis, by defining the problem of pattern prediction over a single event stream. We also give an introduction of the base prediction model, which is built based on the event forecasting with pattern Markov chains method \cite{alevizos2017event}.
@@ -115,8 +115,7 @@ where $Q$ is the set of states of the DFA, and $F$ the set of the  all final sta
 P(W_{\mathcal{P}}(q)=n)=\boldsymbol{\xi_{q}}\boldsymbol{N}^{n-1}(\boldsymbol{I}-\boldsymbol{N})\boldsymbol{1}
 \end{equation*}
 where $\boldsymbol{N}$ is $h \times h$ matrix that obtained by re-arranging the transition matrix $\Pi$ to include transitions between the non-final states of the DFA, $\boldsymbol{I}$ is an identity matrix of size $d \times d$, and  $\boldsymbol{1}$ is $h \times 1$ vector of ones. The $\boldsymbol{\xi_{q}}$ is $1 \times h$ row of elements that contains zeros except $1.0$ in the cell corresponding to $q$. 
-\par Finally, the model provides the prediction reports in the form of intervals i.e.,  $I=(\mathit{start},\mathit{end})$. Which means that the DFA is expected to reach a final state  after future transitions (number of events $n$) between $\mathit{start}$ and $\mathit{end}$ with probability $P(I)$ at least some constant threshold $\theta_{p}$ that defined by the user, given by: 
- given by:
+\par Finally, the model provides the prediction reports in the form of intervals i.e.,  $I=(\mathit{start},\mathit{end})$. Which means that the DFA is expected to reach a final state  after future transitions (number of events $n$) between $\mathit{start}$ and $\mathit{end}$ with probability $P(I)$ at least some constant threshold $\theta_{p}$ that defined by the user, given by:
 \begin{equation*}
 P(I)=\sum_{n \in I}{P(W_{\mathcal{P}}(q)=n)}\ where\  P(I) \geq \theta_{p} 
 \end{equation*}
@@ -237,7 +236,7 @@ We extend the pattern prediction problem over a single event stream to the case 
 \subsection*{Learning a Global Transition Probability Matrix}
 
 \par We propose a \textit{synchronization operation} for the transition probability matrices ($w_i=\boldsymbol{\Pi}_i :i \in[k]$) of the $k$ distributed \pmcmr predictors. The operation is based on distributing the maximum-likelihood estimation \cite{anderson1957statistical} for the transition probabilities of the \pmcmr models described by:
- 
+ %TODO:add nij and k meaning%
 \begin{equation}
 \label{eq:dis_pi_estim}
 \hat{\pi}_{i,j} = \frac{\sum_{k \in K} n_{k,i,j}}{\sum_{k \in K} \sum_{l \in L} n_{k,i,l}}

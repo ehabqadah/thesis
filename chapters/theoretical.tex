@@ -120,9 +120,10 @@ Where $p_{l,j}^{t-1}$ is the probability of state $j$ at time $t-1$ given that t
 It can be easily observed that variances are dropping as the sample size $n$ grows large.  In next, we will show that our proposed approach of synchronizing the maximum likelihood estimators over $k$ chains is preserving a similar asymptotic behavior and gives efficient estimates of the transition probabilities.
 
 
-\subsubsection{Probabilistic Learning Guarantee}
+\subsection{Probabilistic Learning Guarantee}
+\label{sec:guarantee}
  %in Equation ~\ref{eq:dis_pi_estim}% 
-\par The proposed synchronization operator aggregates the maximum-likelihood estimates over $k$ observed sequences (i.e., sequences of the DFA states based on the consumed event streams), the operator estimates a global transition probabilities matrix for a set of $k$ sequences, which are arranged in serial order as one large chain with length $N=k*n$, where we assume that all $k$ sequences have $n$ observations. For the sake of simplicity, we assume that the synchronization phase happens on batch size equals $n$ (i.e., $b=n$) given that the $\Delta$ is zero, then the global transition probabilities $\hat{\pi}_{i,j}$ are given 
+\par The proposed synchronization operator aggregates the maximum-likelihood estimates over $k$ observed sequences (i.e., sequences of the DFA states based on the consumed event streams), the operator estimates a global transition probabilities matrix for a set of $k$ sequences, which are arranged as a serial sequence composed of all $k$ sequences with length $N=k*n$, assuming that all $k$ sequences have $n$ observations. For the sake of simplicity, we assume that the synchronization phase happens on batch size equals $n$ (i.e., $b=n$) given that the $\Delta$ is zero, then the global transition probabilities $\hat{\pi}_{i,j}$ are given 
 \begin{equation}
 \label{eq:dis_pi_estim2}
 	\begin{aligned}
@@ -195,7 +196,7 @@ So, we have for any constant $c > 0$ and $k \ge 1$, a probabilistic learning gua
 %Use Chebychev's inequality to prove the weak law of large numbers.
 
  
-\subsection{Transition Matrix of the Underlaying Markov Chain}
+\subsection{Transition Matrix of the Underlying Markov Chain}
 \label{sec:underlaying_mc}
 \par In order to empirically study the learning efficiency of our proposed approach, we need to map the transition probabilities of the underlying Markov chain with the transition probability matrix ($\hat{\Pi}$) of the \pmcmr model. ~\citet{nuel_pattern_2008} showed in \textbf{Theorem 3} the relation between the elements  of 
 $\Pi$ and the conditional probabilities of the $m-$order Markov chain $X=\{X_1, X_2, \ldots X_n\}$ described by 
@@ -224,4 +225,4 @@ P(a|d) 	& P(b|d) 		&  0	 	    & P(d|d)	  & 0 	    & P(c|d)  \\
 \end{bmatrix}
 \end{equation} 
 
-%ADD figure example for the figure in the PMC section%
+%TODO: where we use this%

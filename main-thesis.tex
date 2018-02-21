@@ -48,17 +48,20 @@ BCOR=8mm,openright]{scrbook}
 %	\end{quote}
 %	\vspace*{\fill}
 	\tableofcontents
+	
 	\thispagestyle{empty}
 	\listoffigures
+		\thispagestyle{empty}
 %	\listofalgorithms
-	
+      \newpage
+	\printacronyms[include-classes=abbrev,name=List of Acronyms and Abbreviations]
+	\thispagestyle{empty}
 	\mainmatter
 	
 	\input{chapters/introduction}	
 	\input{chapters/related_work}
 	\input{chapters/system}
 	\input{chapters/implementaion}
-	
 	\input{chapters/evaluation}
 	%\input{chapters/discussion}
 	\input{chapters/conclusion}

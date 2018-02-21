@@ -37,7 +37,7 @@
 \subsection{Apache Kafka}
 
 \par Apache Kafka is a scalable, fault-tolerant, and distributed streaming framework/messaging system \cite{Kafka}. It allows to publish and subscribe to arbitrary data streams, which are managed in different categories (i.e., \textit{topics}) and  partitioned in the Kafka cluster. 
-\par The Kafka producer API provides the ability to publish a stream of messages to a topic. These messages can then be consumed by applications, using the Consumer API that allows them to read the published data stream in the Kafka cluster. In addition, the streams of messages are distributed and load balanced between the multiple receivers within the same consumer group for the sake of scalability. In this work, we leverage the topic-based routing of the messages to control the communication that is required to perform the distributed online learning protocol. 
+\par The Kafka producer API provides the ability to publish a stream of messages to a topic. These messages can then be consumed by applications, using the Consumer \ac{api} that allows them to read the published data stream in the Kafka cluster. In addition, the streams of messages are distributed and load balanced between the multiple receivers within the same consumer group for the sake of scalability. In this work, we leverage the topic-based routing of the messages to control the communication that is required to perform the distributed online learning protocol. 
 % (see Section ~\ref{sec:impl}).    
   
 

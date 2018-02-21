@@ -40,14 +40,11 @@ We used real-world event streams provided by the datAcron project in the context
 \section{Evaluation Metrics} 
 \label{sec:metrics}
 \par We compare our proposed system, which enables the synchronization of prediction models (i.e., \pmcmr models) on the distributed predictor nodes,  against the isolated prediction mode, in which models are computed on single streams only. We compare the performance in terms of following metrics:
-\begin{itemize}
-	
+\begin{itemize}	
 	\item  $\mathit{Precision} =$ $ \mathit{\frac{\#\ of\ correct\ predictions}{\#\ of\ total\ predictions}}$. The fraction of the predictions that are correct. For each new event in the stream, the predictor provides a prediction interval where the full match of the pattern might occur. Thus, the predictions are temporarily stored until a full match is detected. At that point, all stored prediction intervals are evaluated by considering those intervals where the full match occurred within as correct.     
-	
-	\item $\mathit{Spread}$$ =end(I) -start(I)$. The width of the prediction interval $I$, which represents the number of events between the start and the end of $I$. 
-	
-	\item  $\mathit{Cumulative\ communication}$. We study the communication cost by measuring the $\mathit{cumulative\ communication}$ that captures the number of messages, which are required to perform the distributed online learning modes to synchronize the prediction models.
-	
+	\item $\mathit{Spread}$$ =end(I) -start(I)$. The width of the prediction interval $I$, which represents the number of events between the start and the end of $I$. 	
+	\item $\mathit{PS-score} = \alpha * precision + (1 - \alpha ) * ( 1- \frac{spread}{max\  spread})$. In analogy with the $F-score$ we introduce this new score that combines both the $\mathit{precision}$ and the $\mathit{spread}$ to assess the performance of the system in terms of higher precision and smaller spread.  measure follows the 	
+	\item  $\mathit{Cumulative\ communication}$. We study the communication cost by measuring the $\mathit{cumulative\ communication}$ that captures the number of messages, which are required to perform the distributed online learning modes to synchronize the prediction models.	
 \item $Throughput$. The number of events processed per unit time.
 \end{itemize} 
 
@@ -106,7 +103,7 @@ In this section, we present the experimental results for two different patterns 
 \end{center}
 
 
-\par For a clearer picture of the comparison between our distributed learning method and the isolated approach, Figure ~\ref{fig:spread_prec} depicts the measurement of a combined metric of the precision and spread. It is clear that our approach achieves better performance in terms of the precision and spread combined.  
+\par For a clearer picture of the comparison between our distributed learning method and the isolated approach, Figure ~\ref{fig:spread_prec} depicts the PS score for $\mathcal{P}_1$. It is clear that our approach achieves better performance in terms of the precision and spread combined.  
 
 \begin{center}
 	\centering
@@ -114,19 +111,19 @@ In this section, we present the experimental results for two different patterns 
 		
 		\includegraphics[width=\textwidth]{chapters/figures/synopses/p1_new_score_100_2_08.png}
 		
-		\caption{$ \alpha * precision + (1 - \alpha ) * ( 1- \frac{spread}{max\  spread})$ for $\mathcal{P}_1$ with $\alpha = .5$.}
+		\caption{PS score for $\mathcal{P}_1$ with $\alpha = .5$.}
 		\label{fig:spread_prec}
 	\end{figure}
 \end{center}
 
 
-\par For the second, more complex pattern ($\mathcal{P}_2$), we have found that the precision was worse for a distributed model generated over all vessels than in the model created for each vessel in isolation. This indicates that there is no global model describing the behavior of all models consistently. However, when we look at specific groups of vessels, we achieve an improvement in terms of precision. As initial experiment, we only enable the synchronization of the prediction models associated with vessels that belong to the same vessel class. Currently, this change is technically performed by an extra filter step that passes only one type of vessels, while multiple runs of the system are required for all vessel types. For example, Figure ~\ref{fig:precsions_p2} shows the precision scores for vessels of class \textit{PLEASURE CRAFT}. This case might seem to contradict of our assumption that the input event streams belong to the same distribution and share the same behavior, but it actually follows the same assumption but between the predictors of vessels within the same type group. An interesting observation is that the dynamic synchronization approach still has a higher precision scores than the isolated approach.
+\par For the second, more complex pattern ($\mathcal{P}_2$), we have found that the precision was worse for a distributed model generated over all vessels than in the model created for each vessel in isolation. This indicates that there is no global model describing the behavior of all models consistently. However, when we look at specific groups of vessels, we achieve an improvement in terms of precision. As initial experiment, we only enable the synchronization of the prediction models associated with vessels that belong to the same vessel class. Currently, this change is technically performed by an extra filter step that passes only one type of vessels, while multiple runs of the system are required for all vessel types. For example, Figure ~\ref{fig:precsions_p2} shows the precision scores for vessels of class \textit{pleasure craft}. This case might seem to contradict of our assumption that the input event streams belong to the same distribution and share the same behavior, but it actually follows the same assumption but between the predictors of vessels within the same type group. An interesting observation is that the dynamic synchronization approach still has a higher precision scores than the isolated approach.
 
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=\textwidth,height=.55\textheight]{chapters/figures/synopses/p2_precision_100_2_08.png}
 	
-	\caption{Precision scores of $\mathcal{P}_2$  for \textit{PLEASURE CRAFT} vessels.}
+	\caption{Precision scores of $\mathcal{P}_2$  for vessels of \textit{pleasure craft} type.}
 	\label{fig:precsions_p2}
 \end{figure}
 
@@ -145,8 +142,6 @@ We further extend the evaluation of our system by reporting the results of exper
 
 \par Figure~\ref{fig:precsion_synthetic} shows the average precision of the three modes of our system and the isolated approach. We can see that our proposed system in all its modes has higher precision scores than the isolated method. Also, it can be seen that the static and the dynamic approaches have similar performance while the more complex full synchronization mode has a slightly better performance. As expected, we also note that our method converges faster. The isolated models converge to the same accuracy but in much longer time.
 
-\par On the other hand, Figure~\ref{fig:spread_synthetic} presents the average spread. As it can be seen, the average spread of the predictions in our approach (three modes) decreases over time. While the isolated approach has a higher spread of the prediction intervals. 
-
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=\textwidth]{chapters/figures/synthetic/spread_synthetic_15_0001.png}
@@ -155,7 +150,19 @@ We further extend the evaluation of our system by reporting the results of exper
 	\label{fig:spread_synthetic}
 \end{figure}
 
-As discussed in Section ~\ref{sec:theoretical}, our proposed method improves the estimation of the transition probabilities of the underlying Markov chain for the \pmcmr models. Figure~\ref{fig:error_synthetic} shows the difference between the estimated transition probabilities and the reference probabilities of the Markov chain source ($\sum_{i,j} |\hat{p}_{i,j} - {p}_{i,j}|$), the results confirm the derived learning guarantee of our proposed approach that gives a better estimation of the transition probability matrix. It can be seen that the distributed modes have less estimation error and are faster in reaching the correct probabilities than the isolated approach.  
+\par On the other hand, Figure~\ref{fig:spread_synthetic} presents the average spread. As it can be seen, the average spread of the predictions in our approach (three modes) decreases over time. While the isolated approach has a higher spread of the prediction intervals. 
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\textwidth]{chapters/figures/synthetic/newscore_synthetic_15_0001.png}
+	
+	\caption{$\mathit{PS-score}$ for $\mathcal{P}=a;d;c$ with $\alpha = .5$.}
+	\label{fig:ps_score}
+\end{figure}
+
+\par Additionally, Figure~\ref{fig:ps_score} shows the $\mathit{PS-score}$ of %TODO: add more details%
+
+
+
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=\textwidth]{chapters/figures/synthetic/error_synthetic_15_0001.png}
@@ -165,25 +172,36 @@ As discussed in Section ~\ref{sec:theoretical}, our proposed method improves the
 \end{figure}
 
 
+As discussed in Section ~\ref{sec:theoretical}, our proposed method improves the estimation of the transition probabilities of the underlying Markov chain for the \pmcmr models. Figure~\ref{fig:error_synthetic} shows the difference between the estimated transition probabilities and the reference probabilities of the Markov chain source ($\sum_{i,j} |\hat{p}_{i,j} - {p}_{i,j}|$), the results confirm the derived learning guarantee of our proposed approach that gives a better estimation of the transition probability matrix. It can be seen that the distributed modes have less estimation error and are faster in reaching the correct probabilities than the isolated approach. These results follow the probabilistic guarantee in Section ~\ref{sec:theoretical} that states :
+
+\[ \Pr\left( |\hat{\pi}_{i,j} - {p}_{i,j}| \geq c \right) \leq
+\Pr\left( |\hat{p}_{i,j} - {p}_{i,j}| \geq c \right)
+\]
+where the $\hat{\pi}_{i,j}$ is the global transition probability that computed by our approach, and $\hat{p}_{i,j}$ a transition probability, which is learned on a single \pmcmr predictors.
+  
+
+
 
 
 \section{Throughput Results}
 \label{sec:throughput}
+
+
+\begin{figure}[H]
+	
+	\includegraphics[width=\textwidth]{chapters/figures/throughput/throughput_seconds.png}
+	
+	\caption{Throughput of the system on \ac{yarn} cluster.}
+	\label{fig:throughput}
+\end{figure}
+
 Figure 4.8 reports the throughput results of our system on the YARN cluster using the first pattern $\mathcal{P}_1$.  As we can observe, our system is capable of increasing the throughput by utilizing the distributed processing nodes by increasing the Flink's parallelism level. It can also be seen that as we scale up (parallelism), the throughput grows to $5X$.
 
 % As we scale up the  hroughput grows to 3X.
 
 
-\begin{figure}[H]
-	
-	\includegraphics[width=\textwidth]{chapters/figures/throughput/throughput.png}
-	
-	\caption{Throughput of the system on YARN cluster.}
-	\label{fig:throughput}
-\end{figure}
- 
 
-
+\par Notice that the system's throughput does not scale up linearly as the parallelism level increases. This can be explained by the fact that increasing the parallelism increases the network overhead to perform each synchronization phase between the parallel predictors.
 
 
 

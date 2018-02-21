@@ -6,9 +6,6 @@
 
 \par In this chapter, we present the architecture of the proposed system for pattern prediction over multiple input event streams in a scalable distributed setting. To build a scalable and distributed system, we implement the system on top of Apache Flink engine for distributed and large-scale stream processing. We also use Apache Kafka for the distributed communication and to ingest and emit the input/output data streams. In what follows we describe the building blocks of the proposed system and the important aspects of the implementation.
 
-%ADD more details and interfacse structure%
-%CHECK Towards Flexible Event Processing in Distributed Data Streams%
-%SEE delevriable%
 \section{System Architecture}
 \label{sec:architecture}
 The input to our system is an aggregated stream of events coming from a large number of  objects, which is continuously collected and fed into the system. In practice, the aggregated input events stream is composed of multiple event streams (partitions) from a set of objects. Our system allows the users to register a pattern $\mathcal{P}$ to be monitored over each event stream. The output stream consists of original input events along with  the prediction intervals of the full matches of monitored pattern $\mathcal{P}$, which are displayed to the end users. Figure~\ref{fig:architecture} presents an overview of our system architecture and its main components.      
@@ -60,7 +57,9 @@ The system ingests the input events stream from a Kafka cluster that is mapped t
 
 
 \par Moreover, the implementation of the \textit{predictor} map function includes the communication  with \textit{coordinator} using Kafka streams.
-Figure~\ref{fig:class_diagram} shows the general class hierarchy of the predictor node. At the beginning of the execution,  each predictor instance sends a registration request to the coordinator. Also at the run-time,  it sends  its local prediction model as synchronization request,  or as a response for a resolution request from the coordinator. These coordination messages are published into different Kafka topics as depicted in Table~\ref{tab:messagesToTopics}. 
+Figure~\ref{fig:class_diagram} shows the general class hierarchy of the predictor node. %TODO:add add more details here%
+
+ At the beginning of the execution,  each predictor instance sends a registration request to the coordinator. Also at the run-time,  it sends  its local prediction model as synchronization request,  or as a response for a resolution request from the coordinator. These coordination messages are published into different Kafka topics as depicted in Table~\ref{tab:messagesToTopics}. 
  
  
  \begin{figure}[H]
