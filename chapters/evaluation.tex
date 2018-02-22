@@ -12,7 +12,7 @@
 \label{sec:exp_setu}
 \par We ran our experiments on a single-node standalone Flink cluster deployed on an Ubuntu Server 17.04 with Intel(R) Core(TM) i7-7700 CPU @ 3.60GHz X 8 processors and 32GB RAM. We used Apache Flink v1.4.0 and Apache Kafka v0.10.2.1 for our experiment.
 
-\par We also conducted experiments to measure the throughput of our system on a YARN \cite{vavilapalli2013apache} cluster (v2.7.2) with 9 physical nodes, where each node has 10 cores CPU, and 100 GB memory.
+\par We also conducted experiments to measure the throughput of our system on a YARN \cite{vavilapalli2013apache} cluster (v2.7.2) with 9 physical nodes, where each node has 10 cores CPU, and 100 GB memory. More information about the deployment on the YARN cluster can be found on the source code repository \footnote{ \url{https://github.com/ehabqadah/distributed_online_learning_for_large-scale_pattern_prediction}}.
 
 
 
@@ -43,7 +43,7 @@ We used real-world event streams provided by the datAcron project in the context
 \begin{itemize}	
 	\item  $\mathit{Precision} =$ $ \mathit{\frac{\#\ of\ correct\ predictions}{\#\ of\ total\ predictions}}$. The fraction of the predictions that are correct. For each new event in the stream, the predictor provides a prediction interval where the full match of the pattern might occur. Thus, the predictions are temporarily stored until a full match is detected. At that point, all stored prediction intervals are evaluated by considering those intervals where the full match occurred within as correct.     
 	\item $\mathit{Spread}$$ =end(I) -start(I)$. The width of the prediction interval $I$, which represents the number of events between the start and the end of $I$. 	
-	\item $\mathit{PS-score} = \alpha * precision + (1 - \alpha ) * ( 1- \frac{spread}{max\  spread})$. In analogy with the $F-score$ we introduce this new score that combines both the $\mathit{precision}$ and the $\mathit{spread}$ to assess the performance of the system in terms of higher precision and smaller spread.  measure follows the 	
+	\item $\mathit{PS-score} = \alpha * precision + (1 - \alpha ) * ( 1- \frac{spread}{max\  spread})$. In analogy with the $F-score$ we introduce this new score to assess the performance of the system in terms of both the $\mathit{precision}$ and the $\mathit{spread}$ combined.
 	\item  $\mathit{Cumulative\ communication}$. We study the communication cost by measuring the $\mathit{cumulative\ communication}$ that captures the number of messages, which are required to perform the distributed online learning modes to synchronize the prediction models.	
 \item $Throughput$. The number of events processed per unit time.
 \end{itemize} 
@@ -159,13 +159,13 @@ We further extend the evaluation of our system by reporting the results of exper
 	\label{fig:ps_score}
 \end{figure}
 
-\par Additionally, Figure~\ref{fig:ps_score} shows the $\mathit{PS-score}$ of %TODO: add more details%
+\par Moreover, Figure~\ref{fig:ps_score} shows the $\mathit{PS-score}$ of the different approaches. It can be seen that our approach (in three modes) performs better than the isolated approach. %TODO: may be add the initail period only for other synthetic%
 
 
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=\textwidth]{chapters/figures/synthetic/error_synthetic_15_0001.png}
+	\includegraphics[width=\linewidth]{chapters/figures/synthetic/error_synthetic_15_0001.png}
 	
 	\caption{The error  $\sum_{i,j} |\hat{p}_{i,j} - {p}_{i,j}|$) of estimating the transition probabilities  for $\mathcal{P}=a;d;c$.}
 	\label{fig:error_synthetic}

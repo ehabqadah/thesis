@@ -207,7 +207,7 @@ P(X_{m+1}=b|X_1\ldots X_m=\delta^{-m}(p))     & \quad \text{if } \delta(p,q)=b \
 0  & \quad \text{if } p \notin  \delta(p,X)
 \end{cases}
 \]
-Using this theorem, in the case of the underlying transition probability matrix is known (e.g., synthetic event streams), we then can compare the estimation efficiency of the different approaches for the transition probabilities of the underlying Markov chain $X$.  For example, the transition probability matrix of the \pmcmr model for the pattern $\mathcal{P}=a ; d ; c$ over  $\Sigma=\{a,b,c,d\}$ is represented by: 
+\par In the case of the underlying transition probability matrix is known (e.g., synthetic event streams), we then can compare the estimation efficiency of the different approaches for the transition probabilities of the underlying Markov chain $X$.  For example, the transition probability matrix of the \pmcmr model for the pattern $\mathcal{P}=a ; d ; c$ over  $\Sigma=\{a,b,c,d\}$ is represented by: 
 
 \begin{equation}
 \label{eq:matrix}
@@ -225,4 +225,5 @@ P(a|d) 	& P(b|d) 		&  0	 	    & P(d|d)	  & 0 	    & P(c|d)  \\
 \end{bmatrix}
 \end{equation} 
 
-%TODO: where we use this%
+
+\par We use this theorem In Section~\ref{sec:results_synthetic} to calculate the estimation error for the transition probability matrix of the source Markov chain, which is used to generate the synthetic event streams. We compare the learning efficiency of the isolated \pmcmr predictors and our approach that enables the \pmcmr predictors to synchronize the transition probabilities matrices to create a global one. 

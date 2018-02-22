@@ -119,13 +119,8 @@ where $\boldsymbol{N}$ is $h \times h$ matrix that obtained by re-arranging the 
 \begin{equation*}
 P(I)=\sum_{n \in I}{P(W_{\mathcal{P}}(q)=n)}\ where\  P(I) \geq \theta_{p} 
 \end{equation*}
-where $P(I)$ equals the sum of probabilities of all number of future events $n$ that fall within $I$ ($start\leq n\leq end$). Furthermore, the length of the intervals ($spread(I) = end - start$)  can be restricted to not be greater than a maximum spread threshold $\theta_{s}$.  
+where $P(I)$ equals the sum of probabilities of all number of future events $n$ that fall within $I$ ($start\leq n\leq end$). Furthermore, the length of the intervals ($spread(I) = end - start$)  can be restricted to not be greater than a maximum spread threshold $\theta_{s}$ ($spread(I)\leq \theta_{s}$)
 
-\begin{equation*}
-spread(I)\leq \theta_{s}
-\end{equation*}
-
-These intervals are estimated by a single-pass algorithm that scans a waiting-time distribution and finds the smallest (in terms of length) interval that exceeds the $\theta_{p}$ and has a spread  not greater that $\theta_{s}$. For example, Figure~\ref{fig:wt1} shows the \textit{waiting-time} distributions for all non-final states of the DFA presented in Figure~\ref{fig:wt1}, and the generated intervals are depicted in Figure~\ref{fig:predictionsIntervals}.
 
 
 \begin{figure}[H]
@@ -139,6 +134,9 @@ These intervals are estimated by a single-pass algorithm that scans a waiting-ti
 		\label{fig:wt1}
 	\end{centering}
 \end{figure}
+
+\par These intervals are estimated by a single-pass algorithm that scans a waiting-time distribution and finds the smallest (in terms of length) interval that exceeds the $\theta_{p}$ and has a spread  not greater that $\theta_{s}$. For example, Figure~\ref{fig:wt1} shows the \textit{waiting-time} distributions for all non-final states of the DFA presented in Figure~\ref{fig:wt1}, and the generated intervals are depicted in Figure~\ref{fig:predictionsIntervals}.
+
 
 \begin{figure}[H]
 	\begin{centering}
@@ -197,12 +195,13 @@ We extend the pattern prediction problem over a single event stream to the case 
  \par By monitoring the local condition $\|w_i - w_r\|^2 > \Delta$ on all local predictors, we have a guarantee that if none of the local conditions is violated, the divergence (i.e., variance of local models $\delta(w)=\frac{1}{k} \sum_{j=1}^{k}\|w_i - \hat{w}\|^2$) does not exceed the threshold $\Delta$ \cite{kamp2014communication}. This is the key point of this protocol that reduces the communication overhead comparing to the static based communication scheme, where the predictors always communicate periodically after observing a fixed number ($b$) of events ~\cite{dekel2012optimal}.  
 
 \par On the other hand, the coordinator receives the parameters of prediction models from the predictor nodes that requested for model synchronization (violation). Then it tries to keep incrementally querying other nodes for their local prediction models until reaching out all nodes, or the variance of the aggregated parameters $\hat{w}$ that is computed from the already received models less or equal than the divergence threshold $\Delta$. The coordinator uses a synchronization operation to compute the parameters of a global model  $\hat{w}$. Finally, $\hat{w}$ is sent back to the predictor nodes that sent their models after the violation or have been queried by the coordinator. 
-
+%TODO: update it%
 \begin{algorithm}[h]
 	\caption{Communication-efficient Distributed Online Learning \cite{kamp2014communication}.} 
 	\begin{algorithmic}[1] 
-	
-		\Statex \Indm  \textbf{Predictor} node $n_i$: at observing event $e_j$
+		
+		\Statex \Indm  \textbf{Predictors:}
+		\Statex \Indp node $n_i$: at observing event $e_j$
 		
 		\Statex \Indp update the parameters of the local prediction model $w_i$ and provide a prediction interval $I$ \;
 	 
@@ -216,12 +215,12 @@ We extend the pattern prediction problem over a single event stream to the case 
 	
 		\Statex \While{$|B| \neq k $ and $\frac{1}{|B|} \ \sum_{w_i\in  \Pi}\|w_i - \hat{w}\|^2 > \Delta$}{
 			
-			 \Statex  \hspace{\algorithmicindent} add other nodes that have not reported violation for \Statex \hspace{\algorithmicindent} their models $ B \gets \{w_l : f_l \notin B\ and\ l \in [k]\}$    \;
+			 \Statex  \hspace{\algorithmicindent} add other nodes that have not reported violation for \Statex \hspace{\algorithmicindent} their models $ B \gets \{w_l : w_l \notin B\ and\ l \in [k]\}$    \;
 			\Statex  \hspace{\algorithmicindent} receive models from nodes in $B$\;
 	}
         \Statex
 		\Statex compute a new global model $\hat{w}$ \;
-		\Statex send $\hat{w}$ to all the predictors in $B$ and set $f_{1}\dots f_{m}=\hat{w} $\; 
+		\Statex send $\hat{w}$ to all the predictors in $B$ and set $w_{1}\dots w_{m}=\hat{w} $\; 
 		\Statex \If {$|B| = k$}{
 		\Statex  \hspace{\algorithmicindent} set a new reference model $w_r	\gets \hat{w}$ \; }
 	
@@ -235,19 +234,31 @@ We extend the pattern prediction problem over a single event stream to the case 
 
 \subsection*{Learning a Global Transition Probability Matrix}
 
-\par We propose a \textit{synchronization operation} for the transition probability matrices ($w_i=\boldsymbol{\Pi}_i :i \in[k]$) of the $k$ distributed \pmcmr predictors. The operation is based on distributing the maximum-likelihood estimation \cite{anderson1957statistical} for the transition probabilities of the \pmcmr models described by:
- %TODO:add nij and k meaning%
+\par We propose a \textit{synchronization operation} for the transition probability matrices ($w_i=\boldsymbol{\Pi}_i :i \in[k]$) of the $k$ distributed \pmcmr predictors. The operation is based on distributing the maximum-likelihood estimation \cite{anderson1957statistical} for the transition probabilities of the \pmcmr models. 
+Let $\pi_{i,j}$ the transition probability from state $i$ to state $j$ 
+and $n_{k,i,j}$ the number of transitions from state $i$ to state $j$ on node $k$. Then, the global estimation $\hat{\pi}_{i,j}$ for $p_{i,j}$ is described by:
+
 \begin{equation}
 \label{eq:dis_pi_estim}
 \hat{\pi}_{i,j} = \frac{\sum_{k \in K} n_{k,i,j}}{\sum_{k \in K} \sum_{l \in L} n_{k,i,l}}
 \end{equation}
 
-Where $\hat{\Pi}$ is the global transition probability matrix that will be shared among all \pmcmr predictors. 
-\par Moreover, we measure the divergence of the local models from the reference model  $\|w_i - w_r\|^2$ by calculating the sum of square difference between the transition probabilities  $\boldsymbol{\Pi}_i$ and  $\boldsymbol{\Pi}_r$:
+That is,  $\hat{\Pi}$ is the global transition probability matrix that will be shared among all \pmcmr predictors. 
+\par Moreover, we measure the divergence of the local models from the reference model $\|w_i - w_r\|^2$ by calculating the sum of square difference between the local transition probability matrix $\Pi_i$ and the reference transition matrix $\Pi_r$:
 \begin{equation*}
 \label{eq:dis_pi_varinace}
-\|w_i - w_r\|^2=\sum_{l,j} (\hat{\pi}_i{l,j} -\hat{\pi}_r{l,j})^2
+\|w_i - w_r\|^2=|\Pi_i - \Pi_r\|^2=\sum_{l,j} (\pi{i,l,j} -\pi{r,l,j})^2
 \end{equation*}
 
-
+Where $\pi{i,l,j}$ is the transition probability from state $l$ to state $j$ in the $\Pi_i$, and the $\pi{r,l,j}$ the reference transition probability.
 \input{chapters/theoretical}
+
+
+\section{Summary}
+
+\par In this chapter, we addressed the problem of pattern prediction over \emph{$K$} event streams by extending the case of predicting  event patterns over a single stream, where there are \emph{$K$} distributed predictors.  We also described the used prediction model on each predictor, which is based on the event forecasting with pattern Markov chains method \cite{alevizos2017event}. We presented our approach to adapt the distributed online learning protocol \cite{kamp2014communication} that allows the predictors to synchronize their models in a communication-efficient way. Additionally, we provided the theoretical analysis of our approach by deriving a
+ probabilistic guarantee on the learning efficiency. 
+ 
+ \par In next chapter, we will introduce the high-level architecture of our pattern prediction system, which is composed of distributed \pmconer predictors \cite{alevizos2017event} that communicate their models to a coordinator node based a dynamic synchronization scheme \cite{kamp2014communication}. The coordinator computes a global model using the proposed synchronization operation (Equation~\ref{eq:dis_pi_estim}) and shares among the predictors. We will also present the implementation details of the system based on Apache Flink and Apache Kafka.    
+ 
+ 
