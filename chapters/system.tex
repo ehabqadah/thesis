@@ -18,7 +18,7 @@
 We first define the input event and the stream of events as follows:  
 \begin{definition}
 	Each event is defined as a tuple of attributes denoted by $e_i$, where 
-	$e_i = (id,type,\tau,a_1,a_2,\ldots,a_n)$, $type$ is the event type attribute that takes a value from a set of finite event types/symbols $\Sigma$, $\tau$ represents the time when the event tuple was created,  the  $a_1,a_2,...,a_n$ are spatial or other contextual features (e.g., speed); these features are varying from one application domain to another. The attribute $id$ is a unique identifier that connects the event tuple to an associated domain object.
+	$e_i = (id,type,\tau,a_1,a_2,\ldots,a_n)$, $type$ is the event type attribute that takes a value from a set of finite event types/symbols $\Sigma$, $\tau$ represents the time when the event tuple was created,  the  $a_1,a_2,...,a_n$ are spatial or other contextual features (e.g., speed); these features vary from one application domain to another. The attribute $id$ is a unique identifier that connects the event tuple to an associated domain object.
 \end{definition}
 
 \begin{definition}
@@ -56,7 +56,7 @@ that we will need to wait for until the pattern is completed (full match).
 \subsection{Base Prediction Model}
 \label{sec:Event-Forecasting-PMC}
 
-\par In this thesis, we use the event forecasting with pattern Markov chains method \cite{alevizos2017event} to construct a pattern prediction model over an event stream. In next, we describe the details of this approach. We first provide an overview of the Patten Markov Chain framework \cite{nuel_pattern_2008}. Then, we describe how this framework is used to build a pattern prediction model \cite{alevizos2017event}.  
+\par In this thesis, we use the event forecasting with pattern Markov chains method \cite{alevizos2017event} to construct a pattern prediction model over an event stream. Next, we describe the details of this approach. We first provide an overview of the Patten Markov Chain framework \cite{nuel_pattern_2008}. Then, we describe how this framework is used to build a pattern prediction model \cite{alevizos2017event}.  
 
 
 \subsubsection*{Pattern Markov Chain (PMC)}
@@ -185,16 +185,16 @@ We extend the pattern prediction problem over a single event stream to the case 
 
 \subsection*{Distributed Online Learning for Pattern Prediction}
 
-\par In next, we describe the details of adapting the distributed online learning protocol \cite{kamp2014communication} with the pattern prediction (\pmcmr) models. Where this protocol provides a communication-efficient dynamic synchronization scheme based on a periodic static scheme.
+\par In what follows, we describe the details of adapting the distributed online learning protocol \cite{kamp2014communication} with the pattern prediction (\pmcmr) models. Where this protocol provides a communication-efficient dynamic synchronization scheme based on a periodic static scheme.
 
 
 \par Algorithm~\ref{algonline:dol} presents the distributed online prediction protocol by dynamic model synchronization on both the predictor nodes and the coordinator. We refer to the PMC's transition matrix $\boldsymbol{\Pi}_i$ on predictor node $n_i$ by $w_i$, which represents the parameters of the local prediction model $f_i$. 
 
 \par That is, when a predictor $n_i:\ i \in[k]$ observes an event $e_j$ it revises its internal model state ($w_i$) and provides a prediction report. Then it checks the local conditions, by checking the local model divergence from a reference model $w_r$ after consuming a predefined number of events (batch size $b$), to decide whether there is a need to synchronize its local model with the coordinator [or not]. $w_r$ is maintained in the predictor node as a copy of the last computed aggregated model $\hat{w}$ from the previous full synchronization step, which is shared among all distributed predictors.
+%define delta%
+ \par Let $\Delta$ a user-defined divergence threshold. Then, by monitoring the local condition $(\|w_i - w_r\|^2 > \Delta)$ on all local predictors, we have a guarantee that if none of the local conditions is violated, the divergence (i.e., variance of local models $\delta(w)=\frac{1}{k} \sum_{j=1}^{k}\|w_i - \hat{w}\|^2$) does not exceed the threshold $\Delta$ \cite{kamp2014communication}. This is the key point of this protocol that reduces the communication overhead in comparison to the static based communication scheme, where the predictors always communicate periodically after observing a fixed number ($b$) of events ~\cite{dekel2012optimal}.  
 
- \par By monitoring the local condition $\|w_i - w_r\|^2 > \Delta$ on all local predictors, we have a guarantee that if none of the local conditions is violated, the divergence (i.e., variance of local models $\delta(w)=\frac{1}{k} \sum_{j=1}^{k}\|w_i - \hat{w}\|^2$) does not exceed the threshold $\Delta$ \cite{kamp2014communication}. This is the key point of this protocol that reduces the communication overhead comparing to the static based communication scheme, where the predictors always communicate periodically after observing a fixed number ($b$) of events ~\cite{dekel2012optimal}.  
-
-\par On the other hand, the coordinator receives the parameters of prediction models from the predictor nodes that requested for model synchronization (violation). Then it tries to keep incrementally querying other nodes for their local prediction models until reaching out all nodes, or the variance of the aggregated parameters $\hat{w}$ that is computed from the already received models less or equal than the divergence threshold $\Delta$. The coordinator uses a synchronization operation to compute the parameters of a global model  $\hat{w}$. Finally, $\hat{w}$ is sent back to the predictor nodes that sent their models after the violation or have been queried by the coordinator. 
+\par On the other hand, the coordinator receives the parameters of prediction models from the predictor nodes that requested for model synchronization (violation). Then it tries to keep incrementally querying other nodes for their local prediction models until reaching out all nodes have been queried, or the variance of the aggregated parameters $\hat{w}$ that is computed from the already received models is less or equal than the divergence threshold $\Delta$. The coordinator uses a synchronization operation to compute the parameters of a global model  $\hat{w}$. Finally, $\hat{w}$ is sent back to the predictor nodes that sent their models after the violation or have been queried by the coordinator. 
 %TODO: update it%
 \begin{algorithm}[h]
 	\caption{Communication-efficient Distributed Online Learning \cite{kamp2014communication}.} 

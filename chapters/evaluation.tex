@@ -1,7 +1,7 @@
 \chapter{Empirical Evaluation}
 \label{chapter:evaluation}
 
-\par In this chapter, we report and discuss the comprehensive set of experiments to evaluate the performance of our pattern prediction system. We make use of both synthetic and real-word event streams. Section~\ref{sec:exp_setu} provides a brief overview of the used event streams for our evaluation and the experimental environment. Section~\ref{sec:metrics} introduces the metrics used for the evaluation. In Section~\ref{sec:results_real} and ~\ref{sec:results_synthetic}, the evaluation results of our system over synthetic and real-world event streams are reported. Finally, Section~\ref{sec:throughput} discusses the scalability evaluation of the proposed system.  
+\par In this chapter, we report and discuss a comprehensive set of experiments to evaluate the performance of our pattern prediction system. We make use of both synthetic and real-word event streams. Section~\ref{sec:exp_setu} provides a brief overview of the used event streams for our evaluation and the experimental environment. Section~\ref{sec:metrics} introduces the metrics used for the evaluation. In Section~\ref{sec:results_real} and ~\ref{sec:results_synthetic}, the evaluation results of our system over synthetic and real-world event streams are reported. Finally, Section~\ref{sec:throughput} discusses the scalability evaluation of the proposed system.  
 
 %In next, we present the experimental setup, and discuss the results of the proposed method.   
 %Effects of parameters
@@ -195,7 +195,7 @@ where the $\hat{\pi}_{i,j}$ is the global transition probability that computed b
 	\label{fig:throughput}
 \end{figure}
 
-Figure 4.8 reports the throughput results of our system on the YARN cluster using the first pattern $\mathcal{P}_1$.  As we can observe, our system is capable of increasing the throughput by utilizing the distributed processing nodes by increasing the Flink's parallelism level. It can also be seen that as we scale up (parallelism), the throughput grows to $5X$.
+Figure 4.8 reports the throughput results of our system on the YARN cluster using the first pattern $\mathcal{P}_1$.  As we can observe, our system is capable of increasing the throughput by utilizing the distributed processing nodes by increasing Flink's parallelism level. It can also be seen that as we scale up (parallelism), the throughput grows to $5X$.
 
 % As we scale up the  hroughput grows to 3X.
 
