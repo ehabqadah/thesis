@@ -20,7 +20,7 @@
  We first give a brief introduction to the Markov chain theory, where the theoretical definitions and notations presented in this section are based  on the work described in \cite{bertsekas2002introduction,Billingsley1961,anderson1957statistical,howard2012dynamic}.
 
 \begin{definition}
-	Let $\{q_0, q_1, \ldots q_n\}$ be a sequence of random variables as \textbf{Markov chain}, where the variable $q_i$ belongs to a finite state space $\mathbf{S =\{1,\ldots m\}}$ and represents the observed state of the chain at time $i$. Let the transition probabilities of the Markov chain $p_{ij}(t+1)$ such that $i,j \in S$ and $t=0,\ldots, n$, where  $p_{ij}(t+1)$ is the probability of the state $j$ at time $t+1$, given  state $i$ at time $t$, then the sequence $\{q_0, q_1, \ldots q_n\}$ satisfies the \textbf{Markov property} 
+	Let $\{q_0, q_1, \ldots q_n\}$ be a sequence of random variables as \textbf{Markov chain}, where the variable $q_i$ belongs to a finite state space $\mathbf{S =\{1,\ldots m\}}$ and represents the observed state of the chain at time $i$. Let the transition probabilities of the Markov chain be $p_{ij}(t+1)$ such that $i,j \in S$ and $t=0,\ldots, n$, where  $p_{ij}(t+1)$ is the probability of the state $j$ at time $t+1$, given  state $i$ at time $t$, the sequence $\{q_0, q_1, \ldots q_n\}$ satisfies the \textbf{Markov property} 
 	
 	\begin{equation}
 	\begin{aligned}
@@ -37,7 +37,7 @@
 
 \par When the conditional probabilities $P(q_{t+1}=j|q_{t}=i)$ are independent of the time $t$, the Markov chain is called \textbf{homogeneous} such that $p_{ij}:=P(q_{t+1}=j|q_{t}=i)$.
 
-The transition probabilities of the Markov chain are represented by a $m \times m$ matrix that is called \textbf{transition probability matrix} $\boldsymbol{\Pi}$ with $p_{ij}$ elements
+The transition probabilities of the homogeneous Markov chain are represented by a $m \times m$ matrix that is called \textbf{transition probability matrix} $\boldsymbol{\Pi}$ with $p_{ij}$ elements
 
 
 \begin{equation}
@@ -60,14 +60,14 @@ where $0 \leq p_{i,j}\leq 1 $ and the rows sum up to one
 
 \subsection{Learning the Transition Probability Matrix for a Single Markov Chain}
  \
-\par As mentioned in Section ~\ref{sec:pmc_prediction}, we rely on the transition probability matrix of \pmcmr to build the prediction intervals,  given that the sequence of the states $\{q_0, q_1, \ldots q_n\}$ that DFA visits after consuming the input event stream is a 1-order Markov chain.
+\par As mentioned in Section~\ref{sec:pmc_prediction}, we rely on the transition probability matrix of \pmcmr to build the prediction intervals, given that the sequence of the states $\{q_0, q_1, \ldots q_n\}$ that DFA visits after consuming the input event stream is a 1-order homogeneous Markov chain.
 
 
 \par However, in practice, the underlying transition probability matrix is unknown. Thus, it is required to estimate or learn it form the observed sequence $\{q_0, q_1, \ldots q_n\}$. The maximum-likelihood estimator is a common method to estimate the transition probability matrix \cite{anderson1957statistical}.
 
 
 \begin{definition}
-	Let $\boldsymbol{\Pi}$ be the transition probability matrix of a single Markov chain with a set of states $S$, 
+	Let $\boldsymbol{\Pi}$ be the transition probability matrix of a single homogeneous Markov chain with a set of states $S$, 
 	$\pi_{i,j}$ the transition probability from state $i$ to state $j$,
 	$n_{i,j}$ the number of observed transitions from state $i$ to state $j$,
 	then the maximum-likelihood finds $\boldsymbol{\hat{\Pi}}$ as an estimate for $\boldsymbol{\Pi}$, where its elements $\hat{p}_{i,j}$ are
@@ -95,11 +95,11 @@ Where this estimator is used separately to learn each transition probability mat
 	\begin{equation}
 	\begin{aligned}
 	\label{eq:lim_dist}
-	 \sqrt{n}\ (\hat{p}_{i,j} - {p}_{i,j}) \xrightarrow{d} \mathcal{N}(\mu,\,\sigma^{2})\\
+	 \sqrt{n}\ (\hat{p}_{i,j} - {p}_{i,j}) \xrightarrow{d} \mathcal{N}(0,\,\sigma^{2})\\
 	 as\ n \xrightarrow{} \infty
 	 \end{aligned}
 	\end{equation}
-Thus, the random variable $\sqrt{n}\ (\hat{p}_{i,j} - {p}_{i,j})$ has asymptotically normal distribution with mean $\mu=0$, and  the variance  $\sigma^{2}$ is given by   
+Thus, the random variable $\sqrt{n}\ (\hat{p}_{i,j} - {p}_{i,j})$ has asymptotically normal distribution with mean $\mu=0$, and the variance $\sigma^{2}$ is given by   
 
 \begin{equation}
 \begin{aligned}
@@ -123,24 +123,24 @@ It can be easily observed that variances drop as the sample size $n$ grows large
 \subsection{Probabilistic Learning Guarantee}
 \label{sec:guarantee}
  %in Equation ~\ref{eq:dis_pi_estim}% 
-\par The proposed synchronization operator aggregates the maximum-likelihood estimates over $k$ observed sequences (i.e., sequences of the DFA states based on the consumed event streams), the operator estimates a global transition probabilities matrix for a set of $k$ sequences, which are arranged as a serial sequence composed of all $k$ sequences with length $N=k.n$, assuming that all $k$ sequences have $n$ observations. For the sake of simplicity, we assume that the synchronization phase happens on batch size equals to $n$ (i.e., $b=n$) given that the divergence threshold $\Delta$ is zero, then the global transition probabilities $\hat{\pi}_{i,j}$ are given 
+\par The proposed synchronization operator aggregates the maximum-likelihood estimates over $k$ observed sequences (i.e., sequences of the DFA states based on the consumed event streams), the operator estimates a global transition probabilities matrix for a set of $k$ sequences, which are arranged as a serial sequence composed of all $k$ sequences with length $N=k \cdot n$, assuming that all $k$ sequences have $n$ observations. For the sake of simplicity, we assume that the synchronization phase happens on batch size equals to $n$ (i.e., $b=n$) given that the divergence threshold $\Delta$ is zero, then the global transition probabilities $\hat{\pi}_{i,j}$ are given 
 \begin{equation}
 \label{eq:dis_pi_estim2}
 	\begin{aligned}
 \hat{\pi}_{i,j}=\frac{\sum_{k \in K} n_{k,i,j}}{\sum_{k \in K} \sum_{l \in L} n_{k,i,l}} = \hat{p}_{i,j}(N)\\\\
- where\ N = k.n.
+ where\ N = k \cdot n.
  \end{aligned}
 \end{equation}
 %This is equivalent to
 
-\par Thus, this operation allows to observe more samples, which is naturally producing better estimates of the transition probabilities. In addition, our proposed synchronization operation of the $k$ transition matrices has the same properties as the maximum likelihood estimator over a serial sequence of all $k$ sequences, while skipping $k-1$ transitions between every two consecutive sequences, which is in practice a small number that can be neglected comparing to the total transitions count $k.n$. As result, the global transition probabilities of our approach  have the same properties as maximum likelihood estimates, in particular, the random variable $\sqrt{N}\ (\hat{\pi}_{i,j} - {p}_{i,j})$ has asymptotically normal distribution with mean $\mu=0$, and following Equation ~\ref{eq:lim_dist} we have variance 
+\par Thus, this operation allows to observe more samples, which is naturally producing better estimates of the transition probabilities. In addition, our proposed synchronization operation of the $k$ transition matrices has the same properties as the maximum likelihood estimator over a serial sequence of all $k$ sequences, while skipping $k-1$ transitions between every two consecutive sequences, which is in practice a small number that can be neglected comparing to the total transitions count $k \cdot n$. As result, the global transition probabilities of our approach  have the same properties as maximum likelihood estimates, in particular, the random variable $\sqrt{N}\ (\hat{\pi}_{i,j} - {p}_{i,j})$ has asymptotically normal distribution with mean $\mu=0$, and following Equation ~\ref{eq:lim_dist} we have variance 
 
 \begin{equation}
 \begin{aligned}
 \label{eq:lim_dist2}
 \sqrt{N}\ (\hat{\pi}_{i,j} - {p}_{i,j}) \xrightarrow{d} \mathcal{N}(0,\,\sigma^{2})\\
 as\ N \xrightarrow{} \infty\\
-where\ N = n.k .\\
+where\ N = n \cdot k .\\
 \end{aligned}
 \end{equation}
 
@@ -154,7 +154,7 @@ So,
 
 
 That is, since $N > n$ combining $k$ sequences, the variances of estimations of our method  $\mathrm{Var} (\hat{\pi}_{i,j} - {p}_{i,j})$ are smaller than the estimates of maximum-likelihood over a single sequence $\mathrm{Var} (\hat{p}_{i,j} - {p}_{i,j})$. 
-\par Thus, it follows from the  Chebyshev's inequality \cite{feller1968introduction} that we have for the random variable $\hat{p}_{i,j} - {p}_{i,j}$, for any constant $c > 0$  
+\par Thus, it follows from Chebyshev's inequality \cite{feller1968introduction} that we have for the random variable $\hat{p}_{i,j} - {p}_{i,j}$, for any constant $c > 0$  
 
 \[ \Pr\left( |(\hat{p}_{i,j} - {p}_{i,j}) - \mu| \geq c \right) \leq
 \frac{\mathrm{Var} (\hat{p}_{i,j} - {p}_{i,j})}{c^2} \]
@@ -163,27 +163,30 @@ That is, since $N > n$ combining $k$ sequences, the variances of estimations of 
  The mean $\mu$ is zero and the $\mathrm{Var} (\hat{p}_{i,j} - {p}_{i,j})$ equals  $\frac {\sigma^{2}}{n}$, and therefore 
  
  \[ \Pr\left( |\hat{p}_{i,j} - {p}_{i,j}| \geq c \right) \leq
- \frac{\sigma^{2}}{c^2 . n} \]
+ \frac{\sigma^{2}}{c^2 \cdot n} \]
  
  
 $\hat{p}_{i,j} - {p}_{i,j}$  represents the deviation/error between the estimates of maximum-likelihood over a single (i.e., isolated) sequence and the true probabilities. On the other hand, we can obtain, in the same way, the probability bound of deviations for our synchronization operator estimates as follows:
 
 \[ \Pr\left( |\hat{\pi}_{i,j} - {p}_{i,j}| \geq c \right) \leq
-\frac{\sigma^{2}}{c^2. n.k} \]
+\frac{\sigma^{2}}{c^2 \cdot n \cdot k} \]
 
 
 \par Using Equation~\ref{eq:var_sync} we obtain the value $\mathrm{Var} (\hat{\pi}_{i,j} - {p}_{i,j})$, and Equation~\ref{eq:var_sync} for $\mathrm{Var} (\hat{p}_{i,j} - {p}_{i,j})$. Given that $k \ge 1$, then  the variance of $\hat{\pi}_{i,j} - {p}_{i,j}$  is less than or equal to the variance of $\hat{p}_{i,j} - {p}_{i,j}$
 
 \[ 
-\frac{\sigma^{2}}{c^2 .n.k} \leq
-\frac{\sigma^{2}}{c^2 . n}
+\frac{\sigma^{2}}{c^2 \cdot n \cdot k} \leq
+\frac{\sigma^{2}}{c^2 \cdot n}
  \]
 
 So, we have for any constant $c > 0$ and $k \ge 1$, a probabilistic learning guarantee of the transition probabilities: 
-
-\[ \Pr\left( |\hat{\pi}_{i,j} - {p}_{i,j}| \geq c \right) \leq
- \Pr\left( |\hat{p}_{i,j} - {p}_{i,j}| \geq c \right)
- \]
+\begin{equation}
+\begin{aligned}
+ \Pr\left( |\hat{\pi}_{i,j} - {p}_{i,j}| \geq c \right) \leq
+ \Pr\left( |\hat{p}_{i,j} - {p}_{i,j}| \geq c \right) \\
+   as\ n \xrightarrow{} \infty
+ \end{aligned}
+ \end{equation}
  where $\hat{p}_{i,j}$ a transition probability, which is learned on a single \pmcmr predictor, and the $\hat{\pi}_{i,j}$ is the global transition probability computed by the synchronization operation (Equation ~\ref{eq:dis_pi_estim}). To summarize, our approach is based on aggregating the maximum-likelihood estimates over $k$ sequences, which speeds up the convergence to reach the true transition probabilities as a result of the smaller variances of the estimates.
 
 %The weak law of large
