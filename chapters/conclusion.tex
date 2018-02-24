@@ -29,9 +29,10 @@ There are several directions in which we propose to extend our work. The main on
 
 \item The probabilistic learning guarantee that has been obtained for the proposed method relies on the static-like synchronization scheme, where the mini-batch size is equal to the assumed uniform size of the input event streams, and the variance threshold is zero. Therefore, it would be interesting to study the effects of the dynamic synchronization scheme on the learning guarantee.
 
-\item The \pmcmr model provides the prediction intervals in terms of the number of future events, it would be more beneficial if the predictions intervals are transformed into real-time by prediction the time-stamp of the future events using some machine learning techniques like regression.  
+\item The \pmcmr model provides the prediction intervals in terms of the number of future events, it would be more beneficial if the predictions intervals are transformed into real-time by also predicting the time-stamp of the future events using some machine learning techniques like regression.  
 
-%TODO: \item please add Elias Work on extending the pattern language as future work, in particular integrating it via the interface defined above
+\item \citet{alevizos2017event} are working on extending the pattern language of the \pmcmr models to define more complex patterns by supporting boolean predicates. It would be possible also to integrate the new version with the distributed online learning by implementing the system interfaces as was discussed in Section~\ref{sec:impl}.
+
 
 \end{itemize}
 %As future work, we will investigate the effect of grouping the input event streams on the predictive performance of our proposed system. Furthermore,  we will study the interrelation between precision and spread scores.

@@ -80,7 +80,7 @@ In this section, we present the experimental results for two different patterns 
 	
 	\begin{figure}[H]
 		\centering
-		\includegraphics[width=\textwidth,height=.62\textheight]{chapters/figures/synopses/p1_messages_100_2_08.png}
+		\includegraphics[width=\textwidth,height=.62\textheight,keepaspectratio]{chapters/figures/synopses/p1_messages_100_2_08.png}
 		
 		\caption{Cumulative communication with respect to the number of input events over time for $\mathcal{P}_1$.}
 		\label{fig:comm}
@@ -95,7 +95,7 @@ In this section, we present the experimental results for two different patterns 
 	
 	\begin{figure}[H]
 		\centering
-		\includegraphics[width=\textwidth,height=.65\textheight]{chapters/figures/synopses/p1_spread_100_2_08.png}
+		\includegraphics[width=\textwidth,keepaspectratio]{chapters/figures/synopses/p1_spread_100_2_08.png}
 		
 		\caption{Average spread for $\mathcal{P}_1$.}
 		\label{fig:spread}
@@ -131,10 +131,10 @@ In this section, we present the experimental results for two different patterns 
 \label{sec:results_synthetic}
 
 We further extend the evaluation of our system by reporting the results of experiments for $\mathcal{P}=a ; d ; c$ over synthetically generated streams. We set the batch size to 15 ($b=15$), the variance threshold to .0001 ($\Delta=.0001$), the  \pmcmr prediction threshold to $50\%$ ($\theta_{p}=50\%$), and the maximum spread to 10 ($\theta_{s}=10$).
-
+%
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=\textwidth]{chapters/figures/synthetic/precision_synthetic_15_0001.png}
+	\includegraphics[width=\textwidth,keepaspectratio]{chapters/figures/synthetic/precision_synthetic.png}
 	
 	\caption{Precision scores with respect to the number of input events over time for $\mathcal{P}=a;d;c$.}
 	\label{fig:precsion_synthetic}
@@ -189,7 +189,7 @@ where the $\hat{\pi}_{i,j}$ is the global transition probability that computed b
 
 \begin{figure}[H]
 	
-	\includegraphics[width=\textwidth]{chapters/figures/throughput/throughput_seconds.png}
+	\includegraphics[width=\textwidth,keepaspectratio]{chapters/figures/throughput/temp.png}
 	
 	\caption{Throughput of the system on \ac{yarn} cluster.}
 	\label{fig:throughput}

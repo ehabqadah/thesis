@@ -124,7 +124,7 @@ where $P(I)$ equals the sum of probabilities of all number of future events $n$ 
 \begin{figure}[H]
 	\begin{centering}
 		\center
-		\includegraphics[width=\textwidth]{chapters/figures/wt_v2.png}
+		\includegraphics[width=\textwidth,keepaspectratio]{chapters/figures/new_wt.png}
 		
 		
 		\caption{Waiting-time distribution for
@@ -139,7 +139,7 @@ where $P(I)$ equals the sum of probabilities of all number of future events $n$ 
 \begin{figure}[H]
 	\begin{centering}
 		\center
-			\includegraphics[width=\textwidth]{chapters/figures/prediction_intervals_v2.png}
+			\includegraphics[width=\textwidth,keepaspectratio]{chapters/figures/new_prediction_intervals.png}
 					
 		\caption{Example of the computed prediction intervals for
 			$\mathcal{P}=a ; d ; c$, $\Sigma=\{a,b,c,d\}$, $m=1$, $\theta_{p}=0.5\ and\ \theta_{s}=20$.}
@@ -183,14 +183,14 @@ We extend the pattern prediction problem over a single event stream to the case 
 
 \subsection*{Distributed Online Learning for Pattern Prediction}
 
-\par In what follows, we describe the details of adapting the distributed online learning protocol \cite{kamp2014communication} with the pattern prediction (\pmcmr) models. Where this protocol provides a communication-efficient dynamic synchronization scheme based on a periodic static scheme.
+\par In what follows, we describe the details of adapting the distributed online learning protocol \cite{kamp2014communication} with the pattern prediction (\pmcmr) models. This protocol provides a communication-efficient dynamic synchronization scheme based on a periodic static scheme.
 
 
 \par Algorithm~\ref{algonline:dol} presents the distributed online prediction protocol by dynamic model synchronization on both the predictor nodes and the coordinator. We refer to the PMC's transition matrix $\boldsymbol{\Pi}_i$ on predictor node $n_i$ by $w_i$, which represents the parameters of the local prediction model $f_i$. 
 
 \par That is, when a predictor $n_i:\ i \in[k]$ observes an event $e_j$ it revises its internal model state ($w_i$) and provides a prediction report. Then it checks the local conditions, by checking the local model divergence from a reference model $w_r$ after consuming a predefined number of events (batch size $b$), to decide whether there is a need to synchronize its local model with the coordinator [or not]. $w_r$ is maintained in the predictor node as a copy of the last computed aggregated model $\hat{w}$ from the previous full synchronization step, which is shared among all distributed predictors.
 %define delta%
- \par Let $\Delta$ a user-defined divergence threshold. Then, by monitoring the local condition $(\|w_i - w_r\|^2 > \Delta)$ on all local predictors, we have a guarantee that if none of the local conditions is violated, the divergence (i.e., variance of local models $\delta(w)=\frac{1}{k} \sum_{j=1}^{k}\|w_i - \hat{w}\|^2$) does not exceed the threshold $\Delta$ \cite{kamp2014communication}. This is the key point of this protocol that reduces the communication overhead in comparison to the static based communication scheme, where the predictors always communicate periodically after observing a fixed number ($b$) of events ~\cite{dekel2012optimal}.  
+ \par Let $\Delta$ be a user-defined divergence threshold. Then, by monitoring the local condition $(\|w_i - w_r\|^2 > \Delta)$ on all local predictors, we have a guarantee that if none of the local conditions is violated, the divergence (i.e., variance of local models $\delta(w)=\frac{1}{k} \sum_{j=1}^{k}\|w_i - \hat{w}\|^2$) does not exceed the threshold $\Delta$ \cite{kamp2014communication}. This is the key point of this protocol that reduces the communication overhead in comparison to the static based communication scheme, where the predictors always communicate periodically after observing a fixed number ($b$) of events ~\cite{dekel2012optimal}.  
 
 \par On the other hand, the coordinator receives the parameters of prediction models from the predictor nodes that requested for model synchronization (violation). Then it tries to keep incrementally querying other nodes for their local prediction models until reaching out all nodes have been queried, or the variance of the aggregated parameters $\hat{w}$ that is computed from the already received models is less or equal than the divergence threshold $\Delta$. The coordinator uses a synchronization operation to compute the parameters of a global model  $\hat{w}$. Finally, $\hat{w}$ is sent back to the predictor nodes that sent their models after the violation or have been queried by the coordinator. 
 %TODO: update it%
@@ -257,6 +257,6 @@ Where $\pi{i,l,j}$ is the transition probability from state $l$ to state $j$ in 
 \par In this chapter, we addressed the problem of pattern prediction over \emph{$K$} event streams by extending the case of predicting  event patterns over a single stream, where there are \emph{$K$} distributed predictors.  We also described the used prediction model on each predictor, which is based on the event forecasting with pattern Markov chains method \cite{alevizos2017event}. We presented our approach to adapt the distributed online learning protocol \cite{kamp2014communication} that allows the predictors to synchronize their models in a communication-efficient way. Additionally, we provided the theoretical analysis of our approach by deriving a
  probabilistic guarantee on the learning efficiency. 
  
- \par In next chapter, we will introduce the high-level architecture of our pattern prediction system, which is composed of distributed \pmconer predictors \cite{alevizos2017event} that communicate their models to a coordinator node based a dynamic synchronization scheme \cite{kamp2014communication}. The coordinator computes a global model using the proposed synchronization operation (Equation~\ref{eq:dis_pi_estim}) and shares among the predictors. We will also present the implementation details of the system based on Apache Flink and Apache Kafka.    
+ \par In next chapter, we will introduce the high-level architecture of our pattern prediction system, which is composed of distributed \pmcmr predictors \cite{alevizos2017event} that communicate their models to a coordinator node based a dynamic synchronization scheme \cite{kamp2014communication}. The coordinator computes a global model using the proposed synchronization operation (Equation~\ref{eq:dis_pi_estim}) and shares among the predictors. We will also present the implementation details of the system based on Apache Flink and Apache Kafka.    
  
  
