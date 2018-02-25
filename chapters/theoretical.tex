@@ -108,12 +108,13 @@ Thus, the random variable $\sqrt{n}\ (\hat{p}_{i,j} - {p}_{i,j})$ has asymptotic
 \end{aligned}
 \end{equation}
 
-Where $p_{l,j}^{t-1}$ is the probability of state $j$ at time $t-1$ given that the state $l$ at time $0$ ~\cite{anderson1957statistical}. We are interested in the variances of $(\hat{p}_{i,j} - {p}_{i,j})$ that represents the error in the estimation of ${p}_{i,j}$ by the maximum-likelihood estimator, which is given by:
+Where ($\eta_{l} > 0,\ \sum_{} \eta_{l}=1$), and $p_{l,j}^{t-1}$ is the probability of state $j$ at time $t-1$ given that the state $l$ at time $0$ ~\cite{anderson1957statistical}. We are interested in the variances of $(\hat{p}_{i,j} - {p}_{i,j})$ that represents the error in the estimation of ${p}_{i,j}$ by the maximum-likelihood estimator, which is given by:
 
 	\begin{equation}
 \begin{aligned}
 \label{eq:var_isol}
-	\mathrm{Var} (\hat{p}_{i,j} - {p}_{i,j}) =  \frac {\mathrm{Var}(\sqrt{n}\ (\hat{p}_{i,j} - {p}_{i,j}))}{n} = \frac {\sigma^{2}}{n} 
+	\mathrm{Var} (\hat{p}_{i,j} - {p}_{i,j}) = \mathrm{Var} (\frac {\sqrt{n}}{\sqrt{n}}\  (\hat{p}_{i,j} - {p}_{i,j}))= \frac {\mathrm{Var}(\sqrt{n}\ (\hat{p}_{i,j} - {p}_{i,j}))}{n} = \frac {\sigma^{2}}{n}\\
+	as\ n \xrightarrow{} \infty 
 \end{aligned}
 \end{equation}
 
@@ -182,8 +183,9 @@ $\hat{p}_{i,j} - {p}_{i,j}$  represents the deviation/error between the estimate
 So, we have for any constant $c > 0$ and $k \ge 1$, a probabilistic learning guarantee of the transition probabilities: 
 \begin{equation}
 \begin{aligned}
+\label{eq:guarantee}
  \Pr\left( |\hat{\pi}_{i,j} - {p}_{i,j}| \geq c \right) \leq
- \Pr\left( |\hat{p}_{i,j} - {p}_{i,j}| \geq c \right) \\
+ \frac{1}{k}\ \Pr\left( |\hat{p}_{i,j} - {p}_{i,j}| \geq c \right) \\
    as\ n \xrightarrow{} \infty
  \end{aligned}
  \end{equation}
