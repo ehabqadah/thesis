@@ -59,7 +59,7 @@ In this section, we describe in detail the implementation \footnote{The source c
 
 
 \par Moreover, the implementation of the \textit{predictor} map function includes the communication  with \textit{coordinator} using Kafka streams.
-Figure~\ref{fig:class_diagram} shows the general class hierarchy of the predictor node. %TODO:add add more details here%
+Figure~\ref{fig:class_diagram} shows the general class hierarchy of the predictor node. The	crucial	component in the framework is the model interface provided by \textit{predictor}
 
  At the beginning of the execution,  each predictor instance sends a registration request to the coordinator. Also at the run-time,  it sends  its local prediction model as synchronization request,  or as a response for a resolution request from the coordinator. These coordination messages are published into different Kafka topics as depicted in Table~\ref{tab:messagesToTopics}. 
  
