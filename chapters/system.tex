@@ -127,7 +127,7 @@ where $P(I)$ equals the sum of probabilities of all number of future events $n$ 
 		
 		
 		\caption{Waiting-time distribution for
-			$\mathcal{P}=a ; d ; c$, $\Sigma=\{a,b,c,d\}$, $m=1$, $\theta_{p}=0.5\ and\ \theta_{s}=20$.}
+			$\mathcal{P}=a ; d ; c$, $\Sigma=\{a,b,c,d\}$, and $m=1$.}
 		\label{fig:wt1}
 	\end{centering}
 \end{figure}
@@ -141,7 +141,7 @@ where $P(I)$ equals the sum of probabilities of all number of future events $n$ 
 			\includegraphics[width=\textwidth,keepaspectratio]{chapters/figures/new_prediction_intervals.png}
 					
 		\caption{Example of the computed prediction intervals for
-			$\mathcal{P}=a ; d ; c$, $\Sigma=\{a,b,c,d\}$, $m=1$, $\theta_{p}=0.5\ and\ \theta_{s}=20$.}
+			$\mathcal{P}=a ; d ; c$, $\Sigma=\{a,b,c,d\}$, $m=1$, $\theta_{p}=0.5,\ and\ \theta_{s}=20$.}
 		\label{fig:predictionsIntervals}
 	\end{centering}
 \end{figure}
@@ -194,7 +194,7 @@ We extend the pattern prediction problem over a single event stream to the case 
 \par On the other hand, the coordinator receives the parameters of prediction models from the predictor nodes that requested for model synchronization (violation). Then it tries to keep incrementally querying other nodes for their local prediction models until reaching out all nodes have been queried, or the variance of the aggregated parameters $\hat{w}$ that is computed from the already received models is less or equal than the divergence threshold $\Delta$. The coordinator uses a synchronization operation to compute the parameters of a global model  $\hat{w}$. Finally, $\hat{w}$ is sent back to the predictor nodes that sent their models after the violation or have been queried by the coordinator. 
 
 \begin{algorithm}[h]
-	\caption{Communication-efficient Distributed Online Learning \cite{kamp2014communication}.} 
+	\caption{Communication-efficient Distributed Online Learning~\cite{kamp2014communication} .} 
 	\begin{algorithmic}[1] 
 		
 		\Statex \Indm  \textbf{Predictors:}

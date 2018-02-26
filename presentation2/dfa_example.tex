@@ -2,35 +2,8 @@
  \begin{figure}[ht]
 	\begin{center}
 		
-		\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=2.6cm,
-		semithick]
-		\tikzstyle{every state}=[fill=red,text=white]		 
-%\begin{tikzpicture}[node distance=7em, scale=1, transform shape]
-\node[state, initial] (s0) {$0$};
-\node[state, below right of=s0] (Sailing) {$1$};
-
-\node[state, above right of=Sailing] (Moving) {$2$};
-\node[state, above right of=Moving] (Stopping1) {$3$};
-\node[state,accepting,below right of=Moving] (StoppingF) {$4$};
-\path (s0) edge              node {Sailing} (Sailing)
-	       edge              node {Moving} (Moving)
-	       edge   [bend left]  node {Stopping} (Stopping1)
-	       
-	       (Moving) edge              node {Sailing} (Sailing)
-	                edge     [loop right]         node {Moving} (Moving)
-	                edge   [bend left]  node {Stopping} (Stopping1)
-	                
-	        (Sailing) edge   [loop left]           node {Sailing} (Sailing)
-	        edge   [bend left]           node {Moving} (Moving)
-	        edge  [bend right]   node {Stopping} (StoppingF)
-	        
-	        (Stopping1) edge     [ bend left]        node {Sailing} (Sailing)
-	        edge              node {Moving} (Moving)
-	        edge   [loop right]  node {Stopping} (Stopping1)
-	        
-	        ;
-
-\end{tikzpicture}
+	\includegraphics[width=\linewidth,height=.6\textheight,left]{figures/new/dfa.png}\linebreak
+$Q=\{0,1,2,3,4,5,6\}$ for  $m=1$
 \end{center}
-\caption[]{$ Q=\{0,1,2,3,4\}$       $m=1$}
+%\caption[]{}
 \end{figure}

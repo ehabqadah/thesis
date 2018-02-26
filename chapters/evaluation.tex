@@ -63,7 +63,7 @@ In our experiments, we compare the distributed online learning modes against the
 \section{Results on Real-word Event Streams}
 \label{sec:results_real}
 
-In this section, we present the experimental results for two different patterns  $\mathcal{P}_1=Sailing$ (with an order of )$m=2$), and   $\mathcal{P}_2=$\textit{changeInHeading; gapStart; gapEnd; changeInHeading} (with first order $m=1$). All experiments are performed with the batch size of 100  ($b=100$), the variance threshold of 2 ($\Delta=2$), $80\%$ as PMC prediction threshold ($\theta_{p}=80\%$), and 200 for the maximum spread ($\theta_{s}=200$).
+In this section, we present the experimental results for two different patterns  $\mathcal{P}_1=Sailing$ with an order of 2 ($m=2$), and  $\mathcal{P}_2=$\textit{changeInHeading; gapStart; gapEnd; changeInHeading} with first order ($m=1$). All experiments are performed with the batch size of 100  ($b=100$), the variance threshold of 2 ($\Delta=2$), $80\%$ as PMC prediction threshold ($\theta_{p}=80\%$), and 200 for the maximum spread ($\theta_{s}=200$).
 
 \begin{figure}[H]
 	\centering
@@ -175,7 +175,7 @@ We further extend the evaluation of our system by reporting the results of exper
 	\centering
 	\includegraphics[width=\textwidth]{chapters/figures/synthetic/new/ps_score_synthetic.png}
 	
-	\caption{$\mathit{PS-score}$ for $\mathcal{P}=a;d;c$ with $\alpha = .5$.}
+	\caption{$\mathit{PS}$-score for $\mathcal{P}=a;d;c$ with $\alpha = .5$.}
 	\label{fig:ps_score_synth}
 \end{figure}
 
@@ -205,9 +205,7 @@ As discussed in Section ~\ref{sec:theoretical}, our proposed method improves the
 
 
 
-  
-
-
+ 
 \section{Throughput Results}
 \label{sec:throughput}
 
