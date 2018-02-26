@@ -55,24 +55,23 @@ In this section, we describe in detail the implementation \footnote{The source c
 
 \par The system ingests the input events stream from a Kafka cluster that is mapped to a \textit{DataStream} of events, which is then processed by an \textit{EventTuplesMapper} to create tuples of \textit{(id, event)}, where the \textit{id} is associated to the identifier of the moving object. To handle events  coming in out of order in a certain margin, the stream of event tuples  is processed by a \textit{TimestampAssigner}, it assigns the timestamps for the input events based on the extracted creation time. Afterwards,  an ordered stream of event tuples is generated using a process function \textit{EventSorter}.
 
-\par The ordered stream is then transformed to a \textit{keyedEventsStream} by partitioning it, based on the ids values, using a \textit{keyBy} operation. A local \textit{predictor} node in a distributed environment is represented by a \textit{map} function over the \textit{keyedEventsStream}. Each parallel instance of the map operator (predictor) always processes all events of the same moving object (i.e., equivalent id), and maintains a bounded prediction model (i.e., \pmcmr\  predictor) using the Flink's Keyed State  \footnote{{Keyed State in Flink: \url https://ci.apache.org/projects/flink/flink-docs-release-1.3/dev/stream/state.html\#kayed-state}}.  The output streams of the moving objects from the parallel instances of the predictor map functions are sent to a new Kafka stream (i.e., same topic name).  They then can be processed by other components like visualization or users notifier.
+\par The ordered stream is then transformed to a \textit{keyedEventsStream} by partitioning it, based on the ids values, using a \textit{keyBy} operation. A local \textit{predictor} node in a distributed environment is represented by a \textit{map} function over the \textit{keyedEventsStream}. Each parallel instance of the map operator (predictor) always processes all events of the same moving object (i.e., equivalent id), and maintains a bounded prediction model (i.e., \pmcmr\  predictor) using the Flink's Keyed State  \footnote{{Keyed State in Flink: \url https://ci.apache.org/projects/flink/flink-docs-release-1.3/dev/stream/state.html\#kayed-state}}.  The output streams of the moving objects from the parallel instances of the predictor map functions are sent to a new Kafka stream (i.e., same topic name). They then can be processed by other components like visualization or users notifier.
 
 
-\par Moreover, the implementation of the \textit{predictor} map function includes the communication  with \textit{coordinator} using Kafka streams.
-Figure~\ref{fig:class_diagram} shows the general class hierarchy of the predictor node. The	crucial	component in the framework is the model interface provided by \textit{predictor}
+\par The implementation of the \textit{predictor} map function includes the communication  with \textit{coordinator} using Kafka streams.
+Figure~\ref{fig:class_diagram} shows the general class hierarchy of the predictor node. A local predictor in a distributed environment is represented by \textit{LocalPredictorNode}, it maintains a predictor object that processes the incoming events to provide a prediction service. 
 
- At the beginning of the execution,  each predictor instance sends a registration request to the coordinator. Also at the run-time,  it sends  its local prediction model as synchronization request,  or as a response for a resolution request from the coordinator. These coordination messages are published into different Kafka topics as depicted in Table~\ref{tab:messagesToTopics}. 
- 
  
  \begin{figure}[H]
  	\centering
  	\includegraphics[width=\textwidth,height=\linewidth]{chapters/figures/predictor_diagram.png}
  	
- 	\caption{Predictor node class hierarchy.}
+ 	\caption{The class hierarchy of the predictor node.}
  	\label{fig:class_diagram}
  \end{figure}
+\par Moreover, the predictor instance maintains a \textit{LearningModel} object and invokes its methods for the prediction and model update. It communicates with the coordinator through Kafka using instance of the \textit{CoordinationMessagesCommunicator} class. We provide an implementation (\textit{PMCLearningModel}) for the learning interface that represents the \pmcmr model. 
 
- 
+ \par At the beginning of the execution,  each predictor instance sends a registration request to the coordinator. Also at the run-time,  it sends  its local prediction model as synchronization request,  or as a response for a resolution request from the coordinator. These coordination messages are published into different Kafka topics as depicted in Table~\ref{tab:messagesToTopics}. 
 \begin{center}
 \centering
 \begin{table}[h]
@@ -91,7 +90,6 @@ Figure~\ref{fig:class_diagram} shows the general class hierarchy of the predicto
 
 \end{center}
 
-\textbf{Coordinator.} Listing~\ref{algonline:flink2} presents the workflow of the coordinator node that manages the distributed online learning protocol operations, which is implemented as Flink program. The coordinator receives messages from the local predictors through a Kafka Stream of a topic named \textit{LocalToCoordinatorTopicId}. It is implemented as a single \textit{flatMap} function over the messages stream, by setting the \textit{parallelism} level of the Flink program to \textit{1}. Increasing the parallelism will scale up the number of parallel coordinator instances, for example, in order to handle different groupings of the input event streams. 
 \begin{center}
 	\centering
 \begin{lstlisting}[caption={The coordinator Flink program.},label={algonline:flink2},frame=single]
@@ -114,18 +112,26 @@ Figure~\ref{fig:class_diagram} shows the general class hierarchy of the predicto
 \end{lstlisting}
 \end{center}
 
-The flat map operator of the coordinator handles three types of coordination messages from the predictors: \begin{enumerate}[]
+\textbf{Coordinator.} Listing~\ref{algonline:flink2} presents the workflow of the coordinator node that manages the distributed online learning protocol operations, which is implemented as Flink program. The coordinator node receives messages from the local predictors through a Kafka Stream of a topic named \textit{LocalToCoordinatorTopicId}. It is implemented as a single \textit{flatMap} function over the coordination messages stream, by setting the \textit{parallelism} level of the Flink program to \textit{1}. Increasing the parallelism will scale up the number of parallel coordinator instances, for example, having multiple instances to handle different groupings of the input event streams . 
+
+	
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\textwidth,keepaspectratio]{chapters/figures/coordinator_diagram.png}
+	
+	\caption{The class hierarchy of the coordinator node.}
+	\label{fig:coord_class_diagram}
+\end{figure}
+
+\par The flat map operator of the coordinator handles three types of coordination messages from the predictors: 
+\begin{enumerate}[]
 	\item \textbf{RegisterNode} that contains a registration request for a new predictor node.
 	\item \textbf{RequestSync} to receive a local model after violation.
 	\item \textbf{ResolutionResponse} to receive a resolution response from a local predictor node.  
 \end{enumerate}  
 
- On the other hand, it sends \textbf{CoordinatorSync} messages for all predictors after creating a new global prediction model, or \textit{UpdateReference} to set the reference model. It also send  \textbf{RequestResolution} messages to a ask the local predictors for their prediction models. Figure~\ref{fig:coord_class_diagram} depicts the  class hierarchy of the coordinator node.
+  \par Figure~\ref{fig:coord_class_diagram} depicts the class hierarchy of the coordinator node. The corresponding class for the coordinator is implemented in the class \textbf{CoordinatorNode} that processes different types of the \textbf{CoordinationMessage}s from the predictors.  On the other hand, it sends \textbf{CoordinatorSync} messages for all predictors after creating a new global prediction model, or \textit{UpdateReference} to set the reference model. It also send  \textbf{RequestResolution} messages to a ask the local predictors for their prediction models.
  
- \begin{figure}[H]
-	\centering
-	\includegraphics[width=\textwidth,height=\linewidth]{chapters/figures/coordinator_diagram.png}
-	
-	\caption{Coordinator node class hierarchy.}
-	\label{fig:coord_class_diagram}
-\end{figure}
+ 
+ 

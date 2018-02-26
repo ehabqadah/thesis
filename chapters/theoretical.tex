@@ -104,17 +104,23 @@ Thus, the random variable $\sqrt{n}\ (\hat{p}_{i,j} - {p}_{i,j})$ has asymptotic
 \begin{equation}
 \begin{aligned}
 \sigma^{2}=\mathrm{Var}(\sqrt{n}\ (\hat{p}_{i,j} - {p}_{i,j})) = \frac {{p}_{i,j}\ (1- {p}_{i,j})} {\phi_{i}} \\
-\text{s.t.}\ \phi_{i} = \sum_{l=1}^{m} \sum_{t=1}^{n} \eta_{l} \ p_{l,j}^{t-1}
+\text{s.t.}\ \phi_{i} = \sum_{l=1}^{m} \sum_{t=1}^{T} \eta_{l} \ p_{l,j}^{t-1}
 \end{aligned}
 \end{equation}
 
 Where ($\eta_{l} > 0,\ \sum_{} \eta_{l}=1$), and $p_{l,j}^{t-1}$ is the probability of state $j$ at time $t-1$ given that the state $l$ at time $0$ ~\cite{anderson1957statistical}. We are interested in the variances of $(\hat{p}_{i,j} - {p}_{i,j})$ that represents the error in the estimation of ${p}_{i,j}$ by the maximum-likelihood estimator, which is given by:
 
-	\begin{equation}
+\begin{equation}
+\begin{aligned}
+\mathrm{Var} (\hat{p}_{i,j} - {p}_{i,j})=\widehat{\sigma}^{2}\\
+\end{aligned}
+\end{equation}
+
+We assume that for some finite $n$ the random variable $(\hat{p}_{i,j} - {p}_{i,j})$ has a normal distribution with mean $\mu=0$, and the variance is roughly similar to the asymptotic variance  as $\ n \xrightarrow{} \infty$. Thus 
+\begin{equation}
 \begin{aligned}
 \label{eq:var_isol}
-	\mathrm{Var} (\hat{p}_{i,j} - {p}_{i,j}) = \mathrm{Var} (\frac {\sqrt{n}}{\sqrt{n}}\  (\hat{p}_{i,j} - {p}_{i,j}))= \frac {\mathrm{Var}(\sqrt{n}\ (\hat{p}_{i,j} - {p}_{i,j}))}{n} = \frac {\sigma^{2}}{n}\\
-	as\ n \xrightarrow{} \infty 
+	\widehat{\sigma}^{2} = \mathrm{Var} (\frac {\sqrt{n}}{\sqrt{n}}\  (\hat{p}_{i,j} - {p}_{i,j})) = \frac {\mathrm{Var}(\sqrt{n}\ (\hat{p}_{i,j} - {p}_{i,j}))}{n} \approx \frac {\sigma^{2}}{n}
 \end{aligned}
 \end{equation}
 
@@ -134,7 +140,7 @@ It can be easily observed that variances drop as the sample size $n$ grows large
 \end{equation}
 %This is equivalent to
 
-\par Thus, this operation allows to observe more samples, which is naturally producing better estimates of the transition probabilities. In addition, our proposed synchronization operation of the $k$ transition matrices has the same properties as the maximum likelihood estimator over a serial sequence of all $k$ sequences, while skipping $k-1$ transitions between every two consecutive sequences, which is in practice a small number that can be neglected comparing to the total transitions count $k \cdot n$. As result, the global transition probabilities of our approach  have the same properties as maximum likelihood estimates, in particular, the random variable $\sqrt{N}\ (\hat{\pi}_{i,j} - {p}_{i,j})$ has asymptotically normal distribution with mean $\mu=0$, and following Equation ~\ref{eq:lim_dist} we have variance 
+\par Thus, this operation allows to observe more samples, which is naturally producing better estimates of the transition probabilities. In addition, our proposed synchronization operation of the $k$ transition matrices has the same properties as the maximum likelihood estimator over a serial sequence of all $k$ sequences, while skipping $k-1$ transitions between every two consecutive sequences, which is in practice a small number that can be neglected comparing to the total transitions count $k \cdot n$. As result, the global transition probabilities of our approach  have the same properties as maximum likelihood estimates, in particular, the random variable $\sqrt{N}\ (\hat{\pi}_{i,j} - {p}_{i,j})$ has asymptotically normal distribution with mean $\mu=0$, and the variance is 
 
 \begin{equation}
 \begin{aligned}
@@ -145,11 +151,11 @@ where\ N = n \cdot k .\\
 \end{aligned}
 \end{equation}
 
-So, 
+ Following Equation ~\ref{eq:var_isol} we have the variance for finite $N$
 \begin{equation}
 \begin{aligned}
 \label{eq:var_sync}
- \mathrm{Var} (\hat{\pi}_{i,j} - {p}_{i,j}) = \frac {\sigma^{2}}{N} =  \frac {\sigma^{2}}{k.n}
+ \mathrm{Var} (\hat{\pi}_{i,j} - {p}_{i,j}) \approx \frac {\sigma^{2}}{N} =  \frac {\sigma^{2}}{k.n}
 \end{aligned}
 \end{equation}
 
@@ -173,7 +179,7 @@ $\hat{p}_{i,j} - {p}_{i,j}$  represents the deviation/error between the estimate
 \frac{\sigma^{2}}{c^2 \cdot n \cdot k} \]
 
 
-\par Using Equation~\ref{eq:var_sync} we obtain the value $\mathrm{Var} (\hat{\pi}_{i,j} - {p}_{i,j})$, and Equation~\ref{eq:var_sync} for $\mathrm{Var} (\hat{p}_{i,j} - {p}_{i,j})$. Given that $k \ge 1$, then  the variance of $\hat{\pi}_{i,j} - {p}_{i,j}$  is less than or equal to the variance of $\hat{p}_{i,j} - {p}_{i,j}$
+\par Using Equation~\ref{eq:var_sync} we obtain the value $widehat\mathrm{Var} (\hat{\pi}_{i,j} - {p}_{i,j})$, and Equation~\ref{eq:var_sync} for $\mathrm{Var} (\hat{p}_{i,j} - {p}_{i,j})$. Given that $k \ge 1$, then  the variance of $\hat{\pi}_{i,j} - {p}_{i,j}$  is less than or equal to the variance of $\hat{p}_{i,j} - {p}_{i,j}$
 
 \[ 
 \frac{\sigma^{2}}{c^2 \cdot n \cdot k} \leq
@@ -185,8 +191,7 @@ So, we have for any constant $c > 0$ and $k \ge 1$, a probabilistic learning gua
 \begin{aligned}
 \label{eq:guarantee}
  \Pr\left( |\hat{\pi}_{i,j} - {p}_{i,j}| \geq c \right) \leq
- \frac{1}{k}\ \Pr\left( |\hat{p}_{i,j} - {p}_{i,j}| \geq c \right) \\
-   as\ n \xrightarrow{} \infty
+ \frac{1}{k}\ \Pr\left( |\hat{p}_{i,j} - {p}_{i,j}| \geq c \right)
  \end{aligned}
  \end{equation}
  where $\hat{p}_{i,j}$ a transition probability, which is learned on a single \pmcmr predictor, and the $\hat{\pi}_{i,j}$ is the global transition probability computed by the synchronization operation (Equation ~\ref{eq:dis_pi_estim}). To summarize, our approach is based on aggregating the maximum-likelihood estimates over $k$ sequences, which speeds up the convergence to reach the true transition probabilities as a result of the smaller variances of the estimates.
