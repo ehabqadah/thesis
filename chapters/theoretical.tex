@@ -194,7 +194,8 @@ So, we have for any constant $c > 0$ and $k \ge 1$, a probabilistic learning gua
  \frac{1}{k}\ \Pr\left( |\hat{p}_{i,j} - {p}_{i,j}| \geq c \right)
  \end{aligned}
  \end{equation}
- where $\hat{p}_{i,j}$ a transition probability, which is learned on a single \pmcmr predictor, and the $\hat{\pi}_{i,j}$ is the global transition probability computed by the synchronization operation (Equation ~\ref{eq:dis_pi_estim}). To summarize, our approach is based on aggregating the maximum-likelihood estimates over $k$ sequences, which speeds up the convergence to reach the true transition probabilities as a result of the smaller variances of the estimates.
+ where $\hat{p}_{i,j}$ a transition probability, which is learned on a single \pmcmr predictor, and the $\hat{\pi}_{i,j}$ is the global transition probability computed by the synchronization operation (Equation ~\ref{eq:dis_pi_estim}).
+ \par To summarize, our approach is based on aggregating the maximum-likelihood estimates over $k$ sequences, which speeds up the convergence to reach the true transition probabilities as a result of the smaller variances of the estimates.
 
 %The weak law of large
 %numbers states that, if $X_1, X_2, X_3, \ldots$ are independent and identically
@@ -208,7 +209,7 @@ So, we have for any constant $c > 0$ and $k \ge 1$, a probabilistic learning gua
  
 \subsection{Transition Matrix of the Underlying Markov Chain}
 \label{sec:underlaying_mc}
-\par In order to empirically study the learning efficiency of our proposed approach, we need to map the transition probabilities of the underlying Markov chain with the transition probability matrix ($\hat{\Pi}$) of the \pmcmr model. ~\citet{nuel_pattern_2008} showed in \textbf{Theorem 3} the relation between the elements  of 
+\par In order to empirically study the learning efficiency of our proposed approach, we need to map the transition probabilities of the underlying Markov chain with the transition probability matrix ($\hat{\Pi}$) of the \pmcmr model. \par ~\citet{nuel_pattern_2008} showed in \textbf{Theorem 3} the relation between the elements  of 
 $\Pi$ and the conditional probabilities of the $m-$order Markov chain $X=\{X_1, X_2, \ldots X_n\}$ described by 
 
 \[ \Pi(p, q) =
@@ -231,7 +232,7 @@ P(a|b) 	& P(b|b) 		& P(c|b) 		& P(d|b)	  & 0 	    & 0  \\
 P(a|c) 	& P(b|c) 		& P(c|c) 		& P(d|c) 	  & 0 	    & 0  \\
 P(a|d) 	& P(b|d) 		& P(c|d) 		& P(d|d)	  & 0 	    & 0  \\
 P(a|d) 	& P(b|d) 		&  0	 	    & P(d|d)	  & 0 	    & P(c|d)  \\
-0			& 0			& 0		        & 0    		  & 0		& 1.0
+0			& 0			& 0		        & 0    		  & 0		& 1.0     \\
 \end{bmatrix}
 \end{equation} 
 

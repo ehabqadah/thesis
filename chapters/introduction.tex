@@ -1,5 +1,6 @@
 \chapter{Introduction}
 
+%in a variety of practical application areas
 %In many application scenarios, data comes in the form of large distributed event data streams
 \section{Motivation}
 \par In the past decade, technological advancements have led to a growing availability of massive amounts of continuous event streams in many application domains such as social networks \cite{reuter2012event,mathioudakis2010twittermonitor}, Internet of Things (IoT) \cite{miorandi2012internet}, user activities on the web \cite{banerjee2001clickstream,metwally2005duplicate} and maritime monitoring \cite{patroumpas2015event,laxhammar2010conformal}.
@@ -8,7 +9,7 @@
 
 \par An event stream is an unbounded sequence of time-ordered data observations in the form of a tuple of attributes that is composed of a value from finite event types along with other categorical and numerical attributes \cite{agrawal2008efficient,schultz2009distributed,zhou_pattern_2015,flouris2017issues}. Event patterns (i.e., composite events of interest) are defined using a pattern language such as SQL-like \cite{schultz2009distributed} or regular expressions \cite{alevizos2017event}.
 
-\par As an illustrative example, consider the event streams of a group of moving vessels in the context of maritime surveillance. The event stream of a moving vessel consists of spatio-temporal and kinematic information along with the vessel's identification and its trajectory related events, based on the Automatic Identification System (\ac{ais}) \cite{ais} messages that are continuously sent by the vessel. Hence, leveraging event patterns prediction over real-time streams of moving vessels is useful to alert maritime operation managers about suspicious activities (e.g., fast sailing vessels near ports or illegal fishing) before they happen \cite{patroumpas2015event}. 
+\par As an illustrative example of an application domain, consider the event streams of a group of moving vessels in the context of maritime surveillance. The event stream of a moving vessel consists of spatio-temporal and kinematic information along with the vessel's identification and its trajectory related events, based on the Automatic Identification System (\ac{ais}) \cite{ais} messages that are continuously sent by the vessel. Hence, leveraging event patterns prediction over real-time streams of moving vessels is useful to alert maritime operation managers about suspicious activities (e.g., fast sailing vessels near ports or illegal fishing) before they happen \cite{patroumpas2015event}. 
 
 \par However, processing the real-time streaming data poses new challenges, since the data streams are large, distributed in nature and continuously arrive at a high rate \cite{Babcock2002,Flouris2017}. To deal with these data streams in a fast and efficient manner, a distributed stream processing framework \cite{Spark,Flink,Storm} is usually used to implement the stream processing and analytic applications. 
 

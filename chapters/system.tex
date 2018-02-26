@@ -22,7 +22,7 @@ We first define the input event and the stream of events as follows:
 \end{definition}
 
 \begin{definition}
-A stream $s=\langle e_1,e_3,...,e_t,...\rangle$  is a time-ordered sequence of events.
+A stream $s=\langle e_1,e_3,...,e_t,...\rangle$  is a time-ordered infinite sequence of events.
 \end{definition}
 
 
@@ -232,7 +232,7 @@ We extend the pattern prediction problem over a single event stream to the case 
 \subsection*{Learning a Global Transition Probability Matrix}
 
 \par We propose a \textit{synchronization operation} for the transition probability matrices ($w_i=\boldsymbol{\Pi}_i :i \in[k]$) of the $k$ distributed \pmcmr predictors. The operation is based on distributing the maximum-likelihood estimation \cite{anderson1957statistical} for the transition probabilities of the \pmcmr models. 
-Let $\pi_{i,j}$ the transition probability from state $i$ to state $j$ 
+\par Let $\pi_{i,j}$ the transition probability from state $i$ to state $j$ 
 and $n_{k,i,j}$ the number of transitions from state $i$ to state $j$ on node $k$. Then, the global estimation $\hat{\pi}_{i,j}$ for $p_{i,j}$ is described by:
 
 \begin{equation}
@@ -253,9 +253,11 @@ Where $\pi{i,l,j}$ is the transition probability from state $l$ to state $j$ in 
 
 \section{Summary}
 
-\par In this chapter, we addressed the problem of pattern prediction over \emph{$K$} event streams by extending the case of predicting  event patterns over a single stream, where there are \emph{$K$} distributed predictors.  We also described the used prediction model on each predictor, which is based on the event forecasting with pattern Markov chains method \cite{alevizos2017event}. We presented our approach to adapt the distributed online learning protocol \cite{kamp2014communication} that allows the predictors to synchronize their models in a communication-efficient way. Additionally, we provided the theoretical analysis of our approach by deriving a
- probabilistic guarantee on the learning efficiency. 
+\par In this chapter, we addressed the problem of pattern prediction over \emph{$K$} event streams by extending the case of predicting  event patterns over a single stream, where there are \emph{$K$} distributed predictors.  We also described the used prediction model on each predictor, which is based on the event forecasting with pattern Markov chains method \cite{alevizos2017event}. We presented our approach to adapt the distributed online learning protocol \cite{kamp2014communication} that allows the predictors to synchronize their models in a communication-efficient way. 
+\par Additionally, we provided the theoretical analysis of our approach by deriving a probabilistic guarantee on the learning efficiency. 
  
- \par In next chapter, we will introduce the high-level architecture of our pattern prediction system, which is composed of distributed \pmcmr predictors \cite{alevizos2017event} that communicate their models to a coordinator node based a dynamic synchronization scheme \cite{kamp2014communication}. The coordinator computes a global model using the proposed synchronization operation (Equation~\ref{eq:dis_pi_estim}) and shares among the predictors. We will also present the implementation details of the system based on Apache Flink and Apache Kafka.    
+ \par In next chapter, we will introduce the high-level architecture of our pattern prediction system, which is composed of distributed \pmcmr predictors \cite{alevizos2017event} that communicate their models to a coordinator node based a dynamic synchronization scheme \cite{kamp2014communication}. The coordinator computes a global model using the proposed synchronization operation (Equation~\ref{eq:dis_pi_estim}) and shares among the predictors.
+ 
+ \par We will also present the implementation details of the system based on Apache Flink and Apache Kafka. We will describe the different modules  that we implemented to provide the functionalities of the system in a modular way.
  
  
