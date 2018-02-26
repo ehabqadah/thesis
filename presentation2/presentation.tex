@@ -1,0 +1,110 @@
+\documentclass{beamer}
+
+%\usepackage{beamerthemesplit} // Activate for custom appearance
+%\usepackage\{beamercolorthemedove}
+%\setbeamertemplate{footline}[textline]{
+%\includegraphics[width=\paperwidth]{figures/datacron_logo.png}}
+%}
+
+\usepackage{textpos}
+\usepackage{graphicx}
+\usepackage{datetime}
+\usepackage{tikz}
+\usepackage[export]{adjustbox}
+ %\usepackage{natbib}
+ 
+ \usepackage{pgf}
+ \usepackage{tikz}
+ \usetikzlibrary{arrows,automata}
+ %json%
+\usepackage{minted}
+%sudo apt-get install python-pygments
+\usecolortheme{dove}
+
+\def\datacronlogo{%
+  \resizebox{!}{2.5ex}{\includegraphics{figures/datacron_logo.png}%
+}
+}
+\def\eclogo{
+  \resizebox{!}{2.5ex}{\includegraphics{figures/ec_logo.png}%
+}
+}
+\def\horizonlogo{%
+  \resizebox{!}{2.5ex}{\includegraphics{figures/horizon_logo.png}%
+}
+}
+
+
+\def\fraunhoferlogo{%
+	\resizebox{!}{3.0ex}{\includegraphics{figures/iais.pdf}%
+	}
+}
+\def\unibonnlogo{%
+	\resizebox{!}{3.0ex}{\includegraphics{../chapters/figures/uni_bonn_logo_web.png}%
+	}
+}
+%\includegraphics[width=\paperwidth]{figures/datacron_logo.png}}
+
+\title{	Distributed Online Learning for Large-scale Pattern Prediction over Real-time Event Streams}
+%\author[shortname]{Author Name 1 \inst{1} \and Author Name 2 \inst{2}}
+%\institute[shortinst]{\inst{1} affiliation for author1 \and %
+ %                     \inst{2} affiliation for author2}
+%\date{\today}
+
+\defbeamertemplate*{footline}{example theme}
+{%
+    \begin{beamercolorbox}[wd=\paperwidth,ht=3.0ex,dp=1.125ex,%
+        leftskip=.3cm,rightskip=.3cm plus1fil]{separation line}
+        \usebeamerfont{section in head/foot}%
+        \unibonnlogo\hfill\insertshorttitle\hfill\dmyydate \today\hfill \thepage \hfill \fraunhoferlogo
+            \end{beamercolorbox}
+}
+\input{slide-configs}
+\begin{document}
+
+%\frame{\titlepage}
+
+\input{title_slide}
+
+	\begin{frame}<beamer>
+		\frametitle{Outline}
+		\tableofcontents
+	\end{frame}
+
+
+\section{Motivation and Problem Formulation}
+\input{problem_statment.tex}
+\section{The Proposed Approach}
+\input{system-overview}
+\section{Event Forecasting with Pattern Markov Chains}
+\input{event_forecasting_with_markov_chain}
+\section{Our Proposed Approach using Distributed Online Learning}
+\input{distributed_learning}
+\section{Evaluation of Proposed Approach}
+\input{evaluation}
+\section{Work Plan}
+\input{schedule_plan}
+
+%\begin{frame}
+%\frametitle{Tasks}
+%\begin{columns}
+%\begin{column}{0.5\textwidth}
+%  \begin{itemize}
+%  \item<1->Task 1. 
+%  \end{itemize}
+%\end{column}
+%\begin{column}{0.5\textwidth}  %%<--- here
+%  \begin{itemize}
+%  \item<1-> Task 2. 
+%  \end{itemize}
+%\end{column}
+%\end{columns}
+%\end{frame}
+
+\begin{frame}[allowframebreaks]
+	\frametitle{Bibliography}
+	\bibliographystyle{plainnat} 
+	\bibliography{myrefs2}
+	
+\end{frame}
+\end{document}

@@ -1,0 +1,35 @@
+ \begin{figure}[ht]
+	\begin{center}
+		
+		\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=2.6cm,
+		semithick]
+		\tikzstyle{every state}=[fill=red,text=white]		 
+%\begin{tikzpicture}[node distance=7em, scale=1, transform shape]
+\node[state, initial] (s0) {$0$};
+\node[state, below right of=s0] (b) {$1$};
+
+\node[state, above right of=b] (a) {$2$};
+\node[state, above right of=a] (c1) {$3$};
+\node[state,accepting,below right of=a] (cF) {$4$};
+\path (s0) edge              node {b} (b)
+	       edge              node {a} (a)
+	       edge   [bend left]  node {c} (c1)
+	       
+	       (a) edge              node {b} (b)
+	                edge     [loop right]         node {a} (a)
+	                edge   [bend left]  node {c} (c1)
+	                
+	        (b) edge   [loop left]           node {b} (b)
+	        edge   [bend left]           node {a} (a)
+	        edge  [bend right]   node {c} (cF)
+	        
+	        (c1) edge     [ bend left]        node {b} (b)
+	        edge              node {a} (a)
+	        edge   [loop right]  node {c} (c1)
+	        
+	        ;
+
+\end{tikzpicture}
+\end{center}
+\caption[]{$ Q=\{0,1,2,3,4\}$       $m=1$}
+\end{figure}

@@ -1,0 +1,297 @@
+% This file was converted to LaTeX by Writer2LaTeX ver. 1.4
+% see http://writer2latex.sourceforge.net for more info
+\documentclass[a4paper]{article}
+%\usepackage[latin1]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[english]{babel}
+\usepackage{amsmath}
+\usepackage{amssymb,amsfonts,textcomp}
+\usepackage{color}
+\usepackage{xcolor,colortbl}
+\usepackage{sectsty}
+\usepackage{tocloft}
+\usepackage{fancyhdr}
+\usepackage{afterpage}
+\fancyhf{}
+\usepackage{lastpage}
+\usepackage{datetime}
+\usepackage{colortbl}
+\usepackage{array}
+%\usepackage[top=0.7882in,bottom=0.4917in,left=1.25in,right=1.25in,nohead,includefoot,foot=0.5083in,footskip=0.97720003in]{geometry}
+\usepackage[headheight=110pt]{geometry}
+%\usepackage{supertabular}
+\usepackage{hhline}
+\usepackage{caption}
+\usepackage{hyperref}
+
+\usepackage{graphicx}
+\usepackage{verbatim}
+\pagestyle{fancy}
+%\usepackage{titlesec}
+\afterpage{\cfoot{\thepage}}
+
+%new packages & rules
+\linespread{1.1} % Definition of the linespread
+%\usepackage[square,sort,comma,numbers]{natbib}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\mathchardef\mhyphen="2D % Define a "math hyphen" 
+\usepackage{amsthm}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{amsthm}
+
+
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{amsthm}
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}
+\newtheorem{example}{Example}
+
+
+%\usepackage{eufrak}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+\usepackage[ruled,vlined,noend]{algorithm2e}
+\usepackage{natbib}
+\usepackage{pgf}
+\usepackage{tikz}
+\usetikzlibrary{arrows,automata}
+% to start new page for each new section
+%\titlespacing*{\section}
+%{0pt}{6.5ex plus 1ex }{6.3ex plus .2ex}
+%\titlespacing*{\subsection}
+%{0pt}{6.5ex plus 1ex }{6.3ex plus .2ex}
+
+%\allsectionsfont{\centering}
+\setlength{\headsep}{0.2in}
+
+%\newdateformat{bkdate}{\twodigit{\THEDAY}-\twodigit{\THEMONTH}-\twodigit{\THEYEAR}}
+%\dmyydate
+
+
+\definecolor{datacroninner}{rgb}{0.0,0.0,0.5647059}
+\newcommand{\datacroncolor}{\color{datacroninner}}
+\chapterfont{\datacroncolor}  % sets colour of chapters
+\sectionfont{\datacroncolor}  % sets colour of sections
+\subsectionfont{\datacroncolor}  % sets colour of sections
+\subsubsectionfont{\datacroncolor}
+\hypersetup{colorlinks=true, linkcolor=datacroninner, citecolor=datacroninner, filecolor=datacroninner, urlcolor=blue}
+
+\newcommand{\documenttitle}{\ Master Thesis Proposal}
+%\newcommand{\horizongeneral}{\ H2020-ICT-2015 \dmyydate \today}
+%\lhead{\includegraphics[width=122pt]{figures/datACRONDXYTemplate201512162-img001.png}}
+\chead{\documenttitle}
+%\rhead{\horizongeneral}
+\lfoot{}
+\fancyfoot[C]{Page \thepage \hspace{1pt}}
+%\cfoot{Page \thepage \hspace{1pt} of \pageref{LastPage}}
+
+\cfoot{Page \thepage}
+\rfoot{}
+
+
+%\makeatletter
+\newcommand\arraybslash{\let\\\@arraycr}
+%\makeatother
+% Footnote rule
+\setlength{\skip\footins}{0.0469in}
+\renewcommand\footnoterule{\vspace*{-0.0071in}\setlength\leftskip{0pt}\setlength\rightskip{0pt plus 1fil}\noindent\textcolor{black}{\rule{0.0\columnwidth}{0.0071in}}\vspace*{0.0398in}}
+\setlength\tabcolsep{1mm}
+\renewcommand\arraystretch{1.3}
+\newcounter{Table}
+\renewcommand\theTable{\arabic{Table}}
+
+\title{\documenttitle}
+\author{Ehab Qadah \\\\Supervisor:
+	PD Dr. Michael Mock}
+\date{\dmyydate \today}
+\begin{document}
+\pagestyle{fancy}
+\newcommand{\sectionbreak}{
+\clearpage{\pagestyle{fancy}}}
+
+\pagenumbering{gobble}
+
+%\cfttoctitlefont{\datacroncolor}
+%
+
+%\title{\Huge Grant Agreement No: 687591}
+%{\centering
+%\par}
+%\clearpage{\pagestyle{fancy}}
+%%\setcounter{page}{1}
+%\maketitle{\Huge}
+%%\centering
+%\title{\Large \textbf{ Predicting patterns of moving objects based
+%	on contextual information with distributed online learning \\ 
+%Distributed Online Learning for Forecasting Patterns of Moving Objects Events Streams \\
+%Distributed Online Learning for Forecasting Patterns in Event Streams of Moving Objects}}
+%{\centering
+%\Large
+%\par}
+%\maketitle
+
+%{\centering
+%\includegraphics[width=2.5835in,height=0.6634in]{figures/datACRONDXYTemplate201512162-img001.png}
+% \par}
+
+
+
+
+
+
+%\begin{flushleft}
+%\centering
+%\begin{tabular}{lm{5.83516in}l}
+%\hline
+%%\centering
+%\title{\documenttitle}
+%\maketitle
+%\\\hline
+%\end{tabular}
+%\end{flushleft}
+
+
+
+
+
+%\begin{flushleft}
+%\begin{tabular}{|m{0.25\textwidth}|m{0.75\textwidth}|}
+%%\multicolumn{2}{|m{5.8350596in}|}{Deliverable Form}\\\hline
+%\rowcolor{datacroninner}
+%{\bfseries\color{white}Deliverable Form}& \\\hline
+%Project Reference No. &
+%H2020-ICT-2015 687591\\\hline
+%Deliverable No.  & 8.1\\\hline
+%Relevant Work Package: & WP 8\\\hline
+%Nature: &R\\\hline
+%Dissemination Level: &PU\\\hline
+%Document version: &1.0\\\hline
+%Due Date: &29/02/2016\\\hline
+%Date of latest revision: &16/12/2015\\\hline
+%Completion Date: &~\\\hline
+%Lead partner: &UPRC\\\hline
+%Authors: &
+%George Vouros\\\hline
+%Reviewers: &~\\\hline
+%Document description: &
+%This deliverable documents the main project procedures. These procedures have been presented and agreed at the kickoff
+%
+%meeting chaired by the coordinator.\\\hline
+%Document location: &
+%Desktop/Projects/datACRON/Project/Dels\\\hline
+%\end{tabular}
+%\end{flushleft}
+
+%\clearpage
+
+%\section*{HISTORY OF CHANGES}
+%\thispagestyle{empty}
+%\addcontentsline{toc}{section}{HISTORY OF CHANGES}
+%\begin{flushleft}
+%\begin{tabular}{|m{1.10in}|m{1.10in}|m{1.10in}|m{1.10in}|m{1.10in}|}
+%\hline
+%\rowcolor{datacroninner}
+%{\bfseries\color{white} Version} &{\bfseries\color{white} Date} & {\bfseries\color{white} Changes} & {\bfseries\color{white} Author} & {\bfseries\color{white} Remarks}\\\hline
+%~ &~ &~ &~ &~\\\hline
+%\end{tabular}
+%\end{flushleft}
+
+%\clearpage
+
+%\section*{EXECUTIVE SUMMARY}
+%\addcontentsline{toc}{section}{EXECUTIVE SUMMARY}
+%%\clearpage
+
+
+%\section*{TABLE OF CONTENTS}
+%\addcontentsline{toc}{section}{TABLE OF CONTENTS}
+%
+%
+%
+%\setcounter{tocdepth}{3}
+%\renewcommand\contentsname{}
+%\renewcommand{\cfttoctitlefont}{\datacroncolor}
+%\tableofcontents
+%\section*{TERMS \& ABBREVIATIONS}
+%\addcontentsline{toc}{section}{TERMS \& ABBREVIATIONS}
+%
+%\section*{LIST OF FIGURES}
+%\addcontentsline{toc}{section}{LIST OF FIGURES}
+%%\cftloftitlefont{\datacroncolor}
+%\listoffigures
+%\section*{LIST OF TABLES}
+%\addcontentsline{toc}{section}{LIST OF TABLES}
+%
+%\listoftables
+
+\input{title}
+\clearpage
+
+\section*{Abstract}
+
+Predicting full matches of complex patterns from various real-time event streams is an important utility for the decision maker in many application domains such as maritime surveillance, financial services, and sensor networks. Such a utility allows him/her to proactively react to the new situations and enhances the operational decision making. An event stream is an unbounded collection of timely ordered data observations in the form of an attribute tuple that is composed of a value from finite event types along with other categorical and numerical features. For example, in the context of maritime surveillance, patterns prediction over real-time tracking streams of moving vessels is useful to alert maritime operation mangers about suspicious activities (e.g., fast sailing vessels near ports) before they happen, in this scenario, the event stream of a moving vessel consists of spatial-temporal and kinematic information along with the vessel's identification and its trajectory related event types. However, processing real-time streaming data is challenging since data streams are large in nature and continuously keep on coming at a high rate. 
+% we describe the design and implementation of a system called% 
+\par To this end, in this thesis, we present an online, distributed and scalable patterns prediction system over massive input event streams. The proposed approach is based on a novel approach that combines the  distributed online prediction protocol \citep{kamp2014communication} with the event forecasting with Pattern Markov Chain system\citep{alevizos2017event}, in order to provide an online and large-scale patterns prediction system over distributed real-time event streams. 
+
+ \par We leverage an existing online probabilistic forecasting model, which consists of the event forecasting with Pattern Markov Chain~\citep{alevizos2017event}. This system gives the ability to predicate when a pattern within a stream of events will be fully matched. In addition, we integrate the distributed online synchronization protocol \citep{kamp2014communication} to provide distributed online learning capabilities between the prediction models in a communication-efficient manner. This protocol enables us to dynamically synchronize the distributed local prediction models of the multiple input event streams.
+ 
+  In some practical applications the input event streams may belong to different distributions, we propose to divide the input event streams into similar groups, in order to combine the corresponding predictions models to construct a representative global model in each group. The aggregation operation refers to the synchronization operation (e.g., joint average of the local models) in the distributed online learning protocol, which is performed by a central coordinator that constructs and distributes a global prediction model for the input event streams based on the  local models. In addition, we are using one of the modern Big Data frameworks for stream processing i.e., Apache Flink \footnote{\url{https://flink.apache.org/}} to implement the proposed system.
+\par We aim to provide an architecture and implementation of a system for large-scale patterns prediction over multiple input event streams. Our approach exploits the collaborative learning from multiple input streams by combing their associated predication models in a dynamic way. 
+ 
+\par We will analysis and develop the proposed approach, and evaluate the effectiveness through empirical experiments over synthetic event streams and real-word data streams of moving objects, in particular, events streams related to trajectories of moving vessels, which are provided in the context of the datAcron project\footnote{\url{http://www.datacron-project.eu/}}.
+
+%Furthermore, we will try to provide probabilistic guarantees for the new proposed %method by performing theoretical analysis procedures. 
+
+
+{\large\textbf{\\ \\ Acknowledgment\\\\}}
+This work is supported by the EU H2020 datAcron project (grant agreement No 6875).
+
+{\large\textbf{\\ Keywords\\\\}}
+Big Event Data Streams, Stream processing,Large-scale Patterns Prediction, Maritime Surveillance, Apache Flink, Distributed Pattern Markov Chain\\
+
+
+\pagenumbering{arabic}
+\setcounter{page}{1}
+\thispagestyle{fancy}
+\input{introduction}
+\input{related_work}
+\input{implementation}
+\input{experimental_evaluation}
+\input{work_plan}
+
+%\input{extra_rources}
+
+
+%{\centering  
+%\includegraphics[width=4.972in,height=3.5693in]{figures/datACRONDXYTemplate201512162-img002.png}
+% \par}
+%
+%\captionof{figure}{datACRON Overall Architecture }
+%
+%
+%
+%\begin{flushleft}
+%\begin{tabular}{m{0.48in}|m{3.29in}|m{1.89in}c|}
+%\hline
+%\rowcolor{datacroninner}
+%{\bfseries\color{white}lala}&{\bfseries\color{white} Bla} &{\bfseries\color{white} bla}\\\hline
+%1 &~ &~\\\hline
+%2 &~ &~\\\hline
+%\end{tabular}
+%\end{flushleft}
+
+
+\clearpage
+%\nocite{*}
+%\bibliographystyle{plain-annote}
+%\bibliographystyle{plainnat}
+ \bibliographystyle{agsm} 
+\bibliography{myrefs}
+\end{document}
+
+
+
