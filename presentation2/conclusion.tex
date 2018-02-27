@@ -3,11 +3,13 @@
 	\frametitle{Future Work}
 	%\framesubtitle{Over Synthetic Event Streams}
 	\begin{itemize}
-		\item<1-> Introducing a weighted based synchronization operation. For example, the transition counts could be weighted by the number of the full matches of the monitored pattern in the associated event stream. 
+		\item<only@1> In some applications the input event streams may belong to different distributions, we propose to dynamically divide the input event streams into similar groups (clusters).
 		
-		\item<1->Provide real-time predictions intervals by also predicting the time-stamp of the future events using some machine learning techniques.  
+		\item<only@1> Introducing a weighted based synchronization operation. For example, the transition counts could be weighted by the number of the full matches of the monitored pattern in the associated event stream. 
 		
-		\item<1->  The derived probabilistic learning guarantee  relies on the static-like synchronization scheme  ($\Delta=0$). Therefore, it would be interesting to study the effects of the dynamic synchronization scheme on the learning guarantee ($\Delta > 0$).
+		\item<only@2> Provide real-time predictions intervals by also predicting the time-stamp of the future events using some machine learning techniques.  
+		
+		\item<only@2>  The derived probabilistic learning guarantee  relies on the static-like synchronization scheme  ($\Delta=0$). Therefore, it would be interesting to study the effects of the dynamic synchronization scheme on the learning guarantee ($\Delta > 0$).
 	\end{itemize}
 	
 \end{frame}
