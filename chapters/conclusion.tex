@@ -27,7 +27,7 @@ There are several directions in which we propose to extend our work. The main on
  
 \item  The proposed synchronization operation aggregates the maximum-likelihood estimates of the transition probabilities for the \pmcmr models over $k$ input event streams, which creates a global transition probability matrix based on the transition counts in each model. We would like to investigate the effects of introducing a weighted based synchronization operation. For example, the transition counts could be weighted by the number of the full matches of the monitored pattern in the associated event stream. 
 
-\item The probabilistic learning guarantee that has been obtained for the proposed method relies on the static-like synchronization scheme, where the mini-batch size is equal to the assumed uniform size of the input event streams, and the variance threshold is zero. Therefore, it would be interesting to study the effects of the dynamic synchronization scheme on the learning guarantee.
+\item The probabilistic learning guarantee that has been obtained for the proposed method relies on the static-like synchronization scheme, where the mini-batch size is equal to the assumed uniform size of the input event streams, and the variance threshold is zero. Therefore, it would be interesting to study the effects of the dynamic synchronization scheme ($\Delta>0$) on the learning guarantee.
 
 \item The \pmcmr model provides the prediction intervals in terms of the number of future events, it would be more beneficial if the predictions intervals are transformed into real-time by also predicting the time-stamp of the future events using some machine learning techniques like regression.  
 

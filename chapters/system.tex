@@ -66,7 +66,7 @@ that we will need to wait for until the pattern is completed (full match).
 \begin{itemize}[noitemsep]
 	\item Build a DFA that accepts the regular expression $\Sigma^{*};\mathcal{P}$. Firstly, the regular expression $\Sigma^{*};\mathcal{P}$ is converted to non-deterministic finite automaton (NFA), then an equivalent DFA of the constructed NFA is computed using the subset construction \cite{hopcroft2006automata,alevizos2017event}. And the events stream $s$ is considered as the input word of the DFA. 
 
-\par Furthermore, if $\forall q \in Q$ of a DFA the all $\delta(q)^{-m}$ are sets of cardinality 1, then the DFA is called \textit{m-unambiguous}. ~\citet{nuel_pattern_2008} proposed a procedure to transform any DFA to an \textit{m-unambiguous} DFA, which is achieved by incrementally duplicate all states have m-ambiguity (i.e., $\vert\delta(q)^{-m}\vert > 1$).   Figure ~\ref{fig:dfa_adc} shows an associated DFA of a sequential pattern $\mathcal{P}=a ; d ; c$ over an alphabet $\Sigma=\{a,b,c,d\}$. 
+\par Furthermore, if $\forall q \in Q$ of a DFA the all $\delta(q)^{-m}$ are sets of cardinality 1, then the DFA is called \textit{m-unambiguous}. ~\citet{nuel_pattern_2008} proposed a procedure to transform any DFA to an \textit{m-unambiguous} DFA, which is achieved by incrementally duplicate all states have m-ambiguity (i.e., $\vert\delta(q)^{-m}\vert > 1$).   Figure ~\ref{fig:dfa_adc} shows an associated DFA of a sequential pattern $\mathcal{P}=a ; d ; c$ over an alphabet $\Sigma=\{a,b,c,d\}$ of order 1 ($m=1$). 
 
 
 \input{dfa_figure}
@@ -232,8 +232,8 @@ We extend the pattern prediction problem over a single event stream to the case 
 \subsection*{Learning a Global Transition Probability Matrix}
 
 \par We propose a \textit{synchronization operation} for the transition probability matrices ($w_i=\boldsymbol{\Pi}_i :i \in[k]$) of the $k$ distributed \pmcmr predictors. The operation is based on distributing the maximum-likelihood estimation \cite{anderson1957statistical} for the transition probabilities of the \pmcmr models. 
-\par Let $\pi_{i,j}$ the transition probability from state $i$ to state $j$ 
-and $n_{k,i,j}$ the number of transitions from state $i$ to state $j$ on node $k$. Then, the global estimation $\hat{\pi}_{i,j}$ for $p_{i,j}$ is described by:
+\par Let $\pi_{i,j}$ be the transition probability from state $i$ to state $j$ 
+and $n_{k,i,j}$ represents the number of transitions from state $i$ to state $j$ on node $k$. Then, the global estimation $\hat{\pi}_{i,j}$ for $p_{i,j}$ is described by:
 
 \begin{equation}
 \label{eq:dis_pi_estim}
