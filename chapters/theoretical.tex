@@ -130,7 +130,7 @@ It can be easily observed that variances drop as the sample size $n$ grows large
 \subsection{Probabilistic Learning Guarantee}
 \label{sec:guarantee}
  %in Equation ~\ref{eq:dis_pi_estim}% 
-\par The proposed synchronization operator aggregates the maximum-likelihood estimates over $k$ observed sequences (i.e., sequences of the DFA states based on the consumed event streams), the operator estimates a global transition probabilities matrix for a set of $k$ sequences, which are arranged as a serial sequence composed of all $k$ sequences with length $N=k \cdot n$, assuming that all $k$ sequences have $n$ observations. For the sake of simplicity, we assume that the synchronization phase happens on batch size equals to $n$ (i.e., $b=n$) given that the divergence threshold $\Delta$ is zero, then the global transition probabilities $\hat{\pi}_{i,j}$ are given 
+\par The proposed synchronization operator aggregates the maximum-likelihood estimates over $k$ observed sequences (i.e., sequences of the DFA states based on the consumed event streams), the operator estimates a global transition probabilities matrix for a set of $k$ sequences, which are arranged as a serial sequence composed of all $k$ sequences with length $N=k \cdot n$, assuming that all $k$ sequences have $n$ observations. For the sake of simplicity, we assume that the synchronization phase happens on batch size equals to $n$ (i.e., $b=n$) given that the divergence threshold is zero ($\Delta=0$), then the global transition probabilities $\hat{\pi}_{i,j}$ are given 
 \begin{equation}
 \label{eq:dis_pi_estim2}
 	\begin{aligned}

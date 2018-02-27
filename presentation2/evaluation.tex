@@ -40,14 +40,13 @@
 	\frametitle{Empirical evaluation }
 	\framesubtitle{Over Real-word Event Streams}
 \begin{itemize}
-	\item<1-> Synopses over raw AIS messages in Brest, France: 1 October 2015 to 31 March 2016. 
 	
-	\item<1->$ 4,684,444$ derived critical points.
-	
-	\item<1->  $\approx5000$ vessels.
-	\item<only@1> Used patterns: 
-	$\mathcal{P}_1=Sailing$ with $m=2$, and  $\mathcal{P}_2=$\textit{changeInHeading; gapStart; gapEnd; changeInHeading} with $m=1$. 
-	\item<1-> All experiments are performed with the batch size of 100  ($b=100$), the variance threshold of 2 ($\Delta=2$), $80\%$ as PMC prediction threshold ($\theta_{p}=80\%$), and 200 for the maximum spread ($\theta_{s}=200$)
+	\item<only@1> Event streams describe critical points (i.e., synopses) of moving vessels trajectories, which are derived from raw AIS messages as described in \cite{synopses1}.
+	\item<only@1> $4,684,444$ critical points  in Brest, France: October 2015 to March 2016 ($\approx5000$ vessels). 
+	\item<only@1>  $\mathcal{P}_1=Sailing$ with $m=2$ over $\Sigma_1=$$\{$\textit{VerySlow, Slow, Moving,  Sailing, Stopping}$\}$.  
+	\item<only@2> $\mathcal{P}_2=$\textit{changeInHeading; gapStart; gapEnd; changeInHeading} with $m=1$ over $\Sigma_2=$ 
+	$\{$\textit{stopStart, stopEnd, changeInSpeedStart, changeInSpeedEnd,  slowMotionStart, slowMotionEnd, gapStart, gapEnd, changeInHeading}$\}$.
+	\item<only@2> All experiments are performed with setting the batch size of 100  ($b=100$), the variance threshold of 2 ($\Delta=2$), $80\%$ as PMC prediction threshold ($\theta_{p}=80\%$), and 200 for the maximum spread ($\theta_{s}=200$)
 \end{itemize}
 	
 \end{frame}
@@ -156,9 +155,9 @@
 	\begin{itemize}
 		\item<1-> We generate $20$ streams of size 10,000 events from a simulated 1-order Markov process over $\Sigma=\{a, b, c, d\}$.
 		
-		\item<1->The used pattern $\mathcal{P}=a ; d ; c$
+		\item<1->The used pattern $\mathcal{P}=a ; d ; c$ with $m=1$.
 		
-		\item<1-> We use the batch size to 20 ($b=20$), the variance threshold to .0001 ($\Delta=.0001$), the  \pmcmr prediction threshold to $50\%$ ($\theta_{p}=50\%$), and the maximum spread to 10 ($\theta_{s}=10$).
+		\item<1-> We set the batch size to 20 ($b=20$), the variance threshold to .0001 ($\Delta=.0001$), the  \pmcmr prediction threshold to $50\%$ ($\theta_{p}=50\%$), and the maximum spread to 10 ($\theta_{s}=10$).
 	\end{itemize}
 	
 \end{frame}
