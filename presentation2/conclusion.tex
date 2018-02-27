@@ -1,0 +1,32 @@
+\begin{frame}
+	
+	\frametitle{Future Work}
+	%\framesubtitle{Over Synthetic Event Streams}
+	\begin{itemize}
+		\item<only@1> In some applications the input event streams may belong to different distributions, we propose to dynamically divide the input event streams into similar groups (clusters).
+		
+		\item<only@1> Introducing a weighted based synchronization operation. For example, the transition counts could be weighted by the number of the full matches of the monitored pattern in the associated event stream. 
+		
+		\item<only@2> Provide real-time predictions intervals by also predicting the time-stamp of the future events using some machine learning techniques.  
+		
+		\item<only@2>  The derived probabilistic learning guarantee  relies on the static-like synchronization scheme  ($\Delta=0$). Therefore, it would be interesting to study the effects of the dynamic synchronization scheme on the learning guarantee ($\Delta > 0$).
+	\end{itemize}
+	
+\end{frame}
+
+\begin{frame}
+	
+	\frametitle{Summary }
+	%\framesubtitle{Over Synthetic Event Streams}
+	\begin{itemize}
+		\item<only@1> We have presented a system that provides a distributed pattern prediction over multiple large-scale event streams.
+		
+		\item<only@1> The system uses the event forecasting with pattern Markov chain (PMC) \cite{alevizos2017event} as the base prediction model on each event stream, and it applies the protocol for distributed online prediction \cite{kamp2014communication} to exchange the information among the distributed predictors.
+		
+		\item<only@1> The system has been implemented using Apache Flink and Apache Kafka.
+		
+		\item<only@1> Experimental results over synthetic event streams and large real-world event streams related to trajectories of moving vessels show the effectiveness of our approach.
+		
+	\end{itemize}
+	
+\end{frame}
