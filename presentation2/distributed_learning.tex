@@ -65,7 +65,11 @@ Where $n_{k,i,j}$ the number of transitions from state $i$ to state $j$ on node 
 {
 	\frametitle{Distributed Online Learning for Pattern Prediction}
 	\framesubtitle{Probabilistic Learning Guarantee}
-For $k$ distributed \pmcmr predictors:
+	\begin{itemize}[]
+		
+		\item<1-> The maximum-likelihood learner has been proven to converge to  a normal distribution around the real ${p}_{i,j}$ \cite{anderson1957statistical}.
+	
+   \item<1-> For $k$ distributed \pmcmr predictors:
 		
 		\begin{equation*}
 		\begin{aligned}
@@ -76,4 +80,6 @@ For $k$ distributed \pmcmr predictors:
 		\end{equation*}
 		
 \vspace{1cm}Where $\hat{\pi}_{i,j}$ is the global estimation and $\hat{p}_{i,j}$ is an estimation by an isolated predictor.
+
+	\end{itemize}
 }
